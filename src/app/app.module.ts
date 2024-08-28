@@ -9,10 +9,13 @@ import { HomeModule } from './features/home/home.module';
 import { IntroductionModule } from './features/introduction/introduction.module';
 import { CoreModule } from './core/core.module';
 import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
+import { TestErrorComponent } from './features/test-error/test-error.component';
+import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 
 @NgModule({
   declarations: [
     AppComponent,
+    TestErrorComponent,
   ],
   imports: [
     BrowserModule,
@@ -25,7 +28,8 @@ import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
     IntroductionModule
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

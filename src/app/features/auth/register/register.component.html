@@ -1,1 +1,111 @@
-<p>register works!</p>
+<div class="d-flex justify-content-center mt-5">
+    <div class="col-3">
+      <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+        <div class="text-center mb-4">
+          <h1 class="mb-3">Register to Libri</h1>
+        </div>
+
+        <app-text-input [formControl]="registerForm.controls['username']" [label]="'Username'"></app-text-input>
+
+        <app-text-input [formControl]="registerForm.controls['email']" [label]="'Email Address'"></app-text-input>
+
+        <app-text-input [formControl]="registerForm.controls['password']" [label]="'Password'" [type]="'password'"></app-text-input>
+
+        <app-text-input [formControl]="registerForm.controls['confirmPassword']" [label]="'Confirm password'" [type]="'password'"></app-text-input>
+
+        <app-text-input [formControl]="registerForm.controls['phoneNumber']" [label]="'Phone number'" ></app-text-input>
+
+        <app-text-input [formControl]="registerForm.controls['address']" [label]="'Password'"></app-text-input>
+        
+          <!-- <div class="form-floating mb-3">
+            <input
+              [class.is-invalid]="registerForm.get('username')?.touched && registerForm.get('username')?.invalid"
+              [class.is-valid]="registerForm.get('username')?.touched && registerForm.get('username')?.valid" 
+              type="text" 
+              class="form-control" 
+              id="floatingUsername" 
+              placeholder="Username" 
+              formControlName="username">
+            <label for="floatingUsername">Username</label>
+            <div *ngIf="registerForm.get('username')?.errors?.['required']" class="invalid-feedback">*Username is required</div>          
+          </div>
+        <div class="form-floating mb-3">
+          <input
+            [class.is-invalid]="registerForm.get('email')?.touched && registerForm.get('email')?.invalid"
+            [class.is-valid]="registerForm.get('email')?.touched && registerForm.get('email')?.valid" 
+            type="email" 
+            class="form-control" 
+            id="floatingEmail" 
+            placeholder="Email" 
+            formControlName="email">
+          <label for="floatingEmail">Email address</label>
+          <div *ngIf="registerForm.get('email')?.errors?.['required']" class="invalid-feedback">*Email is required</div>
+          <div *ngIf="registerForm.get('email')?.errors?.['email']" class="invalid-feedback">*Invalid email</div>
+          <div *ngFor="let error of errors">
+            {{ error }}
+          </div>        
+        </div>
+        <div class="form-floating mb-3">
+          <input 
+            [class.is-invalid]="registerForm.get('password')?.touched && registerForm.get('password')?.invalid"
+            [class.is-valid]="registerForm.get('password')?.touched && registerForm.get('password')?.valid" 
+            type="password" 
+            class="form-control" 
+            id="floatingPassword" 
+            placeholder="Password" 
+            formControlName="password">
+          <label for="floatingPassword">Password</label>
+          <div *ngIf="registerForm.get('password')?.errors?.['required']" class="invalid-feedback">*Password is required</div>
+          <div *ngIf="registerForm.get('password')?.errors?.['pattern']" class="invalid-feedback">*Password must have 1 Uppercase, 1 Lowercase, 1 number, 1 non alphanumeric and at least 6 characters</div>
+        </div>
+        <div class="form-floating mb-3">
+            <input
+              [class.is-invalid]="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.invalid"
+              [class.is-valid]="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.valid" 
+              type="password" 
+              class="form-control" 
+              id="floatingConfirmPassword" 
+              placeholder="Confirm password" 
+              formControlName="confirmPassword">
+            <label for="floatingCofirmPassword">Confirm password</label>
+            <div *ngIf="registerForm.get('confirmPassword')?.errors?.['required']" class="invalid-feedback">*Re-type your password</div>          
+          </div>
+        <div class="form-floating mb-3">
+            <input
+              [class.is-invalid]="registerForm.get('phoneNumber')?.touched && registerForm.get('phoneNumber')?.invalid"
+              [class.is-valid]="registerForm.get('phoneNumber')?.touched && registerForm.get('phoneNumber')?.valid" 
+              type="text" 
+              class="form-control" 
+              id="floatingPhoneNumber" 
+              placeholder="Phone number" 
+              formControlName="phoneNumber">
+            <label for="floatingPhoneNumber">Phone number</label>
+            <div *ngIf="registerForm.get('phoneNumber')?.errors?.['required']" class="invalid-feedback">*Phone number is required</div>          
+          </div>
+          <div class="form-floating mb-3">
+            <input
+              [class.is-invalid]="registerForm.get('address')?.touched && registerForm.get('address')?.invalid"
+              [class.is-valid]="registerForm.get('address')?.touched && registerForm.get('address')?.valid" 
+              type="text" 
+              class="form-control" 
+              id="floatingAddress" 
+              placeholder="Address" 
+              formControlName="address">
+            <label for="floatingAddress">Address</label>
+            <div *ngIf="registerForm.get('address')?.errors?.['required']" class="invalid-feedback">*Address is required</div>          
+          </div> -->
+        <ul class="text-danger list-unstyled" *ngIf="errors">
+          <li *ngIf="let error of errors">
+            {{ error }}
+          </li>
+        </ul>
+        <div class="d-grid">
+          <button [disabled]="registerForm.invalid" class="btn btn-lg mt-3" type="submit" style="color: black;background-color: orange;">Register</button>
+          <p class="ms-5 small fw-bold mt-2 pt-1 mb-0">
+            <span>Don't have an account yet?</span>
+            <a routerLink="/login" class="link-danger ms-2" style="font-style: italic;">Login</a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>

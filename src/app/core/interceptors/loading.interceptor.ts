@@ -14,7 +14,10 @@ export class LoadingInterceptor implements HttpInterceptor {
   constructor(private waitingService: WaitingService) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    this.waitingService.waiting()
+    if (!request.url.includes('email-exists'))
+    {
+      this.waitingService.waiting()
+    }
     return next.handle(request).pipe(
       delay(1000),
       finalize(() => this.waitingService.idle())

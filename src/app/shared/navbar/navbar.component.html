@@ -12,8 +12,8 @@
         <div class="cart-no">5</div>
       </a>
       <ng-container *ngIf="(authService.currentUser$ | async) === null">
-        <a routerLink="/login" class="btn btn-outline-secondary me-2">Login</a>
-        <a routerLink="/register" class="btn btn-outline-success me-3">Sign up</a>
+        <a routerLink="/login" class="btn btn-outline-warning me-2" style="color: black;">Login</a>
+        <a routerLink="/register" class="btn btn-outline-dark me-3" style="color: orange;">Sign up</a>
       </ng-container>
       <ng-container *ngIf="authService.currentUser$ | async as user">
         <div class="dropdown ms-3 me-5" style="cursor: pointer; z-index: 11;" dropdown>

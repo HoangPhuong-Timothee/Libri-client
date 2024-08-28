@@ -10,8 +10,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TextInputComponent } from './text-input/text-input.component';
 import { BreadcrumbModule } from 'xng-breadcrumb';
-
-
+import { NotFoundComponent } from './not-found/not-found.component';
+import { ServerErrorComponent } from './server-error/server-error.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -19,13 +21,20 @@ import { BreadcrumbModule } from 'xng-breadcrumb';
     PagingHeaderComponent,
     PagingFooterComponent,
     SectionHeaderComponent,
-    TextInputComponent
+    TextInputComponent,
+    NotFoundComponent,
+    ServerErrorComponent
   ],
   imports: [
     CommonModule,
     RouterModule,
     PaginationModule.forRoot(),
     BsDropdownModule.forRoot(),
+    NgxSpinnerModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true
+    }),
     ReactiveFormsModule,
     BreadcrumbModule
   ],
@@ -37,7 +46,9 @@ import { BreadcrumbModule } from 'xng-breadcrumb';
     BsDropdownModule,
     TextInputComponent,
     SectionHeaderComponent,
-    BreadcrumbModule
+    BreadcrumbModule,
+    NgxSpinnerModule,
+    ToastrModule
   ]
 })
 export class SharedModule { }

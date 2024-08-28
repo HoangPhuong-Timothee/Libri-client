@@ -1,10 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../shared/shared.module';
-import { NgxSpinnerModule } from 'ngx-spinner';
 import { RouterModule } from '@angular/router';
-
-
 
 @NgModule({
   declarations: [],
@@ -12,10 +9,15 @@ import { RouterModule } from '@angular/router';
     CommonModule,
     RouterModule,
     SharedModule,
-    NgxSpinnerModule
+    // NgxSpinnerModule,
+    // ToastrModule.forRoot({
+    //   positionClass: 'toast-bottom-right',
+    //   preventDuplicates: true
+    // })
   ],
   exports: [
-    NgxSpinnerModule
+    // NgxSpinnerModule,
+    // ToastrModule
   ]
 })
 export class CoreModule { }
