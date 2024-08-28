@@ -1,0 +1,84 @@
+<div class="row mb-5" *ngIf="book">
+    <div class="col-6">
+        <img src="{{ book.imageUrl }}" alt="{{ book.title }}" class="w-100">
+    </div>
+    <div class="col-6 mt-5">
+        <h2 style="font-weight: bold;">{{ book.title }}</h2>
+        <p class="my-4" style="font-size: 2em;">{{ book.price | currency:'VND' }}</p>
+        <div *ngIf="book.quantityInStock > 0" class="d-flex my-3">
+            <p>Status: <span class="ms-2 text-success" style="font-weight: bold; font-style: italic;">Available</span></p>
+            <p class="ms-5">In Stock: <span class="ms-2 text-secondary" style="font-style: italic; font-weight: bold;">{{ book.quantityInStock }}</span></p>
+        </div>
+        <div *ngIf="book.isAvailable; else noStock" class="my-5 d-flex justify-content-start align-items-center">
+            <i class="fa fa-minus-circle text-danger me-2" style="cursor: pointer; font-size: 2em;"></i>
+            <span style="font-size: 1.5em; font-weight: bold;">2</span>
+            <i class="fa fa-plus-circle text-success ms-2" style="cursor: pointer; font-size: 2em;"></i>
+            <button class="btn btn-info ms-4 px-5 py-3">
+                <i class="fa-solid fa-basket-shopping"></i>
+                <span class="ms-2 text-white" style="font-weight: bold;">Add to basket</span>
+            </button>
+            <button class="btn btn-danger ms-4 px-5 py-3">
+                <i class="fa-regular fa-heart"></i>
+                <span class="ms-2" style="font-weight: bold;">Add to wishlist</span>
+            </button>
+        </div>
+        <div class="container">
+            <ng-template #noStock>
+                <span class="text-danger my-3" style="font-weight: bold; font-style: italic;">Out of stock</span>
+            </ng-template>
+        </div>
+        
+        <div class="row mt-4 me-4">
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button bg-" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                      <strong>Author</strong>
+                    </button>
+                  </h2>
+                  <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div class="accordion-body" style="font-style: italic;">
+                      {{ book.author }}
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        <strong>Genre</strong>
+                    </button>
+                  </h2>
+                  <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                    <div class="accordion-body" style="font-style: italic;">
+                      {{ book.genre }}
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        <strong>Publisher</strong>
+                    </button>
+                  </h2>
+                  <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                    <div class="accordion-body" style="font-style: italic;">
+                      {{ book.publisher }}
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading4">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
+                          <strong>Description</strong>
+                      </button>
+                    </h2>
+                    <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4" data-bs-parent="#accordionExample">
+                      <div class="accordion-body" style="font-style: italic;">
+                        {{ book.description }}
+                      </div>
+                    </div>
+                  </div>
+              </div>
+        </div>
+    </div>
+</div>
