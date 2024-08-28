@@ -20,7 +20,7 @@ export class AuthService {
       map((user) => {
         if (user)
         {
-          localStorage.setItem('user', JSON.stringify(user))
+          localStorage.setItem('access_token', user.token)
           this.currentUserSource.next(user)
         }
       })
@@ -43,7 +43,7 @@ export class AuthService {
   }
   
   logout() {
-    localStorage.removeItem('user');
+    localStorage.removeItem('access_token');
     this.currentUserSource.next(null)
     this.router.navigateByUrl('/')
   }
