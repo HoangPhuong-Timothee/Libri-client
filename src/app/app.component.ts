@@ -17,10 +17,8 @@ export class AppComponent implements OnInit {
   }
 
   loadCurrentUser() {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      this.authService.loadCurrentUser(token).subscribe()
-    }
+    const token = localStorage.getItem('access_token')
+    this.authService.loadCurrentUser(token).subscribe()
   }
 
 }

@@ -5,6 +5,7 @@ import { IntroductionComponent } from './features/introduction/introduction.comp
 import { TestErrorComponent } from './features/test-error/test-error.component';
 import { ServerErrorComponent } from './shared/server-error/server-error.component';
 import { NotFoundComponent } from './shared/not-found/not-found.component';
+import { AuthGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -19,6 +20,19 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule)
+  },
+  {
+    path: 'wishlist',
+    loadChildren: () => import('./features/wishlist/wishlist.module').then(m => m.WishlistModule)
+  },
+  {
+    path: 'basket',
+    loadChildren: () => import('./features/basket/basket.module').then(m => m.BasketModule)
+  },
+  {
+    path: 'checkout',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./features/checkout/checkout.module').then(m => m.CheckoutModule)
   },
   {
     path: 'introduction',
