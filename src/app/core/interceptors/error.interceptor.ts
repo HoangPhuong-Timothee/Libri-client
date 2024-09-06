@@ -23,11 +23,13 @@ export class ErrorInterceptor implements HttpInterceptor {
             if (error.error.errors) {
               throw error.error
             }else {
-              this.toastr.error(error.error.message, error.status.toString())
+              // this.toastr.error(error.error.message, error.status.toString())
+              this.toastr.error("Bad request", error.status.toString())
           }
             }
           if (error.status === 401) {
-            this.toastr.error(error.error.message, error.status.toString())
+            // this.toastr.error(error.error.message, error.status.toString())
+            this.toastr.error("Unauthorized", error.status.toString())
           }
           if (error.status === 404) {
             this.router.navigateByUrl('/not-found');

@@ -39,8 +39,17 @@ const routes: Routes = [
     component: IntroductionComponent,
   },
   {
+    path: 'profile',
+    loadChildren: () => import('./features/profile/profile.module').then(m => m.ProfileModule)
+  },
+  {
     path: 'test-error',
     component: TestErrorComponent
+  },
+  {
+    path: 'admin',
+    loadChildren: () => import('./features/admin/admin.module').then(m => m.AdminModule),
+    data: { breadcrumb: 'Admin' }
   },
   {
     path: 'server-error',

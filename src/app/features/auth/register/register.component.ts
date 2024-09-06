@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractControl, AsyncValidatorFn, FormBuilder, ValidationErrors, Validator, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, ValidationErrors, Validator, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { debounceTime, finalize, map, switchMap, take } from 'rxjs';
@@ -21,16 +21,16 @@ export class RegisterComponent {
   registerForm = this.fb.group({
     username: ['', Validators.required],
     email: ['', [Validators.required, Validators.email], [this.validateEmailNotTaken()]],
-    password: ['', [Validators.required, Validators.pattern(this.passwordRegex)]],
+    password: ['', [Validators.required, Validators.pattern(this.passwordRegex)]],   
     confirmPassword: ['', Validators.required],
     phoneNumber: ['', Validators.required],
     address: ['', Validators.required]
-  }, { validator: this.validatePasswordMatch }
-)
+  }, { validators: this.validatePasswordMatch });
 
   onRegister() {
     this.authService.register(this.registerForm.value).subscribe({
       next: () => {
+        this.toastr.success("Register successfully.")
         this.router.navigateByUrl('/login')
         this.toastr.success('Register successfully!')
       },
@@ -56,13 +56,13 @@ export class RegisterComponent {
     }
   }
 
-  validatePasswordMatch() {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const password = this.registerForm.get('password')?.value
-      const confirmPassword = control.value
-      return password === confirmPassword 
-        ? null
-        : { passwordNotMatch: true }
-    }
+  validatePasswordMatch(): ValidatorFn {
+   return (control: AbstractControl): ValidationErrors | null => {
+    const password = control.get('password')
+    const confirmPassword = control.get('confirmPassword')
+    return password?.value !== confirmPassword?.value 
+      ? { passwordNotMatch: true }
+      : null
+   }
   }
 }

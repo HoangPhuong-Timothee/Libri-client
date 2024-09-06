@@ -11,6 +11,7 @@ import { CoreModule } from './core/core.module';
 import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
 import { TestErrorComponent } from './features/test-error/test-error.component';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
+import { AdminModule } from './features/admin/admin.module';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,7 @@ import { ErrorInterceptor } from './core/interceptors/error.interceptor';
     SharedModule,
     HomeModule,
     CoreModule,
-    IntroductionModule
+    IntroductionModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },

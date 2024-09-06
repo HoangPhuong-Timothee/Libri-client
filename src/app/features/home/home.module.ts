@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HomeComponent } from './home.component';
-import { RouterModule } from '@angular/router';
-
 
 @NgModule({
   declarations: [
@@ -10,7 +8,6 @@ import { RouterModule } from '@angular/router';
   ],
   imports: [
     CommonModule,
-    RouterModule
   ]
 })
 export class HomeModule { }

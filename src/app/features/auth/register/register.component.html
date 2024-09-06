@@ -46,7 +46,7 @@
         </div>
         <div class="form-floating mb-3">
             <input
-              [class.is-invalid]="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.invalid"
+              [class.is-invalid]="registerForm.get('confirmPassword')?.touched && !registerForm.get('confirmPassword')?.valid"
               [class.is-valid]="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.valid" 
               type="password" 
               class="form-control" 
@@ -55,7 +55,7 @@
               formControlName="confirmPassword">
             <label for="floatingCofirmPassword">Confirm password</label>
             <div *ngIf="registerForm.get('confirmPassword')?.errors?.['required']" class="invalid-feedback">*Re-type your password</div>
-            <div *ngIf="registerForm.get('confirmPassword')?.errors?.['passwordNotMatch']" class="invalid-feedback">*Password is not match</div>          
+            <div *ngIf="registerForm.get('confirmPassword')?.errors?.['passwordNotMatch'] && !registerForm.get('confirmPassword')?.errors?.['required']" class="invalid-feedback">*Password is not match</div>          
           </div>
         <div class="form-floating mb-3">
             <input

@@ -14,6 +14,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { ServerErrorComponent } from './server-error/server-error.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { ToastrModule } from 'ngx-toastr';
     SectionHeaderComponent,
     TextInputComponent,
     NotFoundComponent,
-    ServerErrorComponent
+    ServerErrorComponent,
+    SidebarComponent
   ],
   imports: [
     CommonModule,
@@ -48,7 +50,8 @@ import { ToastrModule } from 'ngx-toastr';
     SectionHeaderComponent,
     BreadcrumbModule,
     NgxSpinnerModule,
-    ToastrModule
+    ToastrModule,
+    SidebarComponent
   ]
 })
 export class SharedModule { }
