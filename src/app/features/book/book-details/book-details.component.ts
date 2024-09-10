@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { take } from 'rxjs';
 import { Book } from 'src/app/core/models/book.model';
+import { BasketService } from 'src/app/core/services/basket.service';
 import { BookService } from 'src/app/core/services/book.service';
 import { BreadcrumbService } from 'xng-breadcrumb';
 
@@ -12,8 +14,10 @@ import { BreadcrumbService } from 'xng-breadcrumb';
 export class BookDetailsComponent implements OnInit {
 
   book?: Book
+  quantity = 1
+  quantityInBasket = 0
 
-  constructor(private bookService: BookService, private route: ActivatedRoute, private bcService: BreadcrumbService) {
+  constructor(private bookService: BookService, private route: ActivatedRoute, private bcService: BreadcrumbService, private basketService: BasketService) {
     this.bcService.set('@bookDetails', ' ')
    }
 
@@ -27,11 +31,46 @@ export class BookDetailsComponent implements OnInit {
       next: (reponse) => {
         this.book = reponse
         this.bcService.set('@bookDetails', this.book.title)
+        this.basketService.basketSource$.pipe(take(1)).subscribe({
+          next: ((basket) => {
+            const basketItem = basket?.basketItems.find(x => x.id === +id)
+            if (basketItem) {
+              this.quantity = basketItem.quantity
+              this.quantityInBasket = basketItem.quantity
+            }
+          })
+        })
       },
       error: (error) => {
         console.error(error);
       }
     })
+  }
+
+  increaseQuantity() {
+    this.quantity++
+  }
+
+  decreaseQuantity() {
+    this.quantity--
+  }
+
+  updateBasket() {
+    if (this.book) {
+      if (this.quantity > this.quantityInBasket) {
+        const itemsToAdd = this.quantity - this.quantityInBasket
+        this.quantityInBasket += itemsToAdd
+        this.basketService.addItemToBasket(this.book, itemsToAdd)
+      }else {
+        const itemsToRemove = this.quantityInBasket - this.quantity
+        this.quantityInBasket -= itemsToRemove
+        this.basketService.removeItemFromBasket(this.book.id, itemsToRemove)
+      }
+    }
+  }
+
+  get buttonText() {
+    return this.quantityInBasket === 0 ? "Add to basket" : "Update basket"
   }
 
 }

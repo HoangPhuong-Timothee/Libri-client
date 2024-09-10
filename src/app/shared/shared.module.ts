@@ -15,6 +15,7 @@ import { ServerErrorComponent } from './server-error/server-error.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { OrderTotalsComponent } from './order-totals/order-totals.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     TextInputComponent,
     NotFoundComponent,
     ServerErrorComponent,
-    SidebarComponent
+    SidebarComponent,
+    OrderTotalsComponent
   ],
   imports: [
     CommonModule,
@@ -51,7 +53,8 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     BreadcrumbModule,
     NgxSpinnerModule,
     ToastrModule,
-    SidebarComponent
+    SidebarComponent,
+    OrderTotalsComponent
   ]
 })
 export class SharedModule { }

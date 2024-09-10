@@ -28,7 +28,7 @@ export class AuthService {
     )
   }
 
-  loadCurrentUser(token: string | null) {
+  getCurrentUser(token: string | null) {
     if (token === null) {
       this.currentUserSource.next(null)
       return of(null)

@@ -1,0 +1,22 @@
+<div class="bg-light px-4 py-3 text-uppercase fw-bold">
+  Order summary
+</div>
+<div class="py-4">
+  <p class="fw-bold text-danger">*Customers will pay shipping fees depending on distance</p>
+  <p class="fst-italic text-muted mb-4">Shipping costs will be calculated based on choices made during checkout</p>
+  <ul class="list-unstyled mb-4" *ngIf="basketService.basketTotalSource$| async as basketTotals">
+    <li class="d-flex justify-content-between py-3 border-bottom">
+      <strong class="text-muted">Order subtotal</strong>
+      <strong>{{ basketTotals.subtotal | currency:'VND' }}</strong>
+    </li>
+    <li class="d-flex justify-content-between py-3 border-bottom">
+      <strong class="text-muted">Shipping</strong>
+      <p>Customers will pay shipping fees depending on distance</p>
+      <strong>{{ basketTotals.shipping | currency:'VND' }}</strong>
+    </li>
+    <li class="d-flex justify-content-between py-3 border-bottom">
+      <strong class="text-muted">Total</strong>
+      <strong>{{ basketTotals.total | currency:'VND' }}</strong>
+    </li>
+  </ul>
+</div>

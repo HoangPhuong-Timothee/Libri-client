@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { BasketItem } from 'src/app/core/models/basket.model';
 import { BasketService } from 'src/app/core/services/basket.service';
 
 @Component({
@@ -6,11 +7,15 @@ import { BasketService } from 'src/app/core/services/basket.service';
   templateUrl: './basket.component.html',
   styleUrls: ['./basket.component.css']
 })
-export class BasketComponent implements OnInit {
+export class BasketComponent {
 
   constructor(public basketService: BasketService) { }
 
-  ngOnInit(): void {
+  increaseQuantity(item: BasketItem) {
+    this.basketService.addItemToBasket(item)
   }
 
+  removeItem(id: number, quantity: number) {
+    this.basketService.removeItemFromBasket(id, quantity)
+  }
 }

@@ -10,12 +10,12 @@
             <p class="ms-5">In Stock: <span class="ms-2 text-secondary" style="font-style: italic; font-weight: bold;">{{ book.quantityInStock }}</span></p>
         </div>
         <div *ngIf="book.isAvailable; else noStock" class="my-5 d-flex justify-content-start align-items-center">
-            <i class="fa fa-minus-circle text-danger me-2" style="cursor: pointer; font-size: 2em;"></i>
-            <span style="font-size: 1.5em; font-weight: bold;">2</span>
-            <i class="fa fa-plus-circle text-success ms-2" style="cursor: pointer; font-size: 2em;"></i>
-            <button class="btn btn-info ms-4 px-5 py-3">
+            <i (click)="increaseQuantity()" class="fa fa-minus-circle text-danger me-2" style="cursor: pointer; font-size: 2em;"></i>
+            <span style="font-size: 1.5em; font-weight: bold;">{{ quantity }}</span>
+            <i (click)="decreaseQuantity()" class="fa fa-plus-circle text-success ms-2" style="cursor: pointer; font-size: 2em;"></i>
+            <button (click)="updateBasket()" [disabled]="quantity===quantityInBasket" class="btn btn-info ms-4 px-5 py-3">
                 <i class="fa-solid fa-basket-shopping"></i>
-                <span class="ms-2 text-white" style="font-weight: bold;">Add to basket</span>
+                <span class="ms-2 text-white" style="font-weight: bold;">{{ buttonText }}</span>
             </button>
             <button class="btn btn-danger ms-4 px-5 py-3">
                 <i class="fa-regular fa-heart"></i>

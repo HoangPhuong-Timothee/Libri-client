@@ -1,158 +1,105 @@
-<section class="h-100 gradient-custom">
-    <div class="container py-5">
-      <div class="row d-flex justify-content-center my-4">
-        <div class="col-md-8">
-          <div class="card mb-4">
-            <div class="card-header py-3">
-              <h5 class="mb-0">Your basket</h5>
-            </div>
-            <div class="card-body">
-              <!-- Single item -->
-              <div class="row">
-                <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
-                  <!-- Image -->
-                  <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                    <img src="https://salt.tikicdn.com/cache/750x750/ts/product/8a/b6/ba/1d95b88597f28e42d8ca91e3b3ff600f.jpg.webp"
-                      class="w-100" alt="Blue Jeans Jacket" />
-                    <a href="#!">
-                      <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
-                    </a>
-                  </div>
-                  <!-- Image -->
-                </div>
-  
-                <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
-                  <!-- Data -->
-                  <p><strong>Lý Thuyết Trò Chơi</strong></p>
-                  <p class="fst-italic">Trần Phách Hàm</p>
-                  <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-danger btn-sm me-1 mb-2" data-mdb-tooltip-init
-                    title="Remove item">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                  <!-- Data -->
-                </div>
-  
-                <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
-                  <!-- Quantity -->
-                  <div class="d-flex mb-4" style="max-width: 300px">
-                    <button data-mdb-button-init data-mdb-ripple-init class="btn"
-                      onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                      <i class="fa fa-minus-circle text-danger me-2" style="cursor: pointer; font-size: 2em;"></i>
-                    </button>
-                    <span class="mt-1" style="font-size: 1.5em; font-weight: bold;">2</span>
-                    <button data-mdb-button-init data-mdb-ripple-init class="btn"
-                      onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                      <i class="fa fa-plus-circle text-success ms-2" style="cursor: pointer; font-size: 2em;"></i>
-                    </button>
-                  </div>
-                  <!-- Price -->
-                  <p class="text-start text-md-center text-center">
-                    <strong>Price: $17.99</strong>
-                  </p>
-                  <!-- Price -->
-                </div>
-              </div>
-              <!-- Single item -->
-  
-              <hr class="my-4" />
-  
-              <!-- Single item -->
-              <div class="row">
-                <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
-                  <!-- Image -->
-                  <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                    <img src="https://salt.tikicdn.com/cache/750x750/ts/product/8a/b6/ba/1d95b88597f28e42d8ca91e3b3ff600f.jpg.webp"
-                      class="w-100" alt="Blue Jeans Jacket" />
-                    <a href="#!">
-                      <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
-                    </a>
-                  </div>
-                  <!-- Image -->
-                </div>
-  
-                <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
-                  <!-- Data -->
-                  <p><strong>Lý Thuyết Trò Chơi</strong></p>
-                  <p class="fst-italic">Trần Phách Hàm</p>
-                  <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-danger btn-sm me-1 mb-2" data-mdb-tooltip-init
-                    title="Remove item">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                  <!-- Data -->
-                </div>
-  
-                <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
-                  <!-- Quantity -->
-                  <div class="d-flex mb-4" style="max-width: 300px">
-                    <button data-mdb-button-init data-mdb-ripple-init class="btn"
-                      onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                      <i class="fa fa-minus-circle text-danger me-2" style="cursor: pointer; font-size: 2em;"></i>
-                    </button>
-                    <span class="mt-1" style="font-size: 1.5em; font-weight: bold;">2</span>
-                    <button data-mdb-button-init data-mdb-ripple-init class="btn"
-                      onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                      <i class="fa fa-plus-circle text-success ms-2" style="cursor: pointer; font-size: 2em;"></i>
-                    </button>
-                  </div>
-                  <!-- Price -->
-                  <p class="text-start text-md-center">
-                    <strong>Price: $17.99</strong>
-                  </p>
-                  <!-- Price -->
-                </div>
-              </div>
-              <!-- Single item -->
-            </div>
+<div class="container">
+  <div *ngIf="(basketService.basketSource$ | async)===null" class="container-fluid mt-100">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h5>Cart</h5>
           </div>
-          <div class="card mb-4 mb-lg-0">
-            <div class="card-body">
-              <p><strong>We accept</strong></p>
-              <img class="me-2" width="45px"
-                src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
-                alt="Visa" />
-              <img class="me-2" width="45px"
-                src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/amex.svg"
-                alt="American Express" />
-              <img class="me-2" width="45px"
-                src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/mastercard.svg"
-                alt="Mastercard" />
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card mb-4">
-            <div class="card-header py-3">
-              <h5 class="mb-0">Summary</h5>
-            </div>
-            <div class="card-body">
-              <ul class="list-group list-group-flush">
-                <li
-                  class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                  Products
-                  <span>$53.98</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                  Shipping
-                  <span>Gratis</span>
-                </li>
-                <li
-                  class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-                  <div>
-                    <strong>Total amount</strong>
-                    <strong>
-                      <p class="mb-0">(including VAT)</p>
-                    </strong>
-                  </div>
-                  <span><strong>$53.98</strong></span>
-                </li>
-              </ul>
-  
-              <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-lg btn-block" style="color: black;background-color: orange;font-weight: bold;margin-left: 130px;">
-                Go to checkout
-              </button>
+          <div class="card-body cart">
+            <div class="col-sm-12 empty-cart-cls text-center">
+              <img
+                src="https://i.imgur.com/dCdflKN.png"
+                width="130"
+                height="130"
+                class="img-fluid mb-4 mr-3"
+              />
+              <h3><strong>Your basket is empty!</strong></h3>
+              <h4>Add something to make me happy :)</h4>
+              <a
+                routerLink="/bookcase"
+                class="btn btn-warning cart-btn-transform m-3"
+                data-abc="true"
+                >View bookcase</a
+              >
             </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+
+  <ng-container *ngIf="basketService.basketSource$ | async as basket">
+    <div class="container">
+      <div class="row">
+        <div class="table-responsive">
+          <table class="table">
+            <thead class="bg-light text-uppercase">
+              <tr>
+                <th><div class="py-2">Book</div></th>
+                <th><div class="py-2">Price</div></th>
+                <th><div class="py-2">Quantity</div></th>
+                <th><div class="py-2">Total</div></th>
+                <th><div class="py-2">Remove</div></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let basketItem of basket.basketItems">
+                <th>
+                  <div class="p-2 d-inline-block">
+                    <img 
+                      src="{{ basketItem.imageUrl }}" 
+                      alt="{{ basketItem.bookName }}" 
+                      class="img-fluid" 
+                      style="max-height: 50px;"
+                    >
+                    <div class="ms-3 d-inline-block align-middle">
+                      <h5 class="mb-0">
+                        <a routerLink="/bookcase/{{ basketItem.id }}" class="text-dark text-decoration-none">
+                          {{ basketItem.bookName }}
+                        </a>
+                      </h5>
+                      <span class="text-muted fst-italic">
+                        Author: {{ basketItem.author }}
+                      </span>
+                    </div>
+                  </div>
+                </th>
+                <td class="align-middle">
+                  <strong>{{ basketItem.price | currency:'VMD' }}</strong>
+                </td>
+                <td class="align-middle">
+                  <div class="d-flex align-items-center">
+                    <i (click)="removeItem(basketItem.id, 1)" class="fa fa-minus-circle text-warning me-2" style="cursor: pointer; font-size: 2em;"></i>
+                    <strong style="font-size: 1.5em;">{{ basketItem.quantity }}</strong>
+                    <i (click)="increaseQuantity(basketItem)" class="fa fa-plus-circle text-success me-2" style="cursor: pointer; font-size: 2em;"></i>
+                  </div>
+                </td>
+                <td class="align-middle">
+                  <strong>{{ basketItem.price * basketItem.quantity | currency:'VND' }}</strong>
+                </td>
+                <td class="align-middle">
+                  <a class="text-danger">
+                    <i (click)="removeItem(basketItem.id, basketItem.quantity)" class="fa fa-trash" style="font-size: 2em; cursor: pointer;"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6 offset-6">
+          
+          <app-order-totals></app-order-totals>
+
+          <div class="d-grid">
+            <a routerLink="/checkout" class="btn btn-warning py-2">
+              Proceed to checkout
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

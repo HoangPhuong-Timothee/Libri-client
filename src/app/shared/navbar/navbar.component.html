@@ -9,7 +9,9 @@
     <div class="d-flex align-items-center">
       <a routerLink="/basket" class="position-relative">
         <i class="fa-solid fa-book fa-2x me-5 text-dark"></i>
-        <div class="cart-no">5</div>
+        <div *ngIf="basketService.basketSource$ | async as basket" class="cart-no">
+          {{ basketItemsCount(basket.basketItems) }}
+        </div>
       </a>
       <ng-container *ngIf="(authService.currentUser$ | async) === null">
         <a routerLink="/login" class="btn btn-outline-warning me-2" style="color: black;">Login</a>
