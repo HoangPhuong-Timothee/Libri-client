@@ -1,0 +1,40 @@
+<tr *ngIf="basketItem">
+    <th>
+        <div class="p-2 d-inline-block">
+          <img 
+            src="{{ basketItem.imageUrl }}" 
+            alt="{{ basketItem.bookName }}" 
+            class="img-fluid" 
+            style="max-height: 50px;"
+          >
+          <div class="ms-3 d-inline-block align-middle">
+            <h5 class="mb-0">
+              <a routerLink="/bookcase/{{ basketItem.id }}" class="text-dark text-decoration-none">
+                {{ basketItem.bookName }}
+              </a>
+            </h5>
+            <span class="text-muted fst-italic">
+              Author: {{ basketItem.author }}
+            </span>
+          </div>
+        </div>
+      </th>
+      <td class="align-middle">
+        <strong>{{ basketItem.price | currency:'VND' }}</strong>
+      </td>
+      <td class="align-middle">
+        <div class="d-flex align-items-center">
+          <i (click)="removeItem(basketItem.id, 1)" class="fa fa-minus-circle text-warning me-2" style="cursor: pointer; font-size: 2em;"></i>
+          <strong style="font-size: 1.5em;">{{ basketItem.quantity }}</strong>
+          <i (click)="increaseQuantity(basketItem)" class="fa fa-plus-circle text-success me-2 ms-2" style="cursor: pointer; font-size: 2em;"></i>
+        </div>
+      </td>
+      <td class="align-middle">
+        <strong>{{ basketItem.price * basketItem.quantity | currency:'VND' }}</strong>
+      </td>
+      <td class="align-middle">
+        <a class="text-danger">
+          <i (click)="removeItem(basketItem.id, basketItem.quantity)" class="fa fa-trash" style="font-size: 2em; cursor: pointer;"></i>
+        </a>
+      </td>    
+</tr>

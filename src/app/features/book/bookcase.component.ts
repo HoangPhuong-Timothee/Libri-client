@@ -26,23 +26,23 @@ export class BookcaseComponent implements OnInit {
   totalCount = 0
   sortOptions = [
     {
-      name: 'Alphabectical',
+      name: 'Theo bảng chữ cái',
       value: 'name'
     },
     {
-      name: 'Price: Low to High',
+      name: 'Giá: Tăng dần',
       value: 'priceAsc'
     },
     {
-      name: 'Price: High to Low',
+      name: 'Giá: Giảm dần',
       value: 'priceDesc'
     },
     {
-      name: 'Latest',
+      name: 'Mới nhất',
       value: 'latest'
     },
     {
-      name: 'Oldest',
+      name: 'Cũ nhất',
       value: 'oldest'
     }
   ]
@@ -78,7 +78,7 @@ export class BookcaseComponent implements OnInit {
   getAllGenres(){
     this.genreService.getAllGenres().subscribe({
       next: (response) => {  
-        this.genres = [{id: 0, name: 'All'}, ...response];
+        this.genres = [{id: 0, name: 'Tất cả'}, ...response];
       },
       error: (error) => {
         console.log(error);
@@ -89,7 +89,7 @@ export class BookcaseComponent implements OnInit {
   getAllPublishers(){
     this.publisherService.getAllPublishers().subscribe({
       next: (response) => {  
-        this.publishers = [{id: 0, name: 'All'}, ...response];
+        this.publishers = [{id: 0, name: 'Tất cả'}, ...response];
       },
       error: (error) => {
         console.log(error);

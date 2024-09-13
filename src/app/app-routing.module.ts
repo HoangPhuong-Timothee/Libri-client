@@ -11,7 +11,7 @@ const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-    data: { breadcrumb: 'Home' },
+    data: { breadcrumb: 'Trang chủ' },
   },
   {
     path: 'bookcase', 
@@ -37,6 +37,7 @@ const routes: Routes = [
   {
     path: 'introduction',
     component: IntroductionComponent,
+    data: { breadcrumb: 'Giới thiệu' }
   },
   {
     path: 'profile',

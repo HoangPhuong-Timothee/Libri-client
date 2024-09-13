@@ -16,6 +16,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { OrderTotalsComponent } from './order-totals/order-totals.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -32,6 +34,8 @@ import { OrderTotalsComponent } from './order-totals/order-totals.component';
   imports: [
     CommonModule,
     RouterModule,
+    MatIconModule,
+    MatButtonModule,
     PaginationModule.forRoot(),
     BsDropdownModule.forRoot(),
     NgxSpinnerModule,
@@ -54,7 +58,9 @@ import { OrderTotalsComponent } from './order-totals/order-totals.component';
     NgxSpinnerModule,
     ToastrModule,
     SidebarComponent,
-    OrderTotalsComponent
+    OrderTotalsComponent,
+    MatIconModule,
+    MatButtonModule
   ]
 })
 export class SharedModule { }

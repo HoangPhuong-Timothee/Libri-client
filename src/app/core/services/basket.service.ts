@@ -17,8 +17,9 @@ export class BasketService {
 
   constructor(private http: HttpClient) { }
 
+  //Get thr basket from Redis
   getBasket(key: string) {
-    return this.http.get<Basket>(`${environment.baseAPIUrl}/api/Baskets/${key}`).subscribe({
+    return this.http.get<Basket>(`${environment.baseAPIUrl}/api/Baskets?key=${key}`).subscribe({
       next: ((basket) => {
         this.basketSource.next(basket)
         this.calculateTotal()
@@ -26,6 +27,7 @@ export class BasketService {
     })
   }
 
+  //Update a bakset in Redis
   setBasket(basket: Basket) {
     return this.http.post<Basket>(`${environment.baseAPIUrl}/api/Baskets`, basket).subscribe({
       next: ((basket) => {
@@ -35,6 +37,12 @@ export class BasketService {
     })
   }
 
+  //Get basket info when changing
+  getCurrentBasketValue() {
+    return this.basketSource.value
+  }
+
+  //Delete basket 
   deleteBasket(basket: Basket) {
     return this.http.delete(`${environment.baseAPIUrl}/api/Baskets/${basket.key}`).subscribe({
       next: (() => {
@@ -45,17 +53,42 @@ export class BasketService {
     })
   }
 
-  getCurrentBasketValue() {
-    return this.basketSource.value
-  }
-
+  //Add an item/book to the basket
   addItemToBasket(item: Book | BasketItem, quantity = 1) {
-    if (this.isBook(item)) item = this.mapItemToBasketItem(item)
-    const basket = this.getCurrentBasketValue() ?? this.createBasket()
-    basket.basketItems = this.addOrUpdateBasket(basket.basketItems, item, quantity)
-    this.setBasket(basket)
+    if (this.isBook(item)) item = this.mapToBasketItem(item) //Check if item is book or not then map book to basket item
+    const basket = this.getCurrentBasketValue() ?? this.createBasket() //Check if is there any current basket in storage, if not create new basket
+    basket.basketItems = this.addOrUpdateBasketItem(basket.basketItems, item, quantity) //Add/update basket item
+    this.setBasket(basket) //Set basket item change in storage
   }
 
+  private mapToBasketItem(item: Book): BasketItem {
+    return {
+      id: item.id,
+      bookName: item.title,
+      price: item.price,
+      quantity: 0,
+      imageUrl: item.imageUrl,
+      author: item.author
+    }
+  }
+
+  createBasket(): Basket {
+    const basket = new Basket()
+    localStorage.setItem('basket_key', basket.key)
+    return basket
+  }
+
+  private addOrUpdateBasketItem(items: BasketItem[], itemToAdd: BasketItem, quantity: number): BasketItem[] {
+    const item = items.find(x => x.id === itemToAdd.id)
+    if (item) item.quantity += quantity
+    else {
+      itemToAdd.quantity = quantity
+      items.push(itemToAdd)
+    }
+    return items
+  }
+
+  //Remove an item/book from the basket
   removeItemFromBasket(id: number, quantity = 1) {
     const basket = this.getCurrentBasketValue()
     if (!basket) return
@@ -67,33 +100,6 @@ export class BasketService {
       }
       if (basket.basketItems.length > 0) this.setBasket(basket)
       else this.deleteBasket(basket)
-    }
-  }
-
-  createBasket(): Basket {
-    const basket = new Basket()
-    localStorage.setItem('basket_key', basket.key)
-    return basket
-  }
-
-  private addOrUpdateBasket(items: BasketItem[], itemToAdd: BasketItem, quantity: number): BasketItem[] {
-    const item = items.find(x => x.id === itemToAdd.id)
-    if (item) item.quantity += quantity
-    else {
-      itemToAdd.quantity = quantity
-      items.push(itemToAdd)
-    }
-    return items
-  }
-
-  private mapItemToBasketItem(item: Book): BasketItem {
-    return {
-      id: item.id,
-      bookName: item.title,
-      price: item.price,
-      quantity: 0,
-      imageUrl: item.imageUrl,
-      author: item.author
     }
   }
 

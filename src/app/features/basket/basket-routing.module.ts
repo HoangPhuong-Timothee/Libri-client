@@ -5,7 +5,8 @@ import { BasketComponent } from './basket.component';
 const routes: Routes = [
   {
     path: '',
-    component: BasketComponent
+    component: BasketComponent,
+    data: { breadcrumb: 'Giỏ sách' }
   }
 ];
 

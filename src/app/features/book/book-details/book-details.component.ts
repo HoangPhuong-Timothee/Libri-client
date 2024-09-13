@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs';
 import { Book } from 'src/app/core/models/book.model';
 import { BasketService } from 'src/app/core/services/basket.service';
@@ -17,7 +18,7 @@ export class BookDetailsComponent implements OnInit {
   quantity = 1
   quantityInBasket = 0
 
-  constructor(private bookService: BookService, private route: ActivatedRoute, private bcService: BreadcrumbService, private basketService: BasketService) {
+  constructor(private toastr: ToastrService, private bookService: BookService, private route: ActivatedRoute, private bcService: BreadcrumbService, private basketService: BasketService) {
     this.bcService.set('@bookDetails', ' ')
    }
 
@@ -53,6 +54,10 @@ export class BookDetailsComponent implements OnInit {
 
   decreaseQuantity() {
     this.quantity--
+    if (this.quantity <= 0)
+    {
+      this.quantity = 0
+    }
   }
 
   updateBasket() {
@@ -66,11 +71,14 @@ export class BookDetailsComponent implements OnInit {
         this.quantityInBasket -= itemsToRemove
         this.basketService.removeItemFromBasket(this.book.id, itemsToRemove)
       }
+      this.toastr.success('Cập nhật giỏ hàng thành công')
+    } else{
+      this.toastr.error('Có lỗi xảy ra, không thể cập nhật giỏ sách')
     }
   }
 
   get buttonText() {
-    return this.quantityInBasket === 0 ? "Add to basket" : "Update basket"
+    return this.quantityInBasket === 0 ? "Thêm vào giỏ" : "Cập nhật giỏ"
   }
 
 }

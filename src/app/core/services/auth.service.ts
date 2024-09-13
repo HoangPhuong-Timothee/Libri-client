@@ -3,24 +3,25 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { map, of, ReplaySubject } from 'rxjs';
-import { User } from '../models/user.model';
+import { LoginResponse } from '../models/login-response.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private currentUserSource = new ReplaySubject<User | null>(1)
+  private currentUserSource = new ReplaySubject<LoginResponse | null>(1)
   currentUser$ = this.currentUserSource.asObservable()
 
   constructor(private http: HttpClient, private router: Router) { }
 
   login(model: any) {
-    return this.http.post<User>(`${environment.baseAPIUrl}/api/Accounts/login`, model)
+    return this.http.post<LoginResponse>(`${environment.baseAPIUrl}/api/Accounts/login`, model)
     .pipe(
       map((user) => {
         if (user)
         {
+          console.log(user)
           localStorage.setItem('access_token', user.token)
           this.currentUserSource.next(user)
         }
@@ -35,7 +36,7 @@ export class AuthService {
     }
     let headers = new HttpHeaders()
     headers = headers.set('Authorization', `Bearer ${token}`)
-    return this.http.get<User>(`${environment.baseAPIUrl}/api/Users`, { headers }).pipe(
+    return this.http.get<LoginResponse>(`${environment.baseAPIUrl}/api/Users`, { headers }).pipe(
       map((user) => {
         if (user) {
           localStorage.setItem('access_token', user.token)
@@ -57,6 +58,7 @@ export class AuthService {
     localStorage.removeItem('access_token');
     this.currentUserSource.next(null)
     this.router.navigateByUrl('/')
+    // return this.http.post(`${environment.baseAPIUrl}/api/Accounts/logout`)
   }
 
  checkEmailExists(email: string) {

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { Book } from 'src/app/core/models/book.model';
 import { BasketService } from 'src/app/core/services/basket.service';
 
@@ -11,10 +12,11 @@ export class BookItemComponent {
 
   @Input() book?: Book
 
-  constructor(private basketService: BasketService) { }
+  constructor(private basketService: BasketService, private toastr: ToastrService) { }
 
   addItemToBasket() {
     this.book && this.basketService.addItemToBasket(this.book)
+    this.toastr.success('Đã thêm sách vào giỏ')
   }
 
 }

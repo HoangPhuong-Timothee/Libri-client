@@ -6,7 +6,8 @@ import { BookDetailsComponent } from './book-details/book-details.component';
 const routes: Routes = [
   {
     path: '',
-    component: BookcaseComponent
+    component: BookcaseComponent,
+    data: { breadcrumb: 'Tủ sách' }
   },
   {
     path: ':id',

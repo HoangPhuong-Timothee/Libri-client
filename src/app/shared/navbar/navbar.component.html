@@ -1,10 +1,10 @@
 <header class="d-flex flex-column flex-md-row align-items-center justify-content-between p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm fixed-top">
     <img src="https://librireading.com/wp-content/uploads/2021/06/z2555569091868_782e5f0f9cbd0eba43cc09596a122e36.jpg" style="max-height: 70px;" alt="logo" class="logo" routerLink="/">
     <nav class="my-2 my-md-0 mr-md-3 text-uppercase" style="font-size: larger;">
-      <a routerLink="/" class="p-5" routerLinkActive="active" [routerLinkActiveOptions]="{ exact:true }">Home</a>
-      <a routerLink="/bookcase" class="p-5" routerLinkActive="active">Bookcase</a>
-      <a routerLink="/wishlist" class="p-5" routerLinkActive="active">Wishlist</a>
-      <a routerLink="/introduction" class="p-5" routerLinkActive="active">Introduction</a>
+      <a routerLink="/" class="p-5" routerLinkActive="active" [routerLinkActiveOptions]="{ exact:true }">Trang chủ</a>
+      <a routerLink="/bookcase" class="p-5" routerLinkActive="active">Tủ sách</a>
+      <a routerLink="/wishlist" class="p-5" routerLinkActive="active">Sách yêu thích</a>
+      <a routerLink="/introduction" class="p-5" routerLinkActive="active">Giới thiệu</a>
     </nav>
     <div class="d-flex align-items-center">
       <a routerLink="/basket" class="position-relative">
@@ -14,44 +14,44 @@
         </div>
       </a>
       <ng-container *ngIf="(authService.currentUser$ | async) === null">
-        <a routerLink="/login" class="btn btn-outline-warning me-2" style="color: black;">Login</a>
-        <a routerLink="/register" class="btn btn-outline-dark me-3" style="color: orange;">Sign up</a>
+        <a routerLink="/login" class="btn btn-outline-warning me-2" style="color: black;">Đăng nhập</a>
+        <a routerLink="/register" class="btn btn-outline-dark me-3" style="color: orange;">Đăng ký</a>
       </ng-container>
       <ng-container *ngIf="authService.currentUser$ | async as user">
         <div class="dropdown ms-3 me-5" style="cursor: pointer; z-index: 11;" dropdown>
           <a dropdownToggle class="dropdown-toggle">
-            <strong>Welcome, {{ user.userName }}</strong>
+            <strong>Xin chào, {{ user.userName }}!</strong>
           </a>
           <ul *dropdownMenu class="dropdown-menu dropdown-menu-right">
             <li class="py-1">
               <a routerLink="/profile" class="dropdown-item">
                 <i class="fa-solid fa-user"></i>
-                My profile
+                Hồ sơ cá nhân
               </a>
             </li>
             <li class="py-1">
               <a routerLink="/wishlist" class="dropdown-item">
                 <i class="fa-solid fa-shield-heart"></i>
-                Wishlist
+                Sách yêu thích
               </a>
             </li>
             <li class="py-1">
               <a routerLink="/rentals" class="dropdown-item">
                 <i class="fa-solid fa-file-invoice"></i>
-                My rentals
+                Danh sách thuê
               </a>
             </li>
             <li class="py-1">
               <a routerLink="/basket" class="dropdown-item">
                 <i class="fa-solid fa-basket-shopping"></i>
-                My basket
+                Giỏ sách
               </a>
             </li>
             <div class="dropdown-divider"></div>
             <li class="py-1">
               <a class="dropdown-item" (click)="authService.logout()">
                 <i class="fa-solid fa-right-from-bracket"></i>
-                Logout
+                Đăng xuất
               </a>
             </li>
           </ul>
@@ -59,3 +59,5 @@
       </ng-container>
     </div>
   </header>
+
+  
