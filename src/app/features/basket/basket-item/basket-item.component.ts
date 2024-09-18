@@ -1,5 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { BasketItem } from 'src/app/core/models/basket.model';
 import { BasketService } from 'src/app/core/services/basket.service';
 
@@ -10,17 +9,18 @@ import { BasketService } from 'src/app/core/services/basket.service';
 })
 export class BasketItemComponent {
 
-  @Input() basketItem?: BasketItem
+  @Output() addItem = new EventEmitter<BasketItem>()
+  @Output() removeItem = new EventEmitter<({ id: number, quantity: number })>()
+  @Input() isBasket = true
 
-  constructor(private toastr: ToastrService, public basketService: BasketService) { }
+  constructor(public basketService: BasketService) { }
 
-  increaseQuantity(item: BasketItem) {
-    this.basketService.addItemToBasket(item)
+  addBasketItem(item: BasketItem) {
+    this.addItem.emit(item)
   }
 
-  removeItem(id: number, quantity: number) {
-    this.basketService.removeItemFromBasket(id, quantity)
-    this.toastr.success('Đã xóa sách khỏi giỏ')
+  removeBasketItem(id: number, quantity: number) {
+    this.removeItem.emit({ id, quantity })
   }
-  
+
 }

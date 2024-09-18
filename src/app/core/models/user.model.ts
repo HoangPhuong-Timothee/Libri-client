@@ -17,3 +17,10 @@ export interface UserProfile {
     phoneNumber: string;
     address: string;
 }
+
+export interface LoginResponse{
+    userName: string;
+    email: string;
+    token: string;
+    roles: string[]
+}

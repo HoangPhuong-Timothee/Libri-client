@@ -32,7 +32,7 @@ export class BookDetailsComponent implements OnInit {
       next: (reponse) => {
         this.book = reponse
         this.bcService.set('@bookDetails', this.book.title)
-        this.basketService.basketSource$.pipe(take(1)).subscribe({
+        this.basketService.basket$.pipe(take(1)).subscribe({
           next: ((basket) => {
             const basketItem = basket?.basketItems.find(x => x.id === +id)
             if (basketItem) {

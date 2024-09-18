@@ -1,6 +1,25 @@
-<div class="container mt-5">
-    <h1>Please, Login Libri account to checkout!</h1>
-    <button class="btn btn-warning">
-        <a routerLink="/login" class="fw-bold">Login</a>
-    </button>
+<div class="container">
+  <div class="row">
+    <div class="col-8">
+      <mat-stepper #stepper class="tw-bg-white tw-border tw-border-gray-200 tw-shadow-sm">
+        <mat-step label="Thông tin người thuê">
+          Họ tên và địa chỉ người thuê
+        </mat-step>
+        <mat-step label="Dịch vụ giao sách">
+          Phương thức giao/lấy sách
+        </mat-step>
+        <mat-step label="Tổng kết giỏ sách">
+          Tổng kết
+        </mat-step>
+        <mat-step label="Thanh toán">
+          Thanh toán
+        </mat-step>
+      </mat-stepper>
+    </div>
+    <div class="col-4">
+
+      <app-order-totals></app-order-totals>
+    
+    </div>
+  </div>
 </div>

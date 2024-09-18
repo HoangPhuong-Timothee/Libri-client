@@ -1,5 +1,5 @@
-<div class="container">
-  <div *ngIf="(basketService.basketSource$ | async)===null" class="container-fluid">
+<div class="container mb-2">
+  <ng-container *ngIf="(basketService.basket$ | async) === null" class="container-fluid">
     <div class="row">
       <div class="col-md-12">
         <div class="card">
@@ -24,77 +24,31 @@
         </div>
       </div>
     </div>
-  </div>
-
-  <ng-container *ngIf="basketService.basketSource$ | async as basket">
+  </ng-container>
+  <ng-container *ngIf="(basketService.basket$ | async) as basket">
     <div class="container">
+      <button routerLink="/bookcase" class="mb-1 btn btn-secondary">
+        <i class="fa-solid fa-arrows-left-right-to-line"></i>
+        Quay lại tủ sách
+      </button>
       <div class="row">
-        <div class="table-responsive">
-          <table class="table">
-            <thead class="bg-light text-uppercase">
-              <tr>
-                <th><div class="py-2">Thông tin sách</div></th>
-                <th><div class="py-2">Giá</div></th>
-                <th><div class="py-2">Số lượng</div></th>
-                <th><div class="py-2">Tạm tính</div></th>
-                <th><div class="py-2"></div></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let basketItem of basket.basketItems">
-                <!-- <app-basket-item [basketItem]="basketItem"></app-basket-item> -->
-                <th>
-                  <div class="p-2 d-inline-block">
-                    <img 
-                      src="{{ basketItem.imageUrl }}" 
-                      alt="{{ basketItem.bookName }}" 
-                      class="img-fluid" 
-                      style="max-height: 50px;"
-                    >
-                    <div class="ms-3 d-inline-block align-middle">
-                      <h5 class="mb-0">
-                        <a routerLink="/bookcase/{{ basketItem.id }}" class="text-dark text-decoration-none">
-                          {{ basketItem.bookName }}
-                        </a>
-                      </h5>
-                      <span class="text-muted fst-italic">
-                        Tác giả: {{ basketItem.author }}
-                      </span>
-                    </div>
-                  </div>
-                </th>
-                <td class="align-middle">
-                  <strong>{{ basketItem.price | currency:'VND' }}</strong>
-                </td>
-                <td class="align-middle">
-                  <div class="d-flex align-items-center">
-                    <i (click)="removeItem(basketItem.id, 1)" class="fa fa-minus-circle text-warning me-2" style="cursor: pointer; font-size: 2em;"></i>
-                    <strong style="font-size: 1.5em;">{{ basketItem.quantity }}</strong>
-                    <i (click)="increaseQuantity(basketItem)" class="fa fa-plus-circle text-success me-2 ms-2" style="cursor: pointer; font-size: 2em;"></i>
-                  </div>
-                </td>
-                <td class="align-middle">
-                  <strong>{{ basketItem.price * basketItem.quantity | currency:'VND' }}</strong>
-                </td>
-                <td class="align-middle">
-                  <a class="text-danger">
-                    <i (click)="removeItem(basketItem.id, basketItem.quantity)" class="fa fa-trash" style="font-size: 2em; cursor: pointer;"></i>
-                  </a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+
+        <app-basket-item 
+          (addItem)="increaseQuantity($event)" 
+          (removeItem)="removeItem($event)"
+        >
+        </app-basket-item>
+
       </div>
       <div class="row">
         <div class="col-6 offset-6">
           
           <app-order-totals></app-order-totals>
 
-          <div class="d-grid mb-2">
-            <a routerLink="/checkout" class="btn btn-warning py-2 fw-bold">
+          <div class="d-grid">
+            <button routerLink="/checkout" class="btn btn-warning py-2 fw-bold">
               Tiến hành thanh toán
-            </a>
+            </button>
           </div>
         </div>
       </div>

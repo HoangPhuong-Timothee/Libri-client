@@ -5,11 +5,10 @@ import { BasketComponent } from './basket.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { BasketItemComponent } from './basket-item/basket-item.component';
 
-
 @NgModule({
   declarations: [
     BasketComponent,
-    BasketItemComponent
+    BasketItemComponent,
   ],
   imports: [
     CommonModule,

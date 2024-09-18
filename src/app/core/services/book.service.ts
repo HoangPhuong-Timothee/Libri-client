@@ -26,4 +26,8 @@ export class BookService {
   getSingleBook(id: number) {
     return this.http.get<Book>(`${environment.baseAPIUrl}/api/Books/${id}`)
   }
+
+  getLatestBook() {
+    return this.http.get<Book[]>(`${environment.baseAPIUrl}/api/Books/latest`)
+  }
 }

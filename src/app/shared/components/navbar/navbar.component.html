@@ -4,12 +4,13 @@
       <a routerLink="/" class="p-5" routerLinkActive="active" [routerLinkActiveOptions]="{ exact:true }">Trang chủ</a>
       <a routerLink="/bookcase" class="p-5" routerLinkActive="active">Tủ sách</a>
       <a routerLink="/wishlist" class="p-5" routerLinkActive="active">Sách yêu thích</a>
+      <a *ngIf="isAdmin$ | async" routerLink="/admin" class="p-5" routerLinkActive="active">Quản lý sách</a>
       <a routerLink="/introduction" class="p-5" routerLinkActive="active">Giới thiệu</a>
     </nav>
     <div class="d-flex align-items-center">
       <a routerLink="/basket" class="position-relative">
         <i class="fa-solid fa-book fa-2x me-5 text-dark"></i>
-        <div *ngIf="basketService.basketSource$ | async as basket" class="cart-no">
+        <div *ngIf="(basketService.basket$ | async) as basket" class="cart-no">
           {{ basketItemsCount(basket.basketItems) }}
         </div>
       </a>

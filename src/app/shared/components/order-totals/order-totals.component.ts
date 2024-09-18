@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { BasketService } from 'src/app/core/services/basket.service';
 
 @Component({

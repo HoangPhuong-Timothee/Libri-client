@@ -1,7 +1,7 @@
 import * as cuid from 'cuid'
 
 export interface Basket {
-    key: string;
+    id: string;
     basketItems: BasketItem[];
 }
 
@@ -21,6 +21,6 @@ export interface BasketTotals {
 }
 
 export class Basket implements Basket {
-    key = cuid();
+    id = cuid();
     basketItems: BasketItem[] = [];
 }

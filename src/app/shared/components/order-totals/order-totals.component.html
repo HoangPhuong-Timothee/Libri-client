@@ -2,9 +2,9 @@
   Ước tính giỏ hàng
 </div>
 <div class="py-4">
-  <p class="fw-bold text-danger">*Phí giao sách sẽ tính theo khoảng cách</p>
-  <p class="fst-italic text-muted mb-4">Phí giao sách sẽ được tính dựa trên lựa chọn ở mục thanh toán</p>
-  <ul class="list-unstyled mb-4" *ngIf="basketService.basketTotalSource$| async as basketTotals">
+  <p class="fw-bold text-danger">*Phí giao sách sẽ tính dựa theo dịch vụ</p>
+  <p class="fst-italic text-muted mb-4">Tổng thanh toán sẽ được tính dựa trên lựa chọn ở mục thanh toán</p>
+  <ul class="list-unstyled mb-4" *ngIf="basketService.basketTotal$| async as basketTotals">
     <li class="d-flex justify-content-between py-3 border-bottom">
       <strong class="text-muted">Tổng tiền tạm tính</strong>
       <strong>{{ basketTotals.subtotal | currency:'VND' }}</strong>

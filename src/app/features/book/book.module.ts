@@ -20,6 +20,9 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     SharedModule,
     SharedModule
+  ],
+  exports: [
+    BookItemComponent
   ]
 })
 export class BookModule { }

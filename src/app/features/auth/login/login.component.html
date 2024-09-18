@@ -2,9 +2,11 @@
     <div class="col-3">
       <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
         <div class="text-center mb-4">
-          <h1 class="mb-3">Login to join Libri</h1>
+          <h1 class="mb-3">Đăng nhập tài khoản Libri</h1>
         </div>
-        <div class="form-floating mb-3">
+
+        <app-input-text [formControl]="loginForm.controls['email']" [label]="'Email'" type="email"></app-input-text>
+        <!-- <div class="form-floating mb-3">
           <input
             [class.is-invalid]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid"
             [class.is-valid]="loginForm.get('email')?.touched && loginForm.get('email')?.valid" 
@@ -13,11 +15,12 @@
             id="floatingEmail" 
             placeholder="Email" 
             formControlName="email">
-          <label for="floatingEmail">Email address</label>
+          <label for="floatingEmail">Email</label>
           <div *ngIf="loginForm.get('email')?.errors?.['required']" class="invalid-feedback">*Email is required</div>
           <div *ngIf="loginForm.get('email')?.errors?.['email']" class="invalid-feedback">*Invalid email</div>          
-        </div>
-        <div class="form-floating mb-3">
+        </div> -->
+        <app-input-text [formControl]="loginForm.controls['password']" [label]="'Mật khẩu'" type="password"></app-input-text>
+        <!-- <div class="form-floating mb-3">
           <input 
             [class.is-invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
             [class.is-valid]="loginForm.get('password')?.touched && loginForm.get('password')?.valid" 
@@ -26,14 +29,14 @@
             id="floatingPassword" 
             placeholder="Password" 
             formControlName="password">
-          <label for="floatingEmail">Password</label>
+          <label for="floatingEmail">Mật khẩu</label>
           <div *ngIf="loginForm.get('password')?.errors?.['required']" class="invalid-feedback">*Password is required</div>
-        </div>
+        </div> -->
         <div class="d-grid">
-          <button [disabled]="loginForm.invalid" class="btn btn-lg mt-3" type="submit" style="color: black;background-color: orange;">Login</button>
+          <button [disabled]="loginForm.invalid" class="btn btn-lg mt-3" type="submit" style="color: black;background-color: orange;">Đăng nhập</button>
           <p class="ms-5 small fw-bold mt-2 pt-1 mb-0">
-            <span>Don't have an account yet?</span>
-            <a routerLink="/register" class="link-danger ms-2" style="font-style: italic;">Register</a>
+            <span>Bạn chưa có tài khoản Libri?</span>
+            <a routerLink="/register" class="link-danger ms-2" style="font-style: italic;">Đăng ký</a>
           </p>
         </div>
       </form>

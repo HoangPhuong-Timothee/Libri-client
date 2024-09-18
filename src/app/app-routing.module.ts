@@ -3,9 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './features/home/home.component';
 import { IntroductionComponent } from './features/introduction/introduction.component';
 import { TestErrorComponent } from './features/test-error/test-error.component';
-import { ServerErrorComponent } from './shared/server-error/server-error.component';
-import { NotFoundComponent } from './shared/not-found/not-found.component';
+import { ServerErrorComponent } from './shared/components/server-error/server-error.component';
+import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 import { AuthGuard } from './core/guards/auth.guard';
+import { AdminGuard } from './core/guards/admin.guard';
 
 const routes: Routes = [
   {
@@ -50,6 +51,7 @@ const routes: Routes = [
   {
     path: 'admin',
     loadChildren: () => import('./features/admin/admin.module').then(m => m.AdminModule),
+    canActivate: [AuthGuard, AdminGuard],
     data: { breadcrumb: 'Admin' }
   },
   {

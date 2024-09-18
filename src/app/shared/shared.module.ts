@@ -1,23 +1,25 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NavbarComponent } from './navbar/navbar.component';
-import { PagingHeaderComponent } from './paging-header/paging-header.component';
-import { PagingFooterComponent } from './paging-footer/paging-footer.component';
-import { SectionHeaderComponent } from './section-header/section-header.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { PagingHeaderComponent } from './components/paging-header/paging-header.component';
+import { PagingFooterComponent } from './components/paging-footer/paging-footer.component';
+import { SectionHeaderComponent } from './components/section-header/section-header.component';
 import { RouterModule } from '@angular/router';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { TextInputComponent } from './text-input/text-input.component';
 import { BreadcrumbModule } from 'xng-breadcrumb';
-import { NotFoundComponent } from './not-found/not-found.component';
-import { ServerErrorComponent } from './server-error/server-error.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
+import { ServerErrorComponent } from './components/server-error/server-error.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
-import { SidebarComponent } from './sidebar/sidebar.component';
-import { OrderTotalsComponent } from './order-totals/order-totals.component';
-import { MatIconModule } from '@angular/material/icon';
+import { OrderTotalsComponent } from './components/order-totals/order-totals.component';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { InputTextComponent } from './components/input-text/input-text.component';
+import { MatStepperModule } from '@angular/material/stepper';
 
 @NgModule({
   declarations: [
@@ -25,17 +27,14 @@ import { MatButtonModule } from '@angular/material/button';
     PagingHeaderComponent,
     PagingFooterComponent,
     SectionHeaderComponent,
-    TextInputComponent,
     NotFoundComponent,
     ServerErrorComponent,
-    SidebarComponent,
-    OrderTotalsComponent
+    OrderTotalsComponent,
+    InputTextComponent
   ],
   imports: [
     CommonModule,
     RouterModule,
-    MatIconModule,
-    MatButtonModule,
     PaginationModule.forRoot(),
     BsDropdownModule.forRoot(),
     NgxSpinnerModule,
@@ -44,7 +43,12 @@ import { MatButtonModule } from '@angular/material/button';
       preventDuplicates: true
     }),
     ReactiveFormsModule,
-    BreadcrumbModule
+    BreadcrumbModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatStepperModule
   ],
   exports: [
     NavbarComponent,
@@ -52,15 +56,17 @@ import { MatButtonModule } from '@angular/material/button';
     PagingFooterComponent,
     ReactiveFormsModule,
     BsDropdownModule,
-    TextInputComponent,
     SectionHeaderComponent,
     BreadcrumbModule,
     NgxSpinnerModule,
     ToastrModule,
-    SidebarComponent,
     OrderTotalsComponent,
+    MatButtonModule,
     MatIconModule,
-    MatButtonModule
+    MatFormFieldModule,
+    MatInputModule,
+    InputTextComponent,
+    MatStepperModule
   ]
 })
 export class SharedModule { }

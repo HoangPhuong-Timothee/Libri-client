@@ -2,27 +2,28 @@ import { Component, Input, Self } from '@angular/core';
 import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-text-input',
-  templateUrl: './text-input.component.html',
-  styleUrls: ['./text-input.component.css']
+  selector: 'app-input-text',
+  templateUrl: './input-text.component.html',
+  styleUrls: ['./input-text.component.css']
 })
-export class TextInputComponent implements ControlValueAccessor {
+export class InputTextComponent implements ControlValueAccessor {
+
   @Input() type = 'text';
-  @Input() label = '';
+  @Input() label = ''
 
   constructor(@Self() public controlDir: NgControl) {
-    this.controlDir.valueAccessor = this;
-  }
-
+    this.controlDir.valueAccessor = this
+   }
   writeValue(obj: any): void {
+    
   }
   registerOnChange(fn: any): void {
+    
   }
   registerOnTouched(fn: any): void {
+    
   }
-
   get control(): FormControl {
     return this.controlDir.control as FormControl
   }
-
 }

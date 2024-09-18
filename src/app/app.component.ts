@@ -15,17 +15,19 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCurrentUser()
-    this.loadCurrentBasketValue()
+    this.loadBasket()
   }
 
   loadCurrentUser() {
     const token = localStorage.getItem('access_token')
-    this.authService.getCurrentUser(token).subscribe()
+    this.authService.loadCurrentUser(token).subscribe()
   }
 
-  loadCurrentBasketValue() {
+  loadBasket() {
     const basketKey = localStorage.getItem('basket_key')
-    if (basketKey) this.basketService.getBasket(basketKey)
+    if (basketKey) {
+      this.basketService.getBasket(basketKey)
+    }
   }
 
 }

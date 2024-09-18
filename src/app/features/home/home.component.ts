@@ -1,4 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Book } from 'src/app/core/models/book.model';
+import { BookService } from 'src/app/core/services/book.service';
 
 @Component({
   selector: 'app-home',
@@ -7,9 +10,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  books?: Book[]
+
+  constructor(private httpClient: HttpClient, private bookService: BookService) { }
 
   ngOnInit(): void {
+  }
+
+  getLatestBooks() {
+    this.bookService.getLatestBook().subscribe({
+      next: (books) => this.books = books,
+      error: (error) => console.error(error)
+    })
   }
 
 }

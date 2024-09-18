@@ -25,11 +25,11 @@ export class LoginComponent {
     this.authService.login(this.loginForm.value).subscribe({
       next: () => {
         this.loginForm.reset()
-        this.router.navigateByUrl('/')
+        this.router.navigateByUrl(this.returnUrl)
       },
       error: (error) => {
         console.error(error)
-        this.toastr.error('Login failed!')
+        this.toastr.error('Email hoặc tài khoảng không đúng!')
       }
     })
   }

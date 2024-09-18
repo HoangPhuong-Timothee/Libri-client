@@ -11,7 +11,7 @@ import { CoreModule } from './core/core.module';
 import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
 import { TestErrorComponent } from './features/test-error/test-error.component';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
-import { AdminModule } from './features/admin/admin.module';
+import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 
 @NgModule({
   declarations: [
@@ -30,7 +30,8 @@ import { AdminModule } from './features/admin/admin.module';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })
