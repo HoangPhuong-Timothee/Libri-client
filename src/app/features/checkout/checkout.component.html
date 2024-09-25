@@ -1,25 +1,51 @@
 <div class="container">
   <div class="row">
     <div class="col-8">
-      <mat-stepper #stepper class="tw-bg-white tw-border tw-border-gray-200 tw-shadow-sm">
-        <mat-step label="Thông tin người thuê">
-          Họ tên và địa chỉ người thuê
+      <mat-stepper 
+        #stepper 
+        class="tw-bg-white tw-border tw-border-gray-200 tw-shadow-sm"
+        (selectionChange)="onStepChange($event)"
+        >
+        <mat-step label="Thông tin khách hàng">
+
+          <app-checkout-user-info></app-checkout-user-info>
+
         </mat-step>
-        <mat-step label="Dịch vụ giao sách">
-          Phương thức giao/lấy sách
+        <mat-step label="Dịch vụ">
+          
+          <app-checkout-delivery></app-checkout-delivery>
+
         </mat-step>
-        <mat-step label="Tổng kết giỏ sách">
-          Tổng kết
+        <mat-step label="Tổng kết">
+          
+          <app-checkout-review></app-checkout-review>
+
         </mat-step>
         <mat-step label="Thanh toán">
-          Thanh toán
+
+          <app-checkout-payment></app-checkout-payment>
+
         </mat-step>
       </mat-stepper>
     </div>
     <div class="col-4">
 
       <app-order-totals></app-order-totals>
-    
+      
+      <div class="tw-rounded-lg tw-border tw-border-gray-200 tw-bg-white tw-shadow-sm">
+        <form class="tw-flex tw-p1">
+          <mat-form-field appearance="outline">
+            <mat-label>Mã ưu đãi</mat-label>
+            <input type="text" matInput/>
+          </mat-form-field>
+          <button class="btn btn-warning py-2 px-4 mx-2">Áp dụng</button>
+        </form>
+      </div>
+      <div class="d-grid">
+        <a routerLink="/bookcase" class="text-decoration-none text-secondary text-center my-1 fw-bold">
+          Xem thêm sách
+        </a>
+      </div>
     </div>
   </div>
 </div>

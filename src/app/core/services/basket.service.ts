@@ -37,8 +37,11 @@ export class BasketService {
   setBasket(basket: Basket) {
     return this.http.post<Basket>(`${environment.baseAPIUrl}/api/Baskets`, basket).subscribe({
       next: ((basket) => {
-        this.basketSource.next(basket)
-        this.calculateTotal()
+        if (basket)
+        {
+          this.basketSource.next(basket)
+          this.calculateTotal()
+        }
       })
     })
   }
@@ -50,11 +53,7 @@ export class BasketService {
 
   //Delete basket
   deleteBasket(basket: Basket) {
-    return this.http.delete(`${environment.baseAPIUrl}/api/Baskets?id=${basket.id}`).subscribe({
-      next: (() => {
-        
-      })
-    })
+    return this.http.delete(`${environment.baseAPIUrl}/api/Baskets?id=${basket.id}`)
   }
 
   //Add an item/book to the basket

@@ -6,7 +6,7 @@ import { PagingFooterComponent } from './components/paging-footer/paging-footer.
 import { SectionHeaderComponent } from './components/section-header/section-header.component';
 import { RouterModule } from '@angular/router';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { BreadcrumbModule } from 'xng-breadcrumb';
 import { NotFoundComponent } from './components/not-found/not-found.component';
@@ -20,6 +20,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { InputTextComponent } from './components/input-text/input-text.component';
 import { MatStepperModule } from '@angular/material/stepper';
+import { CouponComponent } from './components/coupon/coupon.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { MatStepperModule } from '@angular/material/stepper';
     NotFoundComponent,
     ServerErrorComponent,
     OrderTotalsComponent,
-    InputTextComponent
+    InputTextComponent,
+    CouponComponent
   ],
   imports: [
     CommonModule,
@@ -43,6 +45,7 @@ import { MatStepperModule } from '@angular/material/stepper';
       preventDuplicates: true
     }),
     ReactiveFormsModule,
+    FormsModule,
     BreadcrumbModule,
     MatButtonModule,
     MatIconModule,
@@ -66,7 +69,8 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatFormFieldModule,
     MatInputModule,
     InputTextComponent,
-    MatStepperModule
+    MatStepperModule,
+    FormsModule
   ]
 })
 export class SharedModule { }

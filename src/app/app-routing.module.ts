@@ -41,10 +41,6 @@ const routes: Routes = [
     data: { breadcrumb: 'Giới thiệu' }
   },
   {
-    path: 'profile',
-    loadChildren: () => import('./features/profile/profile.module').then(m => m.ProfileModule)
-  },
-  {
     path: 'test-error',
     component: TestErrorComponent
   },

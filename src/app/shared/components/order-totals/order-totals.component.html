@@ -10,8 +10,8 @@
       <strong>{{ basketTotals.subtotal | currency:'VND' }}</strong>
     </li>
     <li class="d-flex justify-content-between py-3 border-bottom">
-      <strong class="text-muted">Phí giao sách</strong>
-      <p>Sẽ tính phí giao hàng dựa vào vị trí</p>
+      <strong class="text-muted">Phí dịch vụ</strong>
+      <p>Sẽ tính phí dựa vào dịch vụ mà bạn chọn</p>
       <strong>{{ basketTotals.shipping | currency:'VND' }}</strong>
     </li>
     <li class="d-flex justify-content-between py-3 border-bottom">
@@ -19,4 +19,9 @@
       <strong>{{ basketTotals.total | currency:'VND' }}</strong>
     </li>
   </ul>
+  <div class="d-grid">
+    <button routerLink="/checkout" class="btn btn-warning py-2 fw-bold">
+      Tiến hành thanh toán
+    </button>
+  </div>
 </div>

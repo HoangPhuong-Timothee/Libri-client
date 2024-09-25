@@ -1,26 +1,12 @@
-export interface UserInfo {
+import { Address } from "./address.model";
+
+export interface User {
     id: number;
     userName: string;
     email: string;
     imageUrl: string;
+    address: Address;
     phoneNumber: string;
-    address: string;
-    role: string | string[]
-    createdAt: Date;
-    updatedAt: Date;
-}
-
-export interface UserProfile {
-    userName: string;
-    email: string;
-    imageUrl: string;
-    phoneNumber: string;
-    address: string;
-}
-
-export interface LoginResponse{
-    userName: string;
-    email: string;
     token: string;
-    roles: string[]
+    roles: string | string[]
 }

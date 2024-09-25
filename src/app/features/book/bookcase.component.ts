@@ -24,7 +24,6 @@ export class BookcaseComponent implements OnInit {
   pagination?: Pagination<Book[]>
   bookParams = new BookParams()
   totalCount = 0
-  pageSizeOptions = [8, 16, 24, 28]
   sortOptions = [
     {
       name: 'Theo bảng chữ cái',
