@@ -13,12 +13,11 @@ export interface Book {
 }
 
 export interface AddBookRequest {
-    id: number;
     title: string;
     authorId: number;
     genreId: number;
     publisherId: number;
-    imageUrl: string;
+    imageUrl?: string;
     description: string;
     publishYear: number;
     price: number;

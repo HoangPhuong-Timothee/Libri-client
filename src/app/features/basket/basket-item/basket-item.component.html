@@ -17,7 +17,7 @@
           <div class="p-2 d-inline-block">
             <img
               src="{{ basketItem.imageUrl }}"
-              alt="{{ basketItem.bookName }}"
+              alt="{{ basketItem.bookTitle }}"
               class="img-fluid"
               style="max-height: 50px"
             />
@@ -27,7 +27,7 @@
                   routerLink="/bookcase/{{ basketItem.id }}"
                   class="text-dark text-decoration-none"
                 >
-                  {{ basketItem.bookName }}
+                  {{ basketItem.bookTitle }}
                 </a>
               </h5>
               <span class="text-muted fst-italic">

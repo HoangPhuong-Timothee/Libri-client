@@ -20,6 +20,6 @@ export class UserService {
   }
 
   modifyUserAddress(address: Address) {
-    return this.http.post(`${environment.baseAPIUrl}/api/Users/address`, address)
+    return this.http.post<Address>(`${environment.baseAPIUrl}/api/Users/address`, address)
   }
 }

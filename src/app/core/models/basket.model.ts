@@ -5,12 +5,13 @@ export interface Basket {
     basketItems: BasketItem[];
     clientSecrect?: string;
     paymentIntentId?: number;
-    deliveryMethodId?: number
+    deliveryMethodId?: number;
+    deliveryPrice?: number;
 }
 
 export interface BasketItem {
     id: number;
-    bookName: string;
+    bookTitle: string;
     price: number;
     quantity: number;
     imageUrl: string;
@@ -18,7 +19,7 @@ export interface BasketItem {
 }
 
 export interface BasketTotals {
-    shipping: number;
+    delivery: number;
     subtotal: number;
     total: number;
 }
