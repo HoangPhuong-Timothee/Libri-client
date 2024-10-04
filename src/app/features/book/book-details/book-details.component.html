@@ -3,11 +3,11 @@
         <img src="{{ book.imageUrl }}" alt="{{ book.title }}" class="w-100">
     </div>
     <div class="col-6 mt-5">
-        <h2 style="font-weight: bold;">{{ book.title }}</h2>
-        <p class="my-4" style="font-size: 2em;">{{ book.price | currency:'VND' }}</p>
+        <h2 style="font-weight: bold; text-align: left;">{{ book.title }}</h2>
+        <p class="my-4 text-muted" style="font-size: 2em; font-style: italic;">{{ book.price | customCurrency: 'VND' }}</p>
         <div *ngIf="book.quantityInStock > 0" class="d-flex my-3">
-            <p>Tình trạng:<span class="ms-2 text-success" style="font-weight: bold; font-style: italic;">Có sẵn</span></p>
-            <p class="ms-5">Còn<span class="ms-1 text-secondary" style="font-style: italic; font-weight: bold;">{{ book.quantityInStock }}</span> sách trong tủ</p>
+            <p>Tình trạng:<span class="ms-2 text-success" style="font-weight: bold;">Có sẵn</span></p>
+            <p class="ms-5">Còn<span class="ms-1 text-secondary" style="font-weight: bold;">{{ book.quantityInStock }}</span> sách trong tủ</p>
         </div>
         <div *ngIf="book.isAvailable; else noStock" class="my-5 d-flex justify-content-start align-items-center">
             <i (click)="decreaseQuantity()" class="fa fa-minus-circle text-danger me-2" style="cursor: pointer; font-size: 2em;"></i>
@@ -32,11 +32,11 @@
             <div class="accordion" id="accordionExample">
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="headingOne">
-                    <button class="accordion-button bg-" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                       <strong>Tác giả</strong>
                     </button>
                   </h2>
-                  <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                  <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                     <div class="accordion-body" style="font-style: italic;">
                       {{ book.author }}
                     </div>
@@ -67,12 +67,24 @@
                   </div>
                 </div>
                 <div class="accordion-item">
+                  <h2 class="accordion-header" id="heading3">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                        <strong>Năm xuất bản</strong>
+                    </button>
+                  </h2>
+                  <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading3" data-bs-parent="#accordionExample">
+                    <div class="accordion-body" style="font-style: italic;">
+                      {{ book.publishYear }}
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
                     <h2 class="accordion-header" id="heading4">
                       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
                           <strong>Mô tả</strong>
                       </button>
                     </h2>
-                    <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4" data-bs-parent="#accordionExample">
+                    <div id="collapse4" class="accordion-collapse collapse show" aria-labelledby="heading4" data-bs-parent="#accordionExample">
                       <div class="accordion-body" style="font-style: italic;">
                         {{ book.description }}
                       </div>
@@ -81,4 +93,17 @@
               </div>
         </div>
     </div>
+    <div class="col-12 mb-5 mt-4">
+      <h2 class="display-6 fw-bolder text-center">
+          <i class="fa-solid fa-book-bookmark me-2"></i>Sách tương tự
+      </h2>
+      <hr />
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-2 mb-4 justify-content-evenly">
+          <div class="col" *ngFor="let similarBook of similarBooks">
+
+              <app-book-item [book]="similarBook"></app-book-item>
+
+          </div>
+      </div>
+  </div>
 </div>

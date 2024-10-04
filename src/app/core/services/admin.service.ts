@@ -22,7 +22,7 @@ export class AdminService {
     return this.http.delete(`${environment.baseAPIUrl}/api/Books/${id}`)
   }
 
-  updateStock(id: number, newQuantity: number) {
-    return this.http.put(`${environment.baseAPIUrl}/api/Books/stocks/${id}`, newQuantity) 
+  updateQuantityInStock(id: number, quantity: number) {
+    return this.http.put(`${environment.baseAPIUrl}/api/Books/stocks/${id}`, quantity) 
   }
 }

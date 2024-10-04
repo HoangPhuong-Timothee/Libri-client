@@ -15,6 +15,7 @@ export class HomeComponent implements OnInit {
   constructor(private httpClient: HttpClient, private bookService: BookService) { }
 
   ngOnInit(): void {
+    this.getLatestBooks()
   }
 
   getLatestBooks() {

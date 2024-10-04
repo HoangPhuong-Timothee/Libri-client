@@ -19,7 +19,7 @@ export class LoadingInterceptor implements HttpInterceptor {
       this.waitingService.waiting()
     }
     return next.handle(request).pipe(
-      delay(1000),
+      delay(250),
       finalize(() => this.waitingService.idle())
     )
   }

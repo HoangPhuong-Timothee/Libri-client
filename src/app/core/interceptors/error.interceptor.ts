@@ -17,33 +17,35 @@ export class ErrorInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
-      catchError((error: HttpErrorResponse) => {
-        if (error) {
-          if (error.status === 400) {
-            if (error.error.errors) {
-              throw error.error
-            }else {
-              // this.toastr.error(error.error.message, error.status.toString())
-              this.toastr.error("Bad request", error.status.toString())
-          }
+     catchError((error: HttpErrorResponse) => {
+      if (error.status === 400) {
+        if (error.error.errors) {
+          const modelStateErrors = [];
+          for (const key in error.error.errors) {
+            if (error.error.errors[key]) {
+              modelStateErrors.push(error.error.errors[key])
             }
-          if (error.status === 401) {
-            // this.toastr.error(error.error.message, error.status.toString())
-            this.toastr.error("Unauthorized", error.status.toString())
           }
-          if (error.status === 403) {
-            this.toastr.error("Forbidden, you are not allowed to access this page!")
-          }
-          if (error.status === 404) {
-            this.router.navigateByUrl('/not-found');
-          }
-          if (error.status === 500) {
-            const navigationExtra: NavigationExtras = { state: { error: error.error } }
-            this.router.navigateByUrl('/server-error', navigationExtra)
-          }
+          throw modelStateErrors.flat();
+        } else {
+          this.toastr.error(error.error.title || error.error);
         }
-        return throwError(() => new Error(error.message))
-      })
+      }
+      if (error.status === 401) {
+        this.toastr.error(error.error.title || error.error);
+      }
+      if (error.status === 403) {
+        this.toastr.error('Forbidden, you are not allowed to access this page');
+      }
+      if (error.status === 404) {
+        this.router.navigateByUrl('/not-found');
+      }
+      if (error.status === 500) {
+        const navigationExtras: NavigationExtras = {state: {error: error.error}}
+        this.router.navigateByUrl('/server-error', navigationExtras);
+      }
+      return throwError(() => error)
+     })
     )
   }
 }

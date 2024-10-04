@@ -1,5 +1,11 @@
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { ToastrService } from 'ngx-toastr';
+import { Address } from 'src/app/core/models/address.model';
+import { BasketService } from 'src/app/core/services/basket.service';
+import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-checkout',
@@ -8,10 +14,12 @@ import { FormBuilder, Validators } from '@angular/forms';
 })
 export class CheckoutComponent implements OnInit {
 
-  constructor(private fb: FormBuilder) { }
+  saveInfo = false
 
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
+  constructor(private fb: FormBuilder, private userService: UserService, private basketService: BasketService, private toastr: ToastrService) { }
+
+  ngOnInit() {
+    this.getUserInfoFormValue()
   }
 
   checkoutForm = this.fb.group({
@@ -31,8 +39,29 @@ export class CheckoutComponent implements OnInit {
     })
   })
 
-  onStepChange(event: any) {
-    
+  onSaveUserInfoCheckboxChange(event: MatCheckboxChange) {
+    this.saveInfo = event.checked
   }
 
+  onStepChange(event: StepperSelectionEvent) {
+    if (event.selectedIndex === 1) {
+      if (this.saveInfo) {
+        const userInfo: Address = this.checkoutForm.get('userInfoForm')?.value as Address
+        this.userService.modifyUserAddress(userInfo).subscribe({
+          next: () => {
+            this.toastr.success('Đã lưu thông tin làm mặc định.')
+            this.checkoutForm.get('userInfoForm')?.reset(this.checkoutForm.get('userInfoForm')?.value)
+          }
+        })
+      }
+    }
+  }
+
+  getUserInfoFormValue() {
+    this.userService.getUserAddress().subscribe({
+      next: userInfo => {
+        userInfo && this.checkoutForm.get('userInfoForm')?.patchValue(userInfo)
+      }
+    })
+  }
 }

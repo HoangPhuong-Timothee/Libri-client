@@ -1,0 +1,37 @@
+<div class="tw-p-4">
+    <table class="tw-min-w-full tw-bg-white tw-border tw-border-gray-300">
+      <thead>
+        <tr class="tw-border-b tw-bg-gray-200">
+          <th *ngFor="let column of columns" class="tw-py-2 tw-px-4 tw-text-left">{{ column.header }}</th>
+          <th class="tw-py-2 tw-px-4 tw-text-left" *ngIf="actions.length"><i class="fa-solid fa-grip"></i></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of dataSource" class="tw-border-b">
+          <td *ngFor="let column of columns" class="tw-py-2 tw-px-4">{{ getCellValue(row, column) }}</td>
+          <td class="tw-py-2 tw-px-4" *ngIf="actions.length">
+            <div class="tw-flex tw-gap-2">
+              <ng-container *ngFor="let action of actions">
+                <button
+                  mat-icon-button
+                  matTooltip="{{ action.tooltip }}"
+                  [disabled]="action.disabled ? action.disabled(row) : false"
+                  (click)="onAction(action.action, row)">
+                  <mat-icon>{{ action.icon }}</mat-icon>
+                </button>
+              </ng-container>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <mat-paginator 
+      [length]="totalItems"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="[5, 10, 20]"
+      (page)="onPageChange($event)"
+      class="tw-mt-4 tw-bg-white"
+    >
+    </mat-paginator>
+  </div>

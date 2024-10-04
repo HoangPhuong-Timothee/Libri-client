@@ -1,2 +1,38 @@
-<p>checkout-user-info works!</p>
+<div class="mt-4" *ngIf="checkoutForm" [formGroup]="checkoutForm">
+    <div class="tw-flex tw-justify-between tw-items-center">
+        <h4>Thông tin khách hàng</h4>
+    </div>
+    <div class="row" formGroupName="userInfoForm">
+        <div class="form-group col-12">
+
+            <app-input-text [label]="'Họ và tên'" formControlName="fullName"></app-input-text>
+
+        </div>
+        <div class="form-group col-12">
+
+            <app-input-text [label]="'Đường/Số nhà'" formControlName="street"></app-input-text>
+
+        </div>
+        <div class="form-group col-6">
+
+            <app-input-text [label]="'Phường/Xã'" formControlName="ward"></app-input-text>
+
+        </div>
+        <div class="form-group col-6">
+
+            <app-input-text [label]="'Quận/Huyện'" formControlName="district"></app-input-text>
+
+        </div>
+        <div class="form-group col-6">
+
+            <app-input-text [label]="'Tỉnh/Thành phố'" formControlName="city"></app-input-text>
+
+        </div>
+        <div class="form-group col-6">
+
+            <app-input-text [label]="'Mã bưu chính'" formControlName="postalCode"></app-input-text>
+
+        </div>
+    </div>
+</div>
 

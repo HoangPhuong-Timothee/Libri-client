@@ -1,1 +1,14 @@
-<p>checkout-delivery works!</p>
+<div class="tw-w-full">
+    <mat-radio-group class="tw-grid tw-grid-cols-2 tw-gap-4">
+        <ng-container *ngFor="let deliveryMethod of deliveryMethodService.deliveryMethods">
+            <label class="tw-p-3 tw-border tw-border-gay-200 tw-cursor-pointer tw-w-full tw-h-full tw-hover:bg-purple-100">
+                <mat-radio-button class="tw-w-full tw-h-full" [value]="deliveryMethod">
+                    <div class="tw-flex tw-flex-col tw-w-full tw-h-full">
+                        <strong>{{ deliveryMethod.shortName }} - {{ deliveryMethod.price | customCurrency:'VND' }}</strong>
+                        <span class="tw-text-sm">{{ deliveryMethod.description }}</span>
+                    </div>
+                </mat-radio-button>
+            </label>
+        </ng-container>
+    </mat-radio-group>
+</div>

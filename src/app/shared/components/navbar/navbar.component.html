@@ -2,16 +2,16 @@
     <img src="https://librireading.com/wp-content/uploads/2021/06/z2555569091868_782e5f0f9cbd0eba43cc09596a122e36.jpg" style="max-height: 70px;" alt="logo" class="logo" routerLink="/">
     <nav class="my-2 my-md-0 mr-md-3 text-uppercase" style="font-size: larger;">
       <a routerLink="/" class="p-5" routerLinkActive="active" [routerLinkActiveOptions]="{ exact:true }">Trang chủ</a>
-      <a routerLink="/bookcase" class="p-5" routerLinkActive="active">Tủ sách</a>
-      <a routerLink="/wishlist" class="p-5" routerLinkActive="active">Sách yêu thích</a>
-      <a *ngIf="isAdmin$ | async" routerLink="/admin" class="p-5" routerLinkActive="active">Quản lý sách</a>
-      <a routerLink="/introduction" class="p-5" routerLinkActive="active">Giới thiệu</a>
+      <a routerLink="/bookcase" class="p-4" routerLinkActive="active">Tủ sách</a>
+      <a routerLink="/wishlist" class="p-4" routerLinkActive="active">Sách yêu thích</a>
+      <a *ngIf="isAdmin$ | async" routerLink="/admin" class="p-4" routerLinkActive="active">Quản lý sách</a>
+      <a routerLink="/introduction" class="p-4" routerLinkActive="active">Giới thiệu</a>
     </nav>
     <div class="d-flex align-items-center">
       <a routerLink="/basket" class="position-relative">
         <i class="fa-solid fa-book fa-2x me-5 text-dark"></i>
         <div *ngIf="(basketService.basket$ | async) as basket" class="cart-no">
-          {{ basketItemsCount(basket.basketItems) }}
+          {{ basketItemCount$ | async }}
         </div>
       </a>
       <ng-container *ngIf="(authService.currentUser$ | async) === null">
@@ -19,8 +19,9 @@
         <a routerLink="/register" class="btn btn-outline-dark me-3" style="color: orange;">Đăng ký</a>
       </ng-container>
       <ng-container *ngIf="authService.currentUser$ | async as user">
-        <div class="dropdown ms-3 me-5" style="cursor: pointer; z-index: 11;" dropdown>
+        <div class="dropdown me-5" style="cursor: pointer; z-index: 11;" dropdown>
           <a dropdownToggle class="dropdown-toggle">
+            <img class="rounded-full" [src]="user.imageUrl" alt="{{ user.userName }}" style="height: 38px; width: 70px;">
             <strong>Xin chào, {{ user.userName }}!</strong>
           </a>
           <ul *dropdownMenu class="dropdown-menu dropdown-menu-right">
@@ -31,15 +32,15 @@
               </a>
             </li>
             <li class="py-1">
-              <a routerLink="/rentals" class="dropdown-item">
-                <i class="fa-solid fa-file-invoice"></i>
-                Danh sách thuê
-              </a>
-            </li>
-            <li class="py-1">
               <a routerLink="/basket" class="dropdown-item">
                 <i class="fa-solid fa-basket-shopping"></i>
                 Giỏ sách
+              </a>
+            </li>
+            <li class="py-1">
+              <a routerLink="/rentals" class="dropdown-item">
+                <i class="fa-solid fa-file-invoice"></i>
+                Danh sách thuê
               </a>
             </li>
             <div class="dropdown-divider"></div>

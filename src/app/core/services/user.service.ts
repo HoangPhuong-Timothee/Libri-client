@@ -9,17 +9,19 @@ import { Address } from '../models/address.model';
 })
 export class UserService {
 
+  apiUrl = `${environment.baseAPIUrl}/api/Users`
+
   constructor(private http: HttpClient) { }
 
   getUsers() {
-    return this.http.get<User[]>(`${environment.baseAPIUrl}/api/Users`)
+    return this.http.get<User[]>(this.apiUrl)
   }
 
   getUserAddress() {
-    return this.http.get<Address>(`${environment.baseAPIUrl}/api/Users/address`)
+    return this.http.get<Address>(`${this.apiUrl}/address`)
   }
 
   modifyUserAddress(address: Address) {
-    return this.http.post<Address>(`${environment.baseAPIUrl}/api/Users/address`, address)
+    return this.http.post<Address>(`${this.apiUrl}/address`, address)
   }
 }

@@ -27,10 +27,6 @@
   </ng-container>
   <ng-container *ngIf="(basketService.basket$ | async) as basket">
     <div class="container">
-      <button routerLink="/bookcase" class="mb-1 btn btn-secondary">
-        <i class="fa-solid fa-arrows-left-right-to-line"></i>
-        Quay lại tủ sách
-      </button>
       <div class="row">
 
         <app-basket-item 
@@ -40,12 +36,10 @@
         </app-basket-item>
 
       </div>
-      <div class="row">
-        <div class="col-6 offset-6">
-          
-          <app-order-totals></app-order-totals>
+      <div class="container">
 
-        </div>
+        <app-order-totals></app-order-totals>
+
       </div>
     </div>
   </ng-container>

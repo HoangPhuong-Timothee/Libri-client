@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Book } from '../models/book.model';
@@ -7,6 +7,9 @@ import { Basket, BasketItem, BasketTotals } from '../models/basket.model';
 import { mapToBasketItem } from 'src/app/shared/helpers/extensions/map-to-basketItem';
 import { ToastrService } from 'ngx-toastr';
 import { isBook } from 'src/app/shared/helpers/extensions/is-book';
+import { Coupon } from '../models/coupon.model';
+import { DeliveryMethod } from '../models/delivery-method.model';
+import { DeliveryMethodService } from './delivery-method.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,10 +20,29 @@ export class BasketService {
   basket$ = this.basketSource.asObservable()
   private basketTotalSource = new BehaviorSubject<BasketTotals | null>(null)
   basketTotal$ = this.basketTotalSource.asObservable()
+  private couponSource = new BehaviorSubject<Coupon | null>(null)
+  coupon$ = this.couponSource.asObservable()
+  delivery = 0
 
-  constructor(private http: HttpClient, private toastr: ToastrService) { }
+  constructor(private http: HttpClient, private toastr: ToastrService, private deliveryMethodService: DeliveryMethodService) { }
 
-  //Get thr basket from Redis
+  setDeliveryPrice(deliveryMethod: DeliveryMethod) {
+    const basket = this.getCurrentBasketValue()
+    this.delivery = deliveryMethod.price
+    if (basket)
+    {
+      basket.deliveryMethodId = deliveryMethod.id
+      this.setBasket(basket)  
+    }
+  }
+
+  get basketItemCount$() {
+    return this.basket$.pipe(
+      map(basket => basket ? basket.basketItems.reduce((sum, item) => sum + item.quantity, 0) : 0)
+    )
+  }
+
+  //Get the basket from Redis
   getBasket(id: string) {
     return this.http.get<Basket>(`${environment.baseAPIUrl}/api/Baskets?id=${id}`).subscribe({
       next: ((basket) => {
@@ -108,9 +130,10 @@ export class BasketService {
   private calculateTotal() {
     const basket = this.getCurrentBasketValue()
     if (!basket) return
-    const shipping = 0
+    const delivery = 0
+    const discount = 0
     const subtotal = basket.basketItems.reduce((a, b) => a + (b.price * b.quantity), 0)
-    const total = subtotal + shipping
-    this.basketTotalSource.next({ shipping, total, subtotal })
+    const total = subtotal + this.delivery - discount
+    this.basketTotalSource.next({ delivery: this.delivery, total, subtotal, discount })
   }
 }

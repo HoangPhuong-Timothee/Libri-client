@@ -1,8 +1,8 @@
 export class BookParams {
     genreId = 0;
     publisherId = 0;
-    sort = 'name';
+    sort = 'title';
     pageIndex = 1;
-    pageSize = 8;
+    pageSize = 12;
     search = '';
 }

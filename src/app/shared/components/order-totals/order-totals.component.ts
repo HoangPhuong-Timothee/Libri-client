@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { BasketService } from 'src/app/core/services/basket.service';
 
 @Component({
@@ -8,6 +9,13 @@ import { BasketService } from 'src/app/core/services/basket.service';
 })
 export class OrderTotalsComponent {
 
-  constructor(public basketService: BasketService, public location: Location) { }
+  constructor(public basketService: BasketService, public router: Router) { }
   
+  applyCouponCode() {
+
+  }
+
+  removeCouponCode() {
+    
+  }
 }

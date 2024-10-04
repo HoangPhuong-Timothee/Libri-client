@@ -15,6 +15,7 @@ import { BreadcrumbService } from 'xng-breadcrumb';
 export class BookDetailsComponent implements OnInit {
 
   book?: Book
+  similarBooks: Book[] = []
   quantity = 1
   quantityInBasket = 0
 
@@ -23,7 +24,8 @@ export class BookDetailsComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.showBookDetails();
+    this.showBookDetails()
+    this.showSimilarBooks()
   }
 
   showBookDetails() {
@@ -45,6 +47,13 @@ export class BookDetailsComponent implements OnInit {
       error: (error) => {
         console.error(error);
       }
+    })
+  }
+
+  showSimilarBooks() {
+    const id = this.route.snapshot.paramMap.get('id')
+    if (id) this.bookService.getSimilarBook(+id).subscribe({
+      next: response => this.similarBooks = response
     })
   }
 

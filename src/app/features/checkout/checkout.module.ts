@@ -9,8 +9,6 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { CheckoutUserInfoComponent } from './checkout-user-info/checkout-user-info.component';
 import { CheckoutPaymentComponent } from './checkout-payment/checkout-payment.component';
-import { ReactiveFormsModule } from '@angular/forms';
-
 
 @NgModule({
   declarations: [

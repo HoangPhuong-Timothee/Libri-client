@@ -27,6 +27,10 @@ export class BookService {
     return this.http.get<Book>(`${environment.baseAPIUrl}/api/Books/${id}`)
   }
 
+  getSimilarBook(id: number) {
+    return this.http.get<Book[]>(`${environment.baseAPIUrl}/api/Books/${id}/similar`)
+  }
+
   getLatestBook() {
     return this.http.get<Book[]>(`${environment.baseAPIUrl}/api/Books/latest`)
   }

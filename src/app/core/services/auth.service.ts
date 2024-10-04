@@ -2,9 +2,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
-import { map, of, ReplaySubject } from 'rxjs';
+import { map, Observable, of, ReplaySubject } from 'rxjs';
 import { User } from '../models/user.model';
 import { ToastrService } from 'ngx-toastr';
+import { Address } from '../models/address.model';
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +49,15 @@ export class AuthService {
     )
   }
 
+  get isAdmin$(): Observable<boolean> {
+    return this.currentUser$.pipe(
+      map((user) => {
+        const roles = user?.roles
+        return Array.isArray(roles) ? roles.includes('Admin') : roles === 'Admin'
+      })
+    )
+  }
+
   register(model: any) {
     return this.http.post(`${environment.baseAPIUrl}/api/Auth/register`, model)
   }
@@ -55,11 +65,17 @@ export class AuthService {
   logout() {
     localStorage.removeItem('access_token');
     this.currentUserSource.next(null)
-    this.router.navigateByUrl('/')
-    this.toastr.success('Đã đăng xuất tài khoản')
+    setTimeout(() => {
+      this.router.navigateByUrl('/')
+      this.toastr.success('Đã đăng xuất tài khoản')
+    }, 800)
   }
 
  checkEmailExists(email: string) {
   return this.http.get<boolean>(`${environment.baseAPIUrl}/api/Auth/email-exists?email=${email}`)
+ }
+
+ updateUserAddress(address: Address) {
+  return this.http.put<Address>(`${environment.baseAPIUrl}/api/Users/address`, address)
  }
 }

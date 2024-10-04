@@ -4,7 +4,7 @@ import { Book } from "src/app/core/models/book.model";
 export function mapToBasketItem(item: Book): BasketItem{
     return {
         id: item.id,
-        bookName: item.title,
+        bookTitle: item.title,
         price: item.price,
         quantity: 0,
         imageUrl: item.imageUrl,

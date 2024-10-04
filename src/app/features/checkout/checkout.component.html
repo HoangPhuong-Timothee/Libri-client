@@ -1,51 +1,58 @@
 <div class="container">
   <div class="row">
-    <div class="col-8">
-      <mat-stepper 
-        #stepper 
-        class="tw-bg-white tw-border tw-border-gray-200 tw-shadow-sm"
-        (selectionChange)="onStepChange($event)"
-        >
-        <mat-step label="Thông tin khách hàng">
+    <div class="col-6">
+      <mat-stepper #stepper (selectionChange)="onStepChange($event)" class="tw-bg-white tw-border tw-border-gray-200 tw-shadow-sm">
+        <mat-step label="Thông tin khách hàng" [completed]="checkoutForm.get('userInfoForm')?.valid">
+          <div class="tw-flex tw-justify-end tw-mt-1">
+            <mat-checkbox 
+                [disabled]="!checkoutForm.get('userInfoForm')?.valid || !checkoutForm.get('userInfoForm')?.dirty"
+                [checked]="saveInfo"
+                (change)="onSaveUserInfoCheckboxChange($event)"
+            >
+                Lưu thông mặc định
+            </mat-checkbox>
+          </div>
 
-          <app-checkout-user-info></app-checkout-user-info>
-
+          <app-checkout-user-info [checkoutForm]="checkoutForm"></app-checkout-user-info>
+          
+          <div class="tw-flex justify-content-between mt-6">
+            <button routerLink="/bookcase" mat-stroked-button>Xem thêm sách</button>
+            <button matStepperNext mat-flat-button>Tiếp tục</button>
+          </div>
         </mat-step>
-        <mat-step label="Dịch vụ">
+        <mat-step label="Dịch vụ" [completed]="checkoutForm.get('deliveryForm')?.valid">
           
           <app-checkout-delivery></app-checkout-delivery>
 
+          <div class="tw-flex justify-content-between mt-6">
+            <button matStepperPrevious mat-stroked-button>Quay lại</button>
+            <button matStepperNext mat-flat-button>Tiếp tục</button>
+          </div>
         </mat-step>
         <mat-step label="Tổng kết">
           
           <app-checkout-review></app-checkout-review>
-
+          
+          <div class="tw-flex justify-content-between mt-6">
+            <button matStepperPrevious mat-stroked-button>Quay lại</button>
+            <button matStepperNext mat-flat-button>Tiếp tục</button>
+          </div>
         </mat-step>
-        <mat-step label="Thanh toán">
+        <mat-step label="Thanh toán" [completed]="checkoutForm.get('paymentForm')?.valid">
 
           <app-checkout-payment></app-checkout-payment>
 
+          <div class="tw-flex justify-content-between mt-6">
+            <button matStepperPrevious mat-stroked-button>Quay lại</button>
+            <button matStepperNext mat-flat-button>Tiếp tục</button>
+          </div>
         </mat-step>
       </mat-stepper>
     </div>
-    <div class="col-4">
+    <div class="col-6">
 
       <app-order-totals></app-order-totals>
       
-      <div class="tw-rounded-lg tw-border tw-border-gray-200 tw-bg-white tw-shadow-sm">
-        <form class="tw-flex tw-p1">
-          <mat-form-field appearance="outline">
-            <mat-label>Mã ưu đãi</mat-label>
-            <input type="text" matInput/>
-          </mat-form-field>
-          <button class="btn btn-warning py-2 px-4 mx-2">Áp dụng</button>
-        </form>
-      </div>
-      <div class="d-grid">
-        <a routerLink="/bookcase" class="text-decoration-none text-secondary text-center my-1 fw-bold">
-          Xem thêm sách
-        </a>
-      </div>
     </div>
   </div>
 </div>

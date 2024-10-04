@@ -27,7 +27,7 @@ export class BookcaseComponent implements OnInit {
   sortOptions = [
     {
       name: 'Theo bảng chữ cái',
-      value: 'name'
+      value: 'title'
     },
     {
       name: 'Giá: Tăng dần',

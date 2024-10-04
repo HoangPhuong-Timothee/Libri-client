@@ -15,6 +15,12 @@ const routes: Routes = [
     data: { breadcrumb: 'Trang chủ' },
   },
   {
+    path: 'admin',
+    loadChildren: () => import('./features/admin/admin.module').then(m => m.AdminModule),
+    canActivate: [AuthGuard, AdminGuard],
+    data: { breadcrumb: 'Admin' }
+  },
+  {
     path: 'bookcase', 
     loadChildren: () => import('./features/book/book.module').then(m => m.BookModule) 
   },
@@ -36,6 +42,11 @@ const routes: Routes = [
     loadChildren: () => import('./features/checkout/checkout.module').then(m => m.CheckoutModule)
   },
   {
+    path: 'order',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./features/order/order.module').then(m => m.OrderModule)
+  },
+  {
     path: 'introduction',
     component: IntroductionComponent,
     data: { breadcrumb: 'Giới thiệu' }
@@ -43,12 +54,6 @@ const routes: Routes = [
   {
     path: 'test-error',
     component: TestErrorComponent
-  },
-  {
-    path: 'admin',
-    loadChildren: () => import('./features/admin/admin.module').then(m => m.AdminModule),
-    canActivate: [AuthGuard, AdminGuard],
-    data: { breadcrumb: 'Admin' }
   },
   {
     path: 'server-error',

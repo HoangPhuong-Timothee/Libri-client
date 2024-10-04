@@ -9,8 +9,7 @@ import { Genre } from '../models/genre.model';
 export class GenreService {
 
   genres?: Genre[]
-
-
+  
   constructor(private http: HttpClient) { }
 
   getAllGenres () {

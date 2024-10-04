@@ -20,8 +20,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { InputTextComponent } from './components/input-text/input-text.component';
 import { MatStepperModule } from '@angular/material/stepper';
-import { CouponComponent } from './components/coupon/coupon.component';
-
+import { CustomCurrencyPipe } from './pipes/custom-currency.pipe';
+import { TruncateTitlePipe } from './pipes/truncate-title.pipe';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
+import { BookItemComponent } from './components/book-item/book-item.component';
+import { BasketItemComponent } from './components/basket-item/basket-item.component';
+import { CustomTableComponent } from './components/custom-table/custom-table.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatPaginatorModule } from '@angular/material/paginator';
+ 
 @NgModule({
   declarations: [
     NavbarComponent,
@@ -32,7 +40,11 @@ import { CouponComponent } from './components/coupon/coupon.component';
     ServerErrorComponent,
     OrderTotalsComponent,
     InputTextComponent,
-    CouponComponent
+    CustomCurrencyPipe,
+    TruncateTitlePipe,
+    BookItemComponent,
+    BasketItemComponent,
+    CustomTableComponent,
   ],
   imports: [
     CommonModule,
@@ -51,7 +63,11 @@ import { CouponComponent } from './components/coupon/coupon.component';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    MatStepperModule
+    MatStepperModule,
+    MatCheckboxModule,
+    MatRadioModule,
+    MatPaginatorModule,
+    MatTooltipModule
   ],
   exports: [
     NavbarComponent,
@@ -70,7 +86,16 @@ import { CouponComponent } from './components/coupon/coupon.component';
     MatInputModule,
     InputTextComponent,
     MatStepperModule,
-    FormsModule
+    FormsModule,
+    CustomCurrencyPipe,
+    TruncateTitlePipe,
+    MatCheckboxModule,
+    MatRadioModule,
+    BasketItemComponent,
+    BookItemComponent,
+    MatTooltipModule,
+    MatPaginatorModule,
+    CustomTableComponent
   ]
 })
 export class SharedModule { }
