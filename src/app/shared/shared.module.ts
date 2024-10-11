@@ -19,7 +19,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { InputTextComponent } from './components/input-text/input-text.component';
-import { MatStepperModule } from '@angular/material/stepper';
 import { CustomCurrencyPipe } from './pipes/custom-currency.pipe';
 import { TruncateTitlePipe } from './pipes/truncate-title.pipe';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -29,6 +28,12 @@ import { BasketItemComponent } from './components/basket-item/basket-item.compon
 import { CustomTableComponent } from './components/custom-table/custom-table.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { CdkStepperModule } from '@angular/cdk/stepper';
+import { StepperComponent } from './components/stepper/stepper.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
  
 @NgModule({
   declarations: [
@@ -45,6 +50,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     BookItemComponent,
     BasketItemComponent,
     CustomTableComponent,
+    StepperComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     CommonModule,
@@ -63,11 +70,14 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    MatStepperModule,
     MatCheckboxModule,
     MatRadioModule,
     MatPaginatorModule,
-    MatTooltipModule
+    MatTooltipModule,
+    CdkStepperModule,
+    MatTabsModule,
+    MatDialogModule,
+    MatSelectModule
   ],
   exports: [
     NavbarComponent,
@@ -85,7 +95,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatFormFieldModule,
     MatInputModule,
     InputTextComponent,
-    MatStepperModule,
     FormsModule,
     CustomCurrencyPipe,
     TruncateTitlePipe,
@@ -95,7 +104,13 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     BookItemComponent,
     MatTooltipModule,
     MatPaginatorModule,
-    CustomTableComponent
+    CustomTableComponent,
+    CdkStepperModule,
+    StepperComponent,
+    MatTabsModule,
+    MatDialogModule,
+    MatSelectModule,
+    ConfirmationDialogComponent
   ]
 })
 export class SharedModule { }

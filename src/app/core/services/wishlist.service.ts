@@ -13,4 +13,12 @@ export class WishlistService {
   getUserWishlist() {
     return this.http.get<Book[]>(`${environment.baseAPIUrl}/api/Users/wishlist`)
   }
+
+  addBookToWishlist(book: Book) {
+    return this.http.post(`${environment.baseAPIUrl}/api/Users/wishlist`, book)
+  }
+
+  deleteBookFromWishlist(id: number) {
+    return this.http.delete(`${environment.baseAPIUrl}/api/Users/wishlist/${id}`)
+  }
 }

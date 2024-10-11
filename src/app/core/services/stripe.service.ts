@@ -13,7 +13,6 @@ export class StripeService {
 
   private stripePromise?: Promise<Stripe | null>
   private stripeElements?: StripeElements
-  // private addressElement?: StripeAddressElement
 
   constructor(private http: HttpClient, private basketService: BasketService) {
     this.stripePromise = loadStripe(environment.stripePublicKey)
@@ -35,21 +34,6 @@ export class StripeService {
     }
     return this.stripeElements
    }
-
-  //  async createAddressElement() {
-  //   if (!this.addressElement) {
-  //     const elements = await this.initalizeStripeElements()
-  //     if (elements) {
-  //       const options: StripeAddressElementOptions = {
-  //         mode: 'shipping'
-  //       } 
-  //       this.addressElement = elements.create('address', options)
-  //     }else {
-  //       throw new Error('Element instance has not been loaded.')
-  //     }
-  //   }
-  //   return this.addressElement
-  //  }
 
    createOrUpdatePaymentIntent() {
     const basket = this.basketService.getCurrentBasketValue()

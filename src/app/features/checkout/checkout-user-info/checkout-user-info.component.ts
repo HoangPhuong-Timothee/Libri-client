@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-checkout-user-info',
@@ -10,6 +12,16 @@ export class CheckoutUserInfoComponent {
 
   @Input() checkoutForm?: FormGroup
 
-  constructor() { }
+  constructor(private userService: UserService, private toastr: ToastrService) { }
+
+  saveUserInfo() {
+    const userInfo = this.checkoutForm?.get('userInfoForm')?.value
+    this.userService.modifyUserAddress(userInfo).subscribe({
+      next: () => {
+        this.toastr.success("Lưu thông tin thành công")
+        this.checkoutForm?.get("userInfoForm")?.reset(userInfo)
+      }
+    })
+  }
 
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BookParams } from 'src/app/core/models/book-param.model';
+import { BookParams } from 'src/app/core/models/params.model';
 import { Book } from 'src/app/core/models/book.model';
 import { Genre } from 'src/app/core/models/genre.model';
 import { Pagination } from 'src/app/core/models/pagination.model';

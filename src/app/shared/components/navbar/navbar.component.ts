@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { map, Observable } from 'rxjs';
-import { BasketItem } from 'src/app/core/models/basket.model';
+import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { BasketService } from 'src/app/core/services/basket.service';
 

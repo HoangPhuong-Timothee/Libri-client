@@ -1,58 +1,27 @@
-<div class="container">
-  <div class="row">
-    <div class="col-6">
-      <mat-stepper #stepper (selectionChange)="onStepChange($event)" class="tw-bg-white tw-border tw-border-gray-200 tw-shadow-sm">
-        <mat-step label="Thông tin khách hàng" [completed]="checkoutForm.get('userInfoForm')?.valid">
-          <div class="tw-flex tw-justify-end tw-mt-1">
-            <mat-checkbox 
-                [disabled]="!checkoutForm.get('userInfoForm')?.valid || !checkoutForm.get('userInfoForm')?.dirty"
-                [checked]="saveInfo"
-                (change)="onSaveUserInfoCheckboxChange($event)"
-            >
-                Lưu thông mặc định
-            </mat-checkbox>
-          </div>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-7">
 
-          <app-checkout-user-info [checkoutForm]="checkoutForm"></app-checkout-user-info>
-          
-          <div class="tw-flex justify-content-between mt-6">
-            <button routerLink="/bookcase" mat-stroked-button>Xem thêm sách</button>
-            <button matStepperNext mat-flat-button>Tiếp tục</button>
-          </div>
-        </mat-step>
-        <mat-step label="Dịch vụ" [completed]="checkoutForm.get('deliveryForm')?.valid">
-          
-          <app-checkout-delivery></app-checkout-delivery>
+            <app-stepper [linearModeSelected]="false" #appStepper>
+                <cdk-step [label]="'Khách hàng'" [completed]="checkoutForm.get('userInfoForm')?.valid">
+                    <app-checkout-user-info [checkoutForm]="checkoutForm"></app-checkout-user-info>
+                </cdk-step>
+                <cdk-step [label]="'Dịch vụ'" [completed]="checkoutForm.get('deliveryForm')?.valid">
+                    <app-checkout-delivery [checkoutForm]="checkoutForm"></app-checkout-delivery>
+                </cdk-step>
+                <cdk-step [label]="'Giỏ sách'">
+                    <app-checkout-review></app-checkout-review>
+                </cdk-step>
+                <cdk-step [label]="'Thanh toán'">
+                    <app-checkout-payment></app-checkout-payment>
+                </cdk-step>
+            </app-stepper>
+        
+        </div>
+        <div class="col-5">
 
-          <div class="tw-flex justify-content-between mt-6">
-            <button matStepperPrevious mat-stroked-button>Quay lại</button>
-            <button matStepperNext mat-flat-button>Tiếp tục</button>
-          </div>
-        </mat-step>
-        <mat-step label="Tổng kết">
-          
-          <app-checkout-review></app-checkout-review>
-          
-          <div class="tw-flex justify-content-between mt-6">
-            <button matStepperPrevious mat-stroked-button>Quay lại</button>
-            <button matStepperNext mat-flat-button>Tiếp tục</button>
-          </div>
-        </mat-step>
-        <mat-step label="Thanh toán" [completed]="checkoutForm.get('paymentForm')?.valid">
-
-          <app-checkout-payment></app-checkout-payment>
-
-          <div class="tw-flex justify-content-between mt-6">
-            <button matStepperPrevious mat-stroked-button>Quay lại</button>
-            <button matStepperNext mat-flat-button>Tiếp tục</button>
-          </div>
-        </mat-step>
-      </mat-stepper>
+            <app-order-totals></app-order-totals>
+        
+        </div>
     </div>
-    <div class="col-6">
-
-      <app-order-totals></app-order-totals>
-      
-    </div>
-  </div>
 </div>

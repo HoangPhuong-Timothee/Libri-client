@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { User } from '../models/user.model';
 import { Address } from '../models/address.model';
 
 @Injectable({
@@ -9,19 +8,13 @@ import { Address } from '../models/address.model';
 })
 export class UserService {
 
-  apiUrl = `${environment.baseAPIUrl}/api/Users`
-
   constructor(private http: HttpClient) { }
 
-  getUsers() {
-    return this.http.get<User[]>(this.apiUrl)
-  }
-
   getUserAddress() {
-    return this.http.get<Address>(`${this.apiUrl}/address`)
+    return this.http.get<Address>(`${environment.baseAPIUrl}/api/Users/address`)
   }
 
   modifyUserAddress(address: Address) {
-    return this.http.post<Address>(`${this.apiUrl}/address`, address)
+    return this.http.put<Address>(`${environment.baseAPIUrl}/api/Users/address`, address)
   }
 }

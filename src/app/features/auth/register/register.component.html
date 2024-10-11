@@ -4,89 +4,13 @@
         <div class="text-center mb-4">
           <h1 class="mb-3">Đăng tài khoản Libri</h1>
         </div>
+        
         <app-input-text [formControl]="registerForm.controls['username']" [label]="'Tên người dùng'"></app-input-text>
-          <!-- <div class="form-floating mb-3">
-            <input
-              [class.is-invalid]="registerForm.get('username')?.touched && registerForm.get('username')?.invalid"
-              [class.is-valid]="registerForm.get('username')?.touched && registerForm.get('username')?.valid" 
-              type="text" 
-              class="form-control" 
-              id="floatingUsername" 
-              placeholder="Username" 
-              formControlName="username">
-            <label for="floatingUsername">Tên người dùng</label>
-            <div *ngIf="registerForm.get('username')?.errors?.['required']" class="invalid-feedback">*Username is required</div>          
-          </div> -->
-          <app-input-text [formControl]="registerForm.controls['email']" [label]="'Email'" type="email"></app-input-text>
-        <!-- <div class="form-floating mb-3">
-          <input
-            [class.is-invalid]="registerForm.get('email')?.touched && registerForm.get('email')?.invalid"
-            [class.is-valid]="registerForm.get('email')?.touched && registerForm.get('email')?.valid" 
-            type="email" 
-            class="form-control" 
-            id="floatingEmail" 
-            placeholder="Email" 
-            formControlName="email">
-            <div *ngIf="registerForm.get('email')?.status === 'PENDING'" class="fa fa-spinner fa-spin loader"></div>
-          <label for="floatingEmail">Email</label>
-          <div *ngIf="registerForm.get('email')?.errors?.['required']" class="invalid-feedback">*Email is required</div>
-          <div *ngIf="registerForm.get('email')?.errors?.['email']" class="invalid-feedback">*Invalid email</div>
-          <div *ngIf="registerForm.get('email')?.errors?.['emailExists']" class="invalid-feedback">*Email is already register</div>
-        </div> -->
+        <app-input-text [formControl]="registerForm.controls['email']" [label]="'Email'" type="email"></app-input-text>
         <app-input-text [formControl]="registerForm.controls['password']" [label]="'Mật khẩu'" type="password"></app-input-text>
-        <!-- <div class="form-floating mb-3">
-          <input 
-            [class.is-invalid]="registerForm.get('password')?.touched && registerForm.get('password')?.invalid"
-            [class.is-valid]="registerForm.get('password')?.touched && registerForm.get('password')?.valid" 
-            type="password" 
-            class="form-control" 
-            id="floatingPassword" 
-            placeholder="Password" 
-            formControlName="password">
-          <label for="floatingPassword">Mật khẩu</label>
-          <div *ngIf="registerForm.get('password')?.errors?.['required']" class="invalid-feedback">*Password is required</div>
-          <div *ngIf="registerForm.get('password')?.errors?.['pattern']" class="invalid-feedback">*Password must have 1 Uppercase, 1 Lowercase, 1 number, 1 non alphanumeric and at least 6 characters</div>
-        </div> -->
         <app-input-text [formControl]="registerForm.controls['confirmPassword']" [label]="'Xác nhận mật khẩu'" type="password"></app-input-text>
-        <!-- <div class="form-floating mb-3">
-            <input
-              [class.is-invalid]="registerForm.get('confirmPassword')?.errors && registerForm.get('confirmPassword')?.touched"
-              [class.is-valid]="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.valid"
-              type="password" 
-              class="form-control" 
-              id="floatingConfirmPassword" 
-              placeholder="Confirm password" 
-              formControlName="confirmPassword">
-            <label for="floatingCofirmPassword">Xác nhận mật khẩu</label>
-            <div *ngIf="registerForm.get('confirmPassword')?.errors?.['required']" class="invalid-feedback">*Re-type your password</div>
-            <div *ngIf="registerForm.get('confirmPassword')?.hasError('matching')" class="invalid-feedback">*Password is not match</div>          
-          </div> -->
-          <app-input-text [formControl]="registerForm.controls['phoneNumber']" [label]="'Số điện thoại'"></app-input-text>
-        <!-- <div class="form-floating mb-3">
-            <input
-              [class.is-invalid]="registerForm.get('phoneNumber')?.touched && registerForm.get('phoneNumber')?.invalid"
-              [class.is-valid]="registerForm.get('phoneNumber')?.touched && registerForm.get('phoneNumber')?.valid" 
-              type="text" 
-              class="form-control" 
-              id="floatingPhoneNumber" 
-              placeholder="Phone number" 
-              formControlName="phoneNumber">
-            <label for="floatingPhoneNumber">Số điện thoại</label>
-            <div *ngIf="registerForm.get('phoneNumber')?.errors?.['required']" class="invalid-feedback">*Phone number is required</div>          
-          </div> -->
-          <app-input-text [formControl]="registerForm.controls['address']" [label]="'Địa chỉ'"></app-input-text>
-          <!-- <div class="form-floating mb-3">
-            <input
-              [class.is-invalid]="registerForm.get('address')?.touched && registerForm.get('address')?.invalid"
-              [class.is-valid]="registerForm.get('address')?.touched && registerForm.get('address')?.valid" 
-              type="text" 
-              class="form-control" 
-              id="floatingAddress" 
-              placeholder="Address" 
-              formControlName="address">
-            <label for="floatingAddress">Địa chỉ</label>
-            <div *ngIf="registerForm.get('address')?.errors?.['required']" class="invalid-feedback">*Address is required</div>          
-          </div> -->
+        <app-input-text [formControl]="registerForm.controls['phoneNumber']" [label]="'Số điện thoại'"></app-input-text>
+        
         <ul class="text-danger list-unstyled" *ngIf="errors">
           <li *ngIf="let error of errors">
             {{ error }}

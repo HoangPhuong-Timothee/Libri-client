@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { BreadcrumbService } from 'xng-breadcrumb';
 
 @Component({
@@ -8,5 +9,5 @@ import { BreadcrumbService } from 'xng-breadcrumb';
 })
 export class SectionHeaderComponent {
 
-  constructor(public bcService: BreadcrumbService) { }
+  constructor(public bcService: BreadcrumbService, public router: Router) { }
 }

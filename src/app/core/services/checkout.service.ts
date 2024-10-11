@@ -7,7 +7,7 @@ import { map, of } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class DeliveryMethodService {
+export class CheckoutService {
 
   deliveryMethods: DeliveryMethod[] = []
 
@@ -15,7 +15,7 @@ export class DeliveryMethodService {
 
   getAllDeliveryMethods() {
     if (this.deliveryMethods?.length > 0) return of(this.deliveryMethods)
-    return this.http.get<DeliveryMethod[]>(`${environment.baseAPIUrl}/api/Payments/delivery-methods`).pipe(
+    return this.http.get<DeliveryMethod[]>(`${environment.baseAPIUrl}/api/Orders/delivery-methods`).pipe(
       map(response => {
         this.deliveryMethods = response.sort((a, b) => b.price - a.price)
         return response

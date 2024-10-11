@@ -24,8 +24,7 @@ export class RegisterComponent {
     email: ['', [Validators.required, Validators.email], [this.emailValidator.validateEmailNotTaken()]],
     password: new FormControl ('', [Validators.required, Validators.pattern(this.passwordRegex), matchValue('confirmPassword', true)]),
     confirmPassword: new FormControl('', [Validators.required, matchValue('password', true)]),
-    phoneNumber: ['', Validators.required],
-    address: ['', Validators.required]
+    phoneNumber: ['', Validators.required]
   }
 );
 

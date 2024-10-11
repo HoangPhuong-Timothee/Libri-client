@@ -18,7 +18,7 @@ const routes: Routes = [
     path: 'admin',
     loadChildren: () => import('./features/admin/admin.module').then(m => m.AdminModule),
     canActivate: [AuthGuard, AdminGuard],
-    data: { breadcrumb: 'Admin' }
+    data: { breadcrumb: { skip: true } }
   },
   {
     path: 'bookcase', 
@@ -34,17 +34,20 @@ const routes: Routes = [
   },
   {
     path: 'basket',
-    loadChildren: () => import('./features/basket/basket.module').then(m => m.BasketModule)
+    loadChildren: () => import('./features/basket/basket.module').then(m => m.BasketModule),
+    data: { breadcrumb: 'Giỏ sách' }
   },
   {
     path: 'checkout',
     canActivate: [AuthGuard],
-    loadChildren: () => import('./features/checkout/checkout.module').then(m => m.CheckoutModule)
+    loadChildren: () => import('./features/checkout/checkout.module').then(m => m.CheckoutModule),
+    data: { breadcrumb: 'Thanh toán' }
   },
   {
     path: 'order',
     canActivate: [AuthGuard],
-    loadChildren: () => import('./features/order/order.module').then(m => m.OrderModule)
+    loadChildren: () => import('./features/order/order.module').then(m => m.OrderModule),
+    data: { breadcrumb: 'Đơn đặt sách' }
   },
   {
     path: 'introduction',

@@ -4,7 +4,7 @@
       <a routerLink="/" class="p-5" routerLinkActive="active" [routerLinkActiveOptions]="{ exact:true }">Trang chủ</a>
       <a routerLink="/bookcase" class="p-4" routerLinkActive="active">Tủ sách</a>
       <a routerLink="/wishlist" class="p-4" routerLinkActive="active">Sách yêu thích</a>
-      <a *ngIf="isAdmin$ | async" routerLink="/admin" class="p-4" routerLinkActive="active">Quản lý sách</a>
+      <a *ngIf="isAdmin$ | async" routerLink="/admin" class="p-4" routerLinkActive="active">Quản lý</a>
       <a routerLink="/introduction" class="p-4" routerLinkActive="active">Giới thiệu</a>
     </nav>
     <div class="d-flex align-items-center">
@@ -21,7 +21,7 @@
       <ng-container *ngIf="authService.currentUser$ | async as user">
         <div class="dropdown me-5" style="cursor: pointer; z-index: 11;" dropdown>
           <a dropdownToggle class="dropdown-toggle">
-            <img class="rounded-full" [src]="user.imageUrl" alt="{{ user.userName }}" style="height: 38px; width: 70px;">
+            <img class="rounded-full" src="{{ user.imageUrl }}" alt="{{ user.userName }}" style="height: 38px; width: 70px;">
             <strong>Xin chào, {{ user.userName }}!</strong>
           </a>
           <ul *dropdownMenu class="dropdown-menu dropdown-menu-right">

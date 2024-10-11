@@ -1,10 +1,5 @@
-import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { ToastrService } from 'ngx-toastr';
-import { Address } from 'src/app/core/models/address.model';
-import { BasketService } from 'src/app/core/services/basket.service';
 import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
@@ -14,13 +9,7 @@ import { UserService } from 'src/app/core/services/user.service';
 })
 export class CheckoutComponent implements OnInit {
 
-  saveInfo = false
-
-  constructor(private fb: FormBuilder, private userService: UserService, private basketService: BasketService, private toastr: ToastrService) { }
-
-  ngOnInit() {
-    this.getUserInfoFormValue()
-  }
+  constructor(private fb: FormBuilder, private userService: UserService) { }
 
   checkoutForm = this.fb.group({
     userInfoForm: this.fb.group({
@@ -32,29 +21,15 @@ export class CheckoutComponent implements OnInit {
       postalCode: ['', Validators.required]
     }),
     deliveryForm: this.fb.group({
-      deliveryMethod: ['', Validators.required] 
+      deliveryMethod: ['', Validators.required]
     }),
     paymentForm: this.fb.group({
       nameOnCard: ['', Validators.required]
     })
   })
 
-  onSaveUserInfoCheckboxChange(event: MatCheckboxChange) {
-    this.saveInfo = event.checked
-  }
-
-  onStepChange(event: StepperSelectionEvent) {
-    if (event.selectedIndex === 1) {
-      if (this.saveInfo) {
-        const userInfo: Address = this.checkoutForm.get('userInfoForm')?.value as Address
-        this.userService.modifyUserAddress(userInfo).subscribe({
-          next: () => {
-            this.toastr.success('Đã lưu thông tin làm mặc định.')
-            this.checkoutForm.get('userInfoForm')?.reset(this.checkoutForm.get('userInfoForm')?.value)
-          }
-        })
-      }
-    }
+  ngOnInit(): void {
+    this.getUserInfoFormValue()
   }
 
   getUserInfoFormValue() {
@@ -64,4 +39,5 @@ export class CheckoutComponent implements OnInit {
       }
     })
   }
+
 }

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { BookParams } from '../models/book-param.model';
+import { BookParams } from '../models/params.model';
 import { Pagination } from '../models/pagination.model';
-import { Book } from '../models/book.model';
+import { AddBookRequest, Book, UpdateBookRequest } from '../models/book.model';
 
 @Injectable({
   providedIn: 'root'
@@ -34,4 +34,21 @@ export class BookService {
   getLatestBook() {
     return this.http.get<Book[]>(`${environment.baseAPIUrl}/api/Books/latest`)
   }
+
+  addNewBook(model: AddBookRequest) {
+    return this.http.post(`${environment.baseAPIUrl}/api/Books/`, model)
+  }
+
+  updateBook(model: UpdateBookRequest) {
+    return this.http.put(`${environment.baseAPIUrl}/api/Books/${model.id}`, model)
+  }
+
+  updateQuantityInStock(id: number, quantity: number) {
+    return this.http.put(`${environment.baseAPIUrl}/api/Books/stocks/${id}`, quantity)
+  }
+
+  deleteBook(id: number) {
+    return this.http.delete(`${environment.baseAPIUrl}/api/Books/${id}`)
+  }
+
 }

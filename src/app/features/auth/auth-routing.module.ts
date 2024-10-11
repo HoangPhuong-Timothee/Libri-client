@@ -6,11 +6,13 @@ import { RegisterComponent } from './register/register.component';
 const routes: Routes = [
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent,
+    data: { breadcrumb: { skip: true } }
   },
   {
     path: 'register',
-    component: RegisterComponent
+    component: RegisterComponent,
+    data: { breadcrumb: { skip: true } }
   }
 ];
 

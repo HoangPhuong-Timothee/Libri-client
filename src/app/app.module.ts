@@ -12,11 +12,13 @@ import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
 import { TestErrorComponent } from './features/test-error/test-error.component';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { CustomPaginator } from './shared/helpers/extensions/custom-paginator';
 
 @NgModule({
   declarations: [
     AppComponent,
-    TestErrorComponent
+    TestErrorComponent,
   ],
   imports: [
     BrowserModule,
@@ -31,7 +33,8 @@ import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: MatPaginatorIntl, useClass: CustomPaginator }
   ],
   bootstrap: [AppComponent]
 })

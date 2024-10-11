@@ -8,11 +8,11 @@ import { PageEvent } from '@angular/material/paginator';
 })
 export class CustomTableComponent {
 
-  @Input() columns: { field: string, header: string, pipe?: string, pipeArgs?: any }[] = []
+  @Input() columns: { field: string | string[], header: string, haveImage?: boolean, imageUrl?: string, pipe?: string, pipeArgs?: any }[] = []
   @Input() dataSource: any[] = []
   @Input() actions: { label: string, icon: string, tooltip: string, action: (row: any) => void, disabled?: (row: any) => boolean }[] = []
   @Input() totalItems: number = 0
-  @Input() pageSize: number = 10
+  @Input() pageSize: number = 12
   @Input() pageIndex: number = 0
   @Output() pageChange = new EventEmitter<PageEvent>()
   

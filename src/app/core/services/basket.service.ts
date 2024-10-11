@@ -9,7 +9,6 @@ import { ToastrService } from 'ngx-toastr';
 import { isBook } from 'src/app/shared/helpers/extensions/is-book';
 import { Coupon } from '../models/coupon.model';
 import { DeliveryMethod } from '../models/delivery-method.model';
-import { DeliveryMethodService } from './delivery-method.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,16 +23,11 @@ export class BasketService {
   coupon$ = this.couponSource.asObservable()
   delivery = 0
 
-  constructor(private http: HttpClient, private toastr: ToastrService, private deliveryMethodService: DeliveryMethodService) { }
+  constructor(private http: HttpClient, private toastr: ToastrService) { }
 
   setDeliveryPrice(deliveryMethod: DeliveryMethod) {
-    const basket = this.getCurrentBasketValue()
     this.delivery = deliveryMethod.price
-    if (basket)
-    {
-      basket.deliveryMethodId = deliveryMethod.id
-      this.setBasket(basket)  
-    }
+    this.calculateTotal()
   }
 
   get basketItemCount$() {
@@ -130,7 +124,6 @@ export class BasketService {
   private calculateTotal() {
     const basket = this.getCurrentBasketValue()
     if (!basket) return
-    const delivery = 0
     const discount = 0
     const subtotal = basket.basketItems.reduce((a, b) => a + (b.price * b.quantity), 0)
     const total = subtotal + this.delivery - discount

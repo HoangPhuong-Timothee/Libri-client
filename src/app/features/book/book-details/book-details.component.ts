@@ -24,13 +24,20 @@ export class BookDetailsComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.showBookDetails()
-    this.showSimilarBooks()
+    this.route.paramMap.subscribe(params => {
+      let id = params.get('id')
+      if (id) {
+        this.showBookDetails(+id) 
+        this.showSimilarBooks(+id) 
+      }
+    })
+    // this.showBookDetails()
+    // this.showSimilarBooks()
   }
 
-  showBookDetails() {
-    const id = this.route.snapshot.paramMap.get('id');
-    if(id) this.bookService.getSingleBook(+id).subscribe({
+  showBookDetails(id: number) {
+    // let id = this.route.snapshot.paramMap.get('id')
+    /*if(id)*/ this.bookService.getSingleBook(id).subscribe({
       next: (reponse) => {
         this.book = reponse
         this.bcService.set('@bookDetails', this.book.title)
@@ -50,9 +57,9 @@ export class BookDetailsComponent implements OnInit {
     })
   }
 
-  showSimilarBooks() {
-    const id = this.route.snapshot.paramMap.get('id')
-    if (id) this.bookService.getSimilarBook(+id).subscribe({
+  showSimilarBooks(id: number) {
+    // let id = this.route.snapshot.paramMap.get('id')
+    /*if (id)*/ this.bookService.getSimilarBook(id).subscribe({
       next: response => this.similarBooks = response
     })
   }
