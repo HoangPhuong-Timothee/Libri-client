@@ -30,6 +30,12 @@ export class PublisherService {
     return this.http.post(`${environment.baseAPIUrl}/api/Publishers`, model)
   }
 
+  importPublishersFromFile(file: File) {
+    const formData = new FormData()
+    formData.append('file', file, file.name)
+    return this.http.post(`${environment.baseAPIUrl}/api/Publishers/import`, formData, { reportProgress: true, observe: 'events' })
+  }
+
   updatePublisher(model: UpdatePublisherRequest) {
     return this.http.put(`${environment.baseAPIUrl}/api/Publishers/${model.id}`, model)
   }
@@ -37,4 +43,5 @@ export class PublisherService {
   deletePublisher(id: number) {
     return this.http.delete(`${environment.baseAPIUrl}/api/Publishers/${id}`)
   }
+  
 }

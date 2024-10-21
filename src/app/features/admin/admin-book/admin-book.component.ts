@@ -3,8 +3,6 @@ import { PageEvent } from '@angular/material/paginator';
 import { BookParams } from 'src/app/core/models/params.model';
 import { Book } from 'src/app/core/models/book.model';
 import { BookService } from 'src/app/core/services/book.service';
-import { MatDialog } from '@angular/material/dialog';
-// import { AddBookComponent } from './add-book/add-book.component';
 import { Router } from '@angular/router';
 
 @Component({

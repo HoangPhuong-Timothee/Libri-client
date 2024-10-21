@@ -3,16 +3,23 @@
     <div class="fs-2 fw-semibold mt-4 text-uppercase">
       Quản lý sách
     </div>
-    <div class="mt-2">
+    <div class="mt-2 d-flex">
       <input (keyup.enter)="onSearch()" [(ngModel)]="searchTerm" type="text" class="form-control me-2" placeholder="Nhập từ khóa..." style="width: 300px;">
       <button (click)="onSearch()" class="btn btn-secondary mx-2">Tìm kiếm</button>
       <button (click)="onReset()" class="btn btn-danger"><i class="fa-solid fa-rotate-left"></i></button>
     </div>
-    <button class="btn btn-success mt-3">
-      <i class="fa fa-plus"></i>
-      <i class="fa fa-book me-1"></i>
-      Thêm sách
-    </button>
+    <div class="d-flex justify-content-between">
+      <button class="btn btn-success mt-3">
+        <i class="fa fa-upload"></i>
+        <i class="fa fa-book me-1"></i>
+        Thêm từ file
+      </button>
+      <button class="btn btn-success mt-3">
+        <i class="fa fa-plus"></i>
+        <i class="fa fa-book me-1"></i>
+        Thêm sách
+      </button>
+    </div>
   </div>
 </div>
 

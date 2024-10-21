@@ -1,28 +1,29 @@
-<div class="p-4">
-  <table class="w-100 bg-white">
+<!-- <div class="p-4">
+  <table class="table table-striped">
     <thead>
-      <tr class="border-bottom">
-        <th *ngFor="let column of columns" class="py-2 px-4 text-start bg-warning text-center">{{ column.header }}</th>
-        <th class="py-2 px-4 text-start bg-warning text-center" *ngIf="actions.length"><i class="fa-solid fa-grip"></i></th>
+      <tr>
+        <th *ngFor="let column of columns" class="text-start bg-warning text-center">{{ column.header }}</th>
+        <th class="py-2 px-4 text-start bg-warning text-center" *ngIf="actions.length"></th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let row of dataSource" class="border-bottom">
-        <td *ngFor="let column of columns" class="py-2 px-4">
+        <td *ngFor="let column of columns">
           <div *ngIf="column.haveImage" class="d-flex">
-            <img src="{{ row[column.field[1]] }}" alt="book image" style="width: 50px; height: auto;">
+            <img src="{{ row[column.field[1]] }}" alt="book image" style="width: 70px; height: auto;">
             <span>{{ row[column.field[0]] }}</span>
           </div>
           {{ getCellValue(row, column) }}
         </td>
         <td class="py-2 px-4" *ngIf="actions.length">
-          <div class="d-flex gap-2">
+          <div class="d-flex gap-1">
             <ng-container *ngFor="let action of actions">
               <button
                 mat-icon-button
                 matTooltip="{{ action.tooltip }}"
                 [disabled]="action.disabled ? action.disabled(row) : false"
-                (click)="onAction(action.action, row)">
+                (click)="onAction(action.action, row)"
+              >
                 <mat-icon>{{ action.icon }}</mat-icon>
               </button>
             </ng-container>
@@ -31,13 +32,58 @@
       </tr>
     </tbody>
   </table>
-  <mat-paginator 
+  <mat-paginator
     [length]="totalItems"
     [pageSize]="pageSize"
     [pageIndex]="pageIndex"
     [pageSizeOptions]="[8, 12, 16, 20]"
     (page)="onPageChange($event)"
-    class="mt-4 bg-white"
+    class="mt-4"
+  >
+  </mat-paginator>
+</div> -->
+<div class="p-4">
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th *ngFor="let column of columns" class="text-start bg-primary text-white">{{ column.header }}</th>
+        <th class="px-4 text-start bg-primary text-white" *ngIf="actions.length"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of dataSource" class="border-bottom">
+        <td *ngFor="let column of columns" class="py-2">
+          <div *ngIf="column.haveImage" class="d-flex align-items-center" style="max-width: 350px;">
+            <img src="{{ row[column.field[1]] }}" alt="book image" style="width: 70px; height: auto;">
+            <span class="ms-2">{{ row[column.field[0]] }}</span>
+          </div>
+          {{ getCellValue(row, column) }}
+        </td>
+        <td class="py-2 px-4" *ngIf="actions.length">
+          <div class="d-flex gap-4">
+            <ng-container *ngFor="let action of actions">
+              <button
+                mat-icon-button
+                matTooltip="{{ action.tooltip }}"
+                [disabled]="action.disabled ? action.disabled(row) : false"
+                (click)="onAction(action.action, row)"
+                class="btn btn-sm btn-secondary rounded-circle"
+              >
+                <mat-icon>{{ action.icon }}</mat-icon>
+              </button>
+            </ng-container>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <mat-paginator
+    [length]="totalItems"
+    [pageSize]="pageSize"
+    [pageIndex]="pageIndex"
+    [pageSizeOptions]="[8, 12, 16, 20]"
+    (page)="onPageChange($event)"
+    class="mt-4"
   >
   </mat-paginator>
 </div>

@@ -4,6 +4,11 @@ import { PageEvent } from '@angular/material/paginator';
 import { PublisherParams } from 'src/app/core/models/params.model';
 import { Publisher } from 'src/app/core/models/publisher.model';
 import { PublisherService } from 'src/app/core/services/publisher.service';
+import { AddPublisherFormComponent } from './add-publisher-form/add-publisher-form.component';
+import { firstValueFrom } from 'rxjs';
+import { DialogService } from 'src/app/core/services/dialog.service';
+import { EditPublisherFormComponent } from './edit-publisher-form/edit-publisher-form.component';
+// import { ImportPublihsersFormComponent } from './import-publihsers-form/import-publihsers-form.component';
 
 @Component({
   selector: 'app-admin-publisher',
@@ -26,7 +31,7 @@ export class AdminPublisherComponent implements OnInit {
       icon: 'edit',
       tooltip: 'Chỉnh sửa tên NXB',
       action: (row: any) => {
-        console.log(row)
+        this.openUpdatePublisherDialog(row)
       }
     },
     {
@@ -34,13 +39,17 @@ export class AdminPublisherComponent implements OnInit {
       icon: 'delete',
       tooltip: 'Xóa NXB',
       action: (row: any) => {
-        console.log(row)
+        this.openDeletePublisherDialog(row.id)
       }
 
     }
   ]
   
-  constructor(private publisherService: PublisherService, private dialog: MatDialog) { }
+  constructor(
+    private publisherService: PublisherService, 
+    private dialog: MatDialog, 
+    private dialogService: DialogService
+  ) { }
 
   ngOnInit(): void {
     this.getAllPublishersForAdmin()
@@ -73,6 +82,79 @@ export class AdminPublisherComponent implements OnInit {
     if (this.searchTerm) this.searchTerm = ''
     this.adminPublisherParams = new PublisherParams()
     this.getAllPublishersForAdmin()
+  }
+
+  openAddNewPublisherDialog() {
+    const dialog = this.dialog.open(AddPublisherFormComponent, {
+      minWidth: '500px',
+      data: {
+        title: 'Thêm nhà xuất bản'
+      }
+    })
+    dialog.afterClosed().subscribe({
+      next: async result => {
+        if (result) {
+          const publisher: any = await firstValueFrom(this.publisherService.addNewPublisher(result.publisher))
+          if (publisher) {
+            this.publisherList.push(publisher)
+          }
+        }
+      }
+    })
+  }
+
+  // openImportPublishersDialog() {
+  //   const dialog = this.dialog.open(ImportPublihsersFormComponent, {
+  //     minWidth: '500px',
+  //     data: {
+  //       title: 'Thêm nhà xuất bản từ file'
+  //     }
+  //   })
+  //   dialog.afterClosed().subscribe({
+  //     next: async result => {
+  //       if (result) {
+  //         const publishers: any = await firstValueFrom(this.publisherService.importPublishersFromFile(result.publishers))
+  //         if (publishers) {
+  //           this.publisherList.push(...publishers)
+  //         }
+  //       }
+  //     }
+  //   })
+  // }
+
+  openUpdatePublisherDialog(publisher: Publisher) {
+    const dialog = this.dialog.open(EditPublisherFormComponent, {
+      minWidth: '500px',
+      data: {
+        title: 'Chỉnh sửa tên nhà xuất bản',
+        publisher
+      }
+    })
+    dialog.afterClosed().subscribe({
+      next: async result => {
+        if (result) {
+          await firstValueFrom(this.publisherService.updatePublisher(result.publisher))
+          const index = this.publisherList.findIndex(p => p.id === result.publisher.id)
+          if (index !== -1) {
+            this.publisherList[index] = result.publisher
+          }
+        }
+      }
+    })
+  }
+
+  async openDeletePublisherDialog(id: number) {
+    const confirmed = await this.dialogService.confirmDialog(
+      'Xác nhận xóa nhà xuất bản',
+      'Bạn chắc chắn muốn xóa nhà xuất bản ? Vui lòng xác nhận bên dưới!'
+    )
+    if (confirmed) {
+      this.publisherService.deletePublisher(id).subscribe({
+        next: () => {
+          this.publisherList = this.publisherList.filter(p => p.id !== id)
+        }
+      })
+    }
   }
 
 }

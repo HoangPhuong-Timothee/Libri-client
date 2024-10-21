@@ -34,6 +34,9 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
+import { TextAreaComponent } from './components/text-area/text-area.component';
+import { InputSelectComponent } from './components/input-select/input-select.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
  
 @NgModule({
   declarations: [
@@ -51,7 +54,9 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
     BasketItemComponent,
     CustomTableComponent,
     StepperComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    TextAreaComponent,
+    InputSelectComponent
   ],
   imports: [
     CommonModule,
@@ -77,7 +82,8 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
     CdkStepperModule,
     MatTabsModule,
     MatDialogModule,
-    MatSelectModule
+    MatSelectModule,
+    MatProgressBarModule
   ],
   exports: [
     NavbarComponent,
@@ -110,7 +116,10 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
     MatTabsModule,
     MatDialogModule,
     MatSelectModule,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    InputSelectComponent,
+    TextAreaComponent,
+    MatProgressBarModule
   ]
 })
 export class SharedModule { }

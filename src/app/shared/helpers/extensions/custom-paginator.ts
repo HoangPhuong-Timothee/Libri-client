@@ -3,7 +3,7 @@ import { MatPaginatorIntl } from "@angular/material/paginator";
 
 @Injectable()
 export class CustomPaginator extends MatPaginatorIntl {
-    override itemsPerPageLabel = "Hiển thị"
+    override itemsPerPageLabel = ""
     override nextPageLabel= "Trang tiếp theo"
     override previousPageLabel = "Trang trước"
     override firstPageLabel = "Trang đầu tiên"
@@ -17,6 +17,6 @@ export class CustomPaginator extends MatPaginatorIntl {
         const endIndex = startIndex < length 
             ? Math.min(startIndex + pageSize, length)
             : startIndex + pageSize
-        return `${startIndex + 1} - ${endIndex} của ${length} kết quả` 
+        return `Hiển thị ${startIndex + 1} - ${endIndex} của ${length} kết quả` 
     }
 }

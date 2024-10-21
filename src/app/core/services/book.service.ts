@@ -38,7 +38,7 @@ export class BookService {
   addNewBook(model: AddBookRequest) {
     return this.http.post(`${environment.baseAPIUrl}/api/Books/`, model)
   }
-
+  
   updateBook(model: UpdateBookRequest) {
     return this.http.put(`${environment.baseAPIUrl}/api/Books/${model.id}`, model)
   }

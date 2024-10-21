@@ -1,0 +1,5 @@
+<mat-form-field appearance="outline" class="tw-w-full tw-mb-4">
+    <mat-label>{{ label }}</mat-label>
+    <textarea [formControl]="control" placeholder={{ label }} matInput></textarea>
+    <mat-error *ngIf="control.hasError('required')">*Vui lòng điền {{ label }}</mat-error>
+</mat-form-field>

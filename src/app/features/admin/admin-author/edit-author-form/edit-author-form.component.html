@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+<mat-dialog-content class="tw-p-3">
+  <form [formGroup]="updateAuthorForm" class="tw-p-4 tw-w-full" (ngSubmit)="updateAuthor()">
+    <mat-label>ID</mat-label>
+    <input matInput [value]="data.id" disabled>
+
+    <app-text-input label="Tác giả" formControlName="name"></app-text-input>
+
+    <div class="tw-flex tw-justify-end tw-gap-3">
+      <button mat-button color="warn" type="button" mat-dialog-close>Hủy</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="updateAuthorForm.invalid">
+        Lưu
+      </button>
+    </div>
+  </form>
+</mat-dialog-content>
