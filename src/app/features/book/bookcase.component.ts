@@ -47,9 +47,13 @@ export class BookcaseComponent implements OnInit {
     }
   ]
 
-  constructor(private bookService: BookService, private genreService: GenreService, private publisherService: PublisherService, private router: Router) {
-    this.searchTerm = ''
-   }
+  constructor(
+    private bookService: BookService, 
+    private genreService: GenreService, 
+    private publisherService: PublisherService, 
+    private router: Router
+  ) 
+  { this.searchTerm = '' }
 
   ngOnInit(): void {
     this.getAllBooks()
@@ -130,7 +134,9 @@ export class BookcaseComponent implements OnInit {
 
   onReset() {
     // if (this.searchViewChild) this.searchViewChild.nativeElement.value = '';
-    if (this.searchTerm) this.searchTerm = ''
+    if (this.searchTerm) {
+      this.searchTerm = ''
+    }
     this.bookParams = new BookParams()
     this.getAllBooks()  
   }

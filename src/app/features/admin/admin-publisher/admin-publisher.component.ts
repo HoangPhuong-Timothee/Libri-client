@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { firstValueFrom } from 'rxjs';
 import { PublisherParams } from 'src/app/core/models/params.model';
 import { Publisher } from 'src/app/core/models/publisher.model';
+import { DialogService } from 'src/app/core/services/dialog.service';
 import { PublisherService } from 'src/app/core/services/publisher.service';
 import { AddPublisherFormComponent } from './add-publisher-form/add-publisher-form.component';
-import { firstValueFrom } from 'rxjs';
-import { DialogService } from 'src/app/core/services/dialog.service';
 import { EditPublisherFormComponent } from './edit-publisher-form/edit-publisher-form.component';
-// import { ImportPublihsersFormComponent } from './import-publihsers-form/import-publihsers-form.component';
+import { ImportPublihsersFormComponent } from './import-publihsers-form/import-publihsers-form.component';
 
 @Component({
   selector: 'app-admin-publisher',
@@ -52,6 +52,7 @@ export class AdminPublisherComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.searchTerm = ''
     this.getAllPublishersForAdmin()
   }
 
@@ -79,7 +80,9 @@ export class AdminPublisherComponent implements OnInit {
   }
 
   onReset() {
-    if (this.searchTerm) this.searchTerm = ''
+    if (this.searchTerm) {
+      this.searchTerm = ''
+    }
     this.adminPublisherParams = new PublisherParams()
     this.getAllPublishersForAdmin()
   }
@@ -103,24 +106,21 @@ export class AdminPublisherComponent implements OnInit {
     })
   }
 
-  // openImportPublishersDialog() {
-  //   const dialog = this.dialog.open(ImportPublihsersFormComponent, {
-  //     minWidth: '500px',
-  //     data: {
-  //       title: 'Thêm nhà xuất bản từ file'
-  //     }
-  //   })
-  //   dialog.afterClosed().subscribe({
-  //     next: async result => {
-  //       if (result) {
-  //         const publishers: any = await firstValueFrom(this.publisherService.importPublishersFromFile(result.publishers))
-  //         if (publishers) {
-  //           this.publisherList.push(...publishers)
-  //         }
-  //       }
-  //     }
-  //   })
-  // }
+  openImportPublishersDialog() {
+    const dialog = this.dialog.open(ImportPublihsersFormComponent, {
+      minWidth: '500px',
+      data: {
+        title: 'Thêm nhà xuất bản từ file'
+      }
+    })
+    dialog.afterClosed().subscribe({
+      next: async result => {
+        if (result && result.fileUploaded) {
+          this.getAllPublishersForAdmin()
+        }
+      }
+    })
+  }
 
   openUpdatePublisherDialog(publisher: Publisher) {
     const dialog = this.dialog.open(EditPublisherFormComponent, {

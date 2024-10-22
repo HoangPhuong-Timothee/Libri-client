@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { AddPublisherRequest, Publisher, UpdatePublisherRequest } from '../models/publisher.model';
-import { PublisherParams } from '../models/params.model';
 import { Pagination } from '../models/pagination.model';
+import { PublisherParams } from '../models/params.model';
+import { AddPublisherRequest, Publisher, UpdatePublisherRequest } from '../models/publisher.model';
 
 @Injectable({
   providedIn: 'root'

@@ -15,16 +15,16 @@ export class AddPublisherFormComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder, 
-    private addDialogRef: MatDialogRef<AddPublisherFormComponent>, 
+    private addDialogRef: MatDialogRef<AddPublisherFormComponent>
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.addPublisherForm = this.fb.group({
       name: ['', [Validators.required]]
     })
   }
 
-  addNewPublisher(): void {
+  addNewPublisher() {
     if(this.addPublisherForm.valid) {
       let publisher: Publisher = this.addPublisherForm.value
       this.addDialogRef.close({ publisher })

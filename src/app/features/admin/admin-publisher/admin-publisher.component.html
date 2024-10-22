@@ -1,32 +1,35 @@
-<div class="tw-mt-2">
-  <div class="tw-container tw-d-flex tw-justify-content-between tw-align-items-center">
-    <div class="tw-fs-2 tw-fw-semibold tw-mt-4 tw-text-uppercase">
-      Nhà xuất bản
-    </div>
-    <div class="tw-mt-2 tw-d-flex">
-      <input
-        (keyup.enter)="onSearch()"
-        [(ngModel)]="searchTerm"
-        type="text"
-        class="tw-form-control tw-me-2"
-        placeholder="Nhập từ khóa..."
-        style="width: 300px;"
-      >
-      <button (click)="onSearch()" class="tw-btn tw-btn-secondary tw-mx-2">Tìm kiếm</button>
-      <button (click)="onReset()" class="tw-btn tw-btn-danger"><i class="fa-solid fa-rotate-left"></i></button>
-    </div>
-    <div class="tw-d-flex tw-justify-content-between">
-      <button class="tw-btn tw-btn-success tw-mt-3">
-        <i class="fa fa-upload"></i>
-        <i class="fa fa-book tw-me-1"></i>
-        Thêm từ file
-      </button>
-      <button (click)="openAddNewPublisherDialog()" class="tw-btn tw-btn-success tw-mt-3">
-        <i class="fa fa-plus"></i>
-        <i class="fa fa-p tw-me-1"></i>
-        Thêm NXB
-      </button>
-    </div>
+<div class="tw-flex tw-justify-between tw-items-center tw-mt-2">
+  <div class="tw-text-2xl tw-font-semibold tw-mt-4">
+    Nhà xuất bản
+  </div>
+  <div class="tw-mt-2 tw-flex">
+    <input
+      (keyup.enter)="onSearch()"
+      [(ngModel)]="searchTerm"
+      type="text"
+      class="form-control me-2"
+      placeholder="Nhập từ khóa..."
+      style="width: 300px;"
+    >
+    <button (click)="onSearch()" class="btn btn-secondary mx-2">Tìm kiếm</button>
+    <button (click)="onReset()" class="btn btn-danger"><i class="fa-solid fa-rotate-left"></i></button>
+  </div>
+  <div class="tw-flex tw-justify-between">
+    <button class="btn btn-success mt-3">
+      <i class="fa fa-upload"></i>
+      <i class="fa fa-book tw-me-1"></i>
+      Thêm từ file
+    </button>
+    <button class="btn btn-secondary mt-3">
+      <i class="fa fa-download"></i>
+      <i class="fa fa-book tw-me-1"></i>
+      Tải file mẫu
+    </button>
+    <button (click)="openAddNewPublisherDialog()" class="btn btn-primary mt-3">
+      <i class="fa fa-plus"></i>
+      <i class="fa fa-p tw-me-1"></i>
+      Thêm NXB
+    </button>
   </div>
 </div>
 

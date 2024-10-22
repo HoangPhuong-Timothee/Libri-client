@@ -15,9 +15,12 @@ import { AddGenreFormComponent } from './admin-genre/add-genre-form/add-genre-fo
 import { EditGenreFormComponent } from './admin-genre/edit-genre-form/edit-genre-form.component';
 import { AddAuthorFormComponent } from './admin-author/add-author-form/add-author-form.component';
 import { EditAuthorFormComponent } from './admin-author/edit-author-form/edit-author-form.component';
+import { AddBookFormComponent } from './admin-book/add-book-form/add-book-form.component';
+import { ImportBooksFormComponent } from './admin-book/import-books-form/import-books-form.component';
+import { EditBookFormComponent } from './admin-book/edit-book-form/edit-book-form.component';
 // import { ImportAuthorsFormComponent } from './admin-author/import-authors-form/import-authors-form.component';
 // import { ImportGenresFormComponent } from './admin-genre/import-genres-form/import-genres-form.component';
-// import { ImportPublihsersFormComponent } from './admin-publisher/import-publihsers-form/import-publihsers-form.component';
+import { ImportPublihsersFormComponent } from './admin-publisher/import-publihsers-form/import-publihsers-form.component';
 
 
 @NgModule({
@@ -35,8 +38,11 @@ import { EditAuthorFormComponent } from './admin-author/edit-author-form/edit-au
     EditGenreFormComponent,
     AddAuthorFormComponent,
     EditAuthorFormComponent,
+    AddBookFormComponent,
+    ImportBooksFormComponent,
+    EditBookFormComponent,
     // ImportGenresFormComponent,
-    // ImportPublihsersFormComponent,
+    ImportPublihsersFormComponent,
     // ImportAuthorsFormComponent
   ],
   imports: [

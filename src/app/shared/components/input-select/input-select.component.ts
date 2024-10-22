@@ -10,8 +10,8 @@ import { MatSelectChange } from '@angular/material/select';
 export class InputSelectComponent {
 
   @Input() label = ''
-  @Input() options: string[] = []
-  value: string = ''
+  @Input() options: { id: number; name: string }[] = []
+  value: number = 0
   onChange: any = () => {}
   onTouched: any = () => {}
 
