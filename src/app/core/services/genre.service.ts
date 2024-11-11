@@ -2,8 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { AddGenreRequest, Genre, UpdateGenreRequest } from '../models/genre.model';
-import { GenreParams } from '../models/params.model';
 import { Pagination } from '../models/pagination.model';
+import { GenreParams } from '../models/params.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ import { Pagination } from '../models/pagination.model';
 export class GenreService {
 
   genres?: Genre[]
-  
+
   constructor(private http: HttpClient) { }
 
   getAllGenres () {
@@ -28,6 +28,12 @@ export class GenreService {
 
   addNewGenre(model: AddGenreRequest) {
     return this.http.post(`${environment.baseAPIUrl}/api/Genres`, model)
+  }
+
+  importGenresFromFile(file: File) {
+    const formData = new FormData()
+    formData.append('file', file, file.name)
+    return this.http.post(`${environment.baseAPIUrl}/api/Genres/import`, formData, { reportProgress: true, observe: 'events' })
   }
 
   updateGenre(model: UpdateGenreRequest) {

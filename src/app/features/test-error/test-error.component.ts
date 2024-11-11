@@ -14,7 +14,7 @@ export class TestErrorComponent {
   constructor(private http: HttpClient) { }
 
   getNotFoundError() {
-    this.http.get(`${environment.baseAPIUrl}/api/Books/1`).subscribe({
+    this.http.get(`${environment.baseAPIUrl}/api/Bugs/not-found`).subscribe({
       next: response => console.log(response),
       error: error => console.log(error)
     })

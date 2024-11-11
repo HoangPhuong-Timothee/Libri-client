@@ -1,8 +1,8 @@
-<div class="p-4">
-    <h2 class="h5 mb-4">{{ data.title }}</h2>
-    <p class="mb-4">{{ data.message }}</p>
-    <div class="d-flex justify-content-end gap-2">
-        <button class="btn btn-outline-warning" type="button" (click)="onCancel()">Hủy</button>
-        <button class="btn btn-outline-primary" type="button" (click)="onConfirm()">Xác nhận</button>
+<div class="tw-p-4">
+    <h2 class="text-lg tw-font-semibold tw-mb-4">{{ data.title }}</h2>
+    <p class="tw-mb-4">{{ data.message }}</p>
+    <div class="tw-flex tw-justify-end tw-gap-2">
+        <button mat-stroked-button color="warn" (click)="onCancel()">Hủy</button>
+        <button mat-stroked-button (click)="onConfirm()">Xác nhận</button>
     </div>
 </div>

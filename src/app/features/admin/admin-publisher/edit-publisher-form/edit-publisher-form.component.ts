@@ -8,9 +8,9 @@ import { Publisher } from 'src/app/core/models/publisher.model';
   templateUrl: './edit-publisher-form.component.html',
   styleUrls: ['./edit-publisher-form.component.css']
 })
-export class EditPublisherFormComponent implements OnInit {
+export class EditPublisherFormComponent implements OnInit { 
 
-  updatePublisherForm!: FormGroup
+  updatePublisherForm!: FormGroup //TODO: Đã render form edit nhưng không load các field cho update
   data = inject(MAT_DIALOG_DATA)
 
   constructor(

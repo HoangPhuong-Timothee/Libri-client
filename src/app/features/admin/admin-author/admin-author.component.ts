@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { firstValueFrom } from 'rxjs';
 import { Author } from 'src/app/core/models/author.model';
 import { AuthorParams } from 'src/app/core/models/params.model';
 import { AuthorService } from 'src/app/core/services/author.service';
-import { MatDialog } from '@angular/material/dialog';
-import { AddAuthorFormComponent } from './add-author-form/add-author-form.component';
-import { firstValueFrom } from 'rxjs';
-import { EditAuthorFormComponent } from './edit-author-form/edit-author-form.component';
 import { DialogService } from 'src/app/core/services/dialog.service';
+import { AddAuthorFormComponent } from './add-author-form/add-author-form.component';
+import { EditAuthorFormComponent } from './edit-author-form/edit-author-form.component';
+import { ImportAuthorsFormComponent } from './import-authors-form/import-authors-form.component';
 
 @Component({
   selector: 'app-admin-author',
@@ -21,7 +22,7 @@ export class AdminAuthorComponent implements OnInit {
   adminAuthorParams = new AuthorParams()
   totalAuthors = 0
   columns = [
-    { field: 'id', header: 'ID' },
+    { field: 'id', header: 'Mã tác giả' },
     { field: 'name', header: 'Tác giả' },
   ]
   actions = [
@@ -43,9 +44,9 @@ export class AdminAuthorComponent implements OnInit {
 
     }
   ]
-  
+
   constructor(
-    private authorService: AuthorService, 
+    private authorService: AuthorService,
     private dialog: MatDialog,
     private dialogService: DialogService
   ) { }
@@ -97,6 +98,28 @@ export class AdminAuthorComponent implements OnInit {
           if (author) {
             this.authorList.push(author)
           }
+        }
+      }
+    })
+  }
+
+  openImportAuthorsDialog(errors?: Array<{ location: string; message: string }>) {
+    const dialog = this.dialog.open(ImportAuthorsFormComponent, {
+      minWidth: '500px',
+      autoFocus: false,
+      data: {
+        title: 'Nhập dữ liệu tác giả',
+        errors: errors || []
+      },
+      panelClass: 'dynamic-dialog'
+    });
+    dialog.afterClosed().subscribe({
+      next: async (result) => {
+        if (result && result.fileUploaded) {
+          this.adminAuthorParams.pageIndex = 1
+          this.getAllAuthorsForAdmin()
+        } else if (result && result.errors) {
+          this.openImportAuthorsDialog(result.errors)
         }
       }
     })

@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AdminGuard } from './core/guards/admin.guard';
+import { AuthGuard } from './core/guards/auth.guard';
 import { HomeComponent } from './features/home/home.component';
 import { IntroductionComponent } from './features/introduction/introduction.component';
 import { TestErrorComponent } from './features/test-error/test-error.component';
-import { ServerErrorComponent } from './shared/components/server-error/server-error.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
-import { AuthGuard } from './core/guards/auth.guard';
-import { AdminGuard } from './core/guards/admin.guard';
+import { ServerErrorComponent } from './shared/components/server-error/server-error.component';
 
 const routes: Routes = [
   {
@@ -37,6 +37,12 @@ const routes: Routes = [
     path: 'basket',
     loadChildren: () => import('./features/basket/basket.module').then(m => m.BasketModule),
     data: { breadcrumb: 'Giỏ sách' }
+  },
+  {
+    path: 'profile',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./features/profile/profile.module').then(m => m.ProfileModule),
+    data: { breadcrumb: 'Thông tin cá nhân' }
   },
   {
     path: 'checkout',

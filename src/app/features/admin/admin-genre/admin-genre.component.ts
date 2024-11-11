@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { firstValueFrom } from 'rxjs';
 import { Genre } from 'src/app/core/models/genre.model';
 import { GenreParams } from 'src/app/core/models/params.model';
 import { DialogService } from 'src/app/core/services/dialog.service';
 import { GenreService } from 'src/app/core/services/genre.service';
 import { AddGenreFormComponent } from './add-genre-form/add-genre-form.component';
-import { firstValueFrom } from 'rxjs';
 import { EditGenreFormComponent } from './edit-genre-form/edit-genre-form.component';
+import { ImportGenresFormComponent } from './import-genres-form/import-genres-form.component';
 
 @Component({
   selector: 'app-admin-genre',
@@ -21,7 +22,7 @@ export class AdminGenreComponent implements OnInit {
   adminGenreParams = new GenreParams()
   totalGenres = 0
   columns = [
-    { field: 'id', header: 'ID' },
+    { field: 'id', header: 'Mã thể loại' },
     { field: 'name', header: 'Thể loại' },
   ]
   actions = [
@@ -80,7 +81,7 @@ export class AdminGenreComponent implements OnInit {
   onReset() {
     if (this.searchTerm) this.searchTerm = ''
     this.adminGenreParams = new GenreParams()
-    this.getAllGenresForAdmin()  
+    this.getAllGenresForAdmin()
   }
 
   openAddNewGenreDialog() {
@@ -102,9 +103,27 @@ export class AdminGenreComponent implements OnInit {
     })
   }
 
-  // openImportGenresDialog() {
-
-  // }
+  openImportGenresDialog(errors?: Array<{ location: string; message: string }>) {
+    const dialog = this.dialog.open(ImportGenresFormComponent, {
+      minWidth: '500px',
+      autoFocus: false,
+      data: {
+        title: 'Nhập dữ liệu thể loại sách',
+        errors: errors || []
+      },
+      panelClass: 'dynamic-dialog'
+    });
+    dialog.afterClosed().subscribe({
+      next: async (result) => {
+        if (result && result.fileUploaded) {
+          this.adminGenreParams.pageIndex = 1
+          this.getAllGenresForAdmin()
+        } else if (result && result.errors) {
+          this.openImportGenresDialog(result.errors)
+        }
+      }
+    })
+  }
 
   openUpdateGenreDialog(genre: Genre) {
     const dialog = this.dialog.open(EditGenreFormComponent, {

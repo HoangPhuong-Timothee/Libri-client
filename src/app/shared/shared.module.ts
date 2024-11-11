@@ -1,43 +1,48 @@
-import { NgModule } from '@angular/core';
+import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
-import { NavbarComponent } from './components/navbar/navbar.component';
-import { PagingHeaderComponent } from './components/paging-header/paging-header.component';
-import { PagingFooterComponent } from './components/paging-footer/paging-footer.component';
-import { SectionHeaderComponent } from './components/section-header/section-header.component';
-import { RouterModule } from '@angular/router';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatOptionModule } from '@angular/material/core';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterModule } from '@angular/router';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { BreadcrumbModule } from 'xng-breadcrumb';
-import { NotFoundComponent } from './components/not-found/not-found.component';
-import { ServerErrorComponent } from './components/server-error/server-error.component';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
-import { OrderTotalsComponent } from './components/order-totals/order-totals.component';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { BreadcrumbModule } from 'xng-breadcrumb';
+import { BasketItemComponent } from './components/basket-item/basket-item.component';
+import { BookItemComponent } from './components/book-item/book-item.component';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
+import { CustomTableComponent } from './components/custom-table/custom-table.component';
+import { DateInputComponent } from './components/date-input/date-input.component';
 import { InputTextComponent } from './components/input-text/input-text.component';
+import { MatTextInputComponent } from './components/mat-text-input/mat-text-input.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
+import { OrderTotalsComponent } from './components/order-totals/order-totals.component';
+import { PagingFooterComponent } from './components/paging-footer/paging-footer.component';
+import { PagingHeaderComponent } from './components/paging-header/paging-header.component';
+import { SectionHeaderComponent } from './components/section-header/section-header.component';
+import { SelectInputComponent } from './components/select-input/select-input.component';
+import { ServerErrorComponent } from './components/server-error/server-error.component';
+import { StepperComponent } from './components/stepper/stepper.component';
+import { TextAreaComponent } from './components/text-area/text-area.component';
 import { CustomCurrencyPipe } from './pipes/custom-currency.pipe';
 import { TruncateTitlePipe } from './pipes/truncate-title.pipe';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatRadioModule } from '@angular/material/radio';
-import { BookItemComponent } from './components/book-item/book-item.component';
-import { BasketItemComponent } from './components/basket-item/basket-item.component';
-import { CustomTableComponent } from './components/custom-table/custom-table.component';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { CdkStepperModule } from '@angular/cdk/stepper';
-import { StepperComponent } from './components/stepper/stepper.component';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatSelectModule } from '@angular/material/select';
-import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
-import { TextAreaComponent } from './components/text-area/text-area.component';
-import { InputSelectComponent } from './components/input-select/input-select.component';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
- 
+
 @NgModule({
   declarations: [
     NavbarComponent,
@@ -56,7 +61,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     StepperComponent,
     ConfirmationDialogComponent,
     TextAreaComponent,
-    InputSelectComponent
+    DateInputComponent,
+    MatTextInputComponent,
+    SelectInputComponent
   ],
   imports: [
     CommonModule,
@@ -83,7 +90,10 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatTabsModule,
     MatDialogModule,
     MatSelectModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    NgxMatSelectSearchModule,
+    BsDatepickerModule,
+    MatOptionModule
   ],
   exports: [
     NavbarComponent,
@@ -117,9 +127,13 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatDialogModule,
     MatSelectModule,
     ConfirmationDialogComponent,
-    InputSelectComponent,
     TextAreaComponent,
-    MatProgressBarModule
+    MatProgressBarModule,
+    NgxMatSelectSearchModule,
+    DateInputComponent,
+    BsDatepickerModule,
+    MatOptionModule,
+    SelectInputComponent
   ]
 })
 export class SharedModule { }

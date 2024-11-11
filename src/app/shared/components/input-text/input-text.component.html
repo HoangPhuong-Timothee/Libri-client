@@ -1,7 +1,6 @@
-<div class="form-floating mb-3">
+  <div class="form-floating mb-3">
     <input
-      autocomplete="off"
-      type={{type}} 
+      type={{type}}
       [formControl]="control"
       placeholder="{{label}}"
       class="form-control"
@@ -9,9 +8,9 @@
     >
     <div *ngIf="control.status === 'PENDING'" class="fa fa-spinner fa-spin loader"></div>
     <label for="floatingInput">{{label}}</label>
-    <div *ngIf="control.errors?.['required']" class="invalid-feedback">*Vui lòng điền thông tin {{label}}</div>
-    <div *ngIf="control.errors?.['email']" class="invalid-feedback">*Email không hợp lệ</div>
-    <div *ngIf="control.errors?.['pattern']" class="invalid-feedback">*Mật khẩu phải có ít nhất 6 ký tự, bao gồm 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt</div>
-    <div *ngIf="control.errors?.['emailExists']" class="invalid-feedback">*Email đã đăng ký</div>
-    <div *ngIf="control.errors?.['matching']" class="invalid-feedback">*Mật khẩu không khớp</div>
+    <div *ngIf="control.errors?.['required']" class="invalid-feedback">* Vui lòng điền {{label}}</div>
+    <div *ngIf="control.errors?.['email']" class="invalid-feedback">* Email không hợp lệ</div>
+    <div *ngIf="control.errors?.['pattern']" class="invalid-feedback">* Mật khẩu phải có ít nhất chữ thường, chữ hoa, số và ký tự đặc biệt</div>
+    <div *ngIf="control.errors?.['emailExists']" class="invalid-feedback">* Email đã được sử dụng</div>
+    <div *ngIf="control.errors?.['isMatching']" class="invalid-feedback">* Mật khẩu không trùng khớp</div>
   </div>

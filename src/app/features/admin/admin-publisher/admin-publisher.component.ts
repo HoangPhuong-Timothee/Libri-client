@@ -8,7 +8,7 @@ import { DialogService } from 'src/app/core/services/dialog.service';
 import { PublisherService } from 'src/app/core/services/publisher.service';
 import { AddPublisherFormComponent } from './add-publisher-form/add-publisher-form.component';
 import { EditPublisherFormComponent } from './edit-publisher-form/edit-publisher-form.component';
-import { ImportPublihsersFormComponent } from './import-publihsers-form/import-publihsers-form.component';
+import { ImportPublishersFormComponent } from './import-publihsers-form/import-publishers-form.component';
 
 @Component({
   selector: 'app-admin-publisher',
@@ -44,10 +44,10 @@ export class AdminPublisherComponent implements OnInit {
 
     }
   ]
-  
+
   constructor(
-    private publisherService: PublisherService, 
-    private dialog: MatDialog, 
+    private publisherService: PublisherService,
+    private dialog: MatDialog,
     private dialogService: DialogService
   ) { }
 
@@ -106,17 +106,23 @@ export class AdminPublisherComponent implements OnInit {
     })
   }
 
-  openImportPublishersDialog() {
-    const dialog = this.dialog.open(ImportPublihsersFormComponent, {
+  openImportPublishersDialog(errors?: Array<{ location: string; message: string }>) {
+    const dialog = this.dialog.open(ImportPublishersFormComponent, {
       minWidth: '500px',
+      autoFocus: false,
       data: {
-        title: 'Thêm nhà xuất bản từ file'
-      }
-    })
+        title: 'Nhập dữ liệu nhà xuất bản',
+        errors: errors || []
+      },
+      panelClass: 'dynamic-dialog'
+    });
     dialog.afterClosed().subscribe({
-      next: async result => {
+      next: async (result) => {
         if (result && result.fileUploaded) {
+          this.adminPublisherParams.pageIndex = 1
           this.getAllPublishersForAdmin()
+        } else if (result && result.errors) {
+          this.openImportPublishersDialog(result.errors)
         }
       }
     })

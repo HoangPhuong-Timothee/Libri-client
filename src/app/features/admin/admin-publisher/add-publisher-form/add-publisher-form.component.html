@@ -1,9 +1,9 @@
-<h2 mat-dialog-title>{{ data.title }}</h2>
+<h2 mat-dialog-title>{{data.title}}</h2>
 <mat-dialog-content class="tw-p-3">
   <form [formGroup]="addPublisherForm" class="tw-p-4 tw-w-full" (ngSubmit)="addNewPublisher()">
-      
-    <app-text-input label="Tên nhà xuất bản" formControlName="name"></app-text-input>
-
+    <mat-form-field appearance="outline" class="w-full mb-4">
+      <mat-label>Tên nhà xuất bản</mat-label>
+    </mat-form-field>
     <div class="tw-flex tw-justify-end tw-gap-3">
       <button mat-button color="warn" type="button" mat-dialog-close>Hủy</button>
       <button mat-raised-button color="primary" type="submit" [disabled]="addPublisherForm.invalid">

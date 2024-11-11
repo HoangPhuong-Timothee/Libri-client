@@ -1,1 +1,39 @@
-<p>admin-inventory works!</p>
+<div class="tw-flex tw-justify-between tw-items-center tw-mt-2">
+  <div class="tw-text-2xl tw-font-semibold tw-mt-4">
+    TỒN KHO
+  </div>
+  <div class="tw-mt-2 tw-flex">
+    <input
+      (keyup.enter)="onSearch()"
+      [(ngModel)]="searchTerm"
+      type="text"
+      class="form-control me-2"
+      placeholder="Nhập tiêu đề sách..."
+      style="width: 300px;"
+    >
+    <button (click)="onSearch()" class="btn btn-secondary mx-2">Tìm kiếm</button>
+    <button (click)="onReset()" class="btn btn-danger"><i class="fa-solid fa-rotate-left"></i></button>
+  </div>
+  <div class="tw-flex tw-justify-between">
+    <button class="btn btn-success mt-3">
+      <i class="fa fa-upload"></i>
+      <i class="fa fa-book tw-me-1"></i>
+      Nhập kho từ file
+    </button>
+    <button class="btn btn-secondary mt-3">
+      <i class="fa fa-download"></i>
+      <i class="fa fa-book tw-me-1"></i>
+      Tải file mẫu
+    </button>
+  </div>
+</div>
+
+<app-custom-table
+    [columns]="columns"
+    [dataSource]="bookInventories"
+    [actions]="actions"
+    [totalItems]="totalInventories"
+    [pageSize]="inventoryParams.pageSize"
+    (pageChange)="onPageChange($event)"
+>
+</app-custom-table>

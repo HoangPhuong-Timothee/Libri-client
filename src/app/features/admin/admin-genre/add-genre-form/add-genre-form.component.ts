@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Genre } from 'src/app/core/models/genre.model';
@@ -11,11 +11,11 @@ import { Genre } from 'src/app/core/models/genre.model';
 export class AddGenreFormComponent implements OnInit {
 
   addGenreForm!: FormGroup
-  data = inject(MAT_DIALOG_DATA)
 
   constructor(
     private fb: FormBuilder, 
-    private addDialogRef: MatDialogRef<AddGenreFormComponent>, 
+    private addDialogRef: MatDialogRef<AddGenreFormComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {

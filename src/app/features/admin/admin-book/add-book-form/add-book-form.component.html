@@ -2,17 +2,18 @@
 <mat-dialog-content class="tw-p-3">
     <form [formGroup]="addBookForm" class="tw-p-4 tw-w-full" (ngSubmit)="addNewBook()">
 
-        <app-input-text label="Tiêu đề" formControlName="title"></app-input-text>
+        <app-mat-text-input label="Tiêu đề" formControlName="title"></app-mat-text-input>
         <app-text-area label="Mô tả sách" formControlName="description"></app-text-area>
-        <app-input-text label="Giá" formControlName="price"></app-input-text>
-        <app-input-text lable="Ảnh minh họa" formControlName="imageUrl"></app-input-text>
-        
-        <div class="tw-flex tw-justify-between tw-w-full tw-gap-3">
+        <app-mat-text-input label="Giá" formControlName="price"></app-mat-text-input>
+        <app-mat-text-input lable="Ảnh minh họa" formControlName="imageUrl"></app-mat-text-input>
 
-            <app-input-select label="Thể loại*" formControlName="genreId" class="tw-w-full"></app-input-select>
-            <app-input-select label="Nhà xuất bản*" formControlName="publisherId" class="tw-w-full"></app-input-select>
-
-        </div>
+        <!-- <div class="tw-flex tw-justify-between tw-w-full tw-gap-3">
+          <app-select-input
+            [label]="'Thể loại sách'"
+            [options]="genreOptions.name"
+          >
+          </app-select-input>
+        </div> -->
 
     </form>
 </mat-dialog-content>

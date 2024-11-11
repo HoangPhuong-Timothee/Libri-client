@@ -1,24 +1,24 @@
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
+import { MatPaginatorIntl } from '@angular/material/paginator';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { SharedModule } from './shared/shared.module';
-import { HomeModule } from './features/home/home.module';
-import { IntroductionModule } from './features/introduction/introduction.module';
 import { CoreModule } from './core/core.module';
-import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
-import { TestErrorComponent } from './features/test-error/test-error.component';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
-import { MatPaginatorIntl } from '@angular/material/paginator';
+import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
+import { HomeModule } from './features/home/home.module';
+import { IntroductionModule } from './features/introduction/introduction.module';
+import { TestErrorComponent } from './features/test-error/test-error.component';
 import { CustomPaginator } from './shared/helpers/extensions/custom-paginator';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    TestErrorComponent,
+    TestErrorComponent
   ],
   imports: [
     BrowserModule,
@@ -28,7 +28,7 @@ import { CustomPaginator } from './shared/helpers/extensions/custom-paginator';
     SharedModule,
     HomeModule,
     CoreModule,
-    IntroductionModule,
+    IntroductionModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },

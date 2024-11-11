@@ -21,10 +21,16 @@
       <ng-container *ngIf="authService.currentUser$ | async as user">
         <div class="dropdown me-5" style="cursor: pointer; z-index: 11;" dropdown>
           <a dropdownToggle class="dropdown-toggle">
-            <img class="rounded-full" src="{{ user.imageUrl }}" alt="{{ user.userName }}" style="height: 38px; width: 70px;">
-            <strong>Xin chào, {{ user.userName }}!</strong>
+            <img class="rounded-full" src="{{ user.imageUrl }}" alt="{{ user.userName }}" style="height: 50px; width: 58px;">
+            <strong>Xin chào, {{ user.userName }}</strong>
           </a>
           <ul *dropdownMenu class="dropdown-menu dropdown-menu-right">
+            <li class="py-1">
+              <a routerLink="/profile" class="dropdown-item">
+                <i class="fa-solid fa-user"></i>
+                Thông tin cá nhân
+              </a>
+            </li>
             <li class="py-1">
               <a routerLink="/wishlist" class="dropdown-item">
                 <i class="fa-solid fa-shield-heart"></i>
@@ -56,4 +62,3 @@
     </div>
   </header>
 
-  

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl,FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -16,11 +16,17 @@ export class LoginComponent {
     password: new FormControl('', Validators.required)
   })
   returnUrl: string
+  passwordVisible = false
 
-  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute, private toastr: ToastrService) {
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/'
-   }
-   
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private toastr: ToastrService
+  ) {
+      this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/'
+  }
+
   onLogin() {
     this.authService.login(this.loginForm.value).subscribe({
       next: () => {
@@ -33,4 +39,13 @@ export class LoginComponent {
       }
     })
   }
+
+  togglePasswordVisibility(): void {
+    this.passwordVisible = !this.passwordVisible
+  }
+
+  get passwordFieldType(): string {
+    return this.passwordVisible ? 'text' : 'password'
+  }
+
 }

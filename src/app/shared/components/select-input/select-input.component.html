@@ -1,0 +1,9 @@
+<mat-form-field appearance="outline" class="w-full mb-4">
+  <mat-label>{{label}}</mat-label>
+  <input matInput (input)="onSearchChange($event)" placeholder="Nhập từ khóa...">
+  <mat-select [(ngModel)]="value" (selectionChange)="onSelect($event)">
+    <mat-option *ngFor="let option of filteredOptions" [value]="option">
+      {{option}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

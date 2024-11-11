@@ -14,31 +14,29 @@ export class CustomTableComponent {
   @Input() totalItems: number = 0
   @Input() pageSize: number = 12
   @Input() pageIndex: number = 0
+  @Input() isErrorData: boolean = false
   @Output() pageChange = new EventEmitter<PageEvent>()
-  
+
   constructor() { }
 
   onPageChange(event: PageEvent) {
-    this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
-    this.pageChange.emit(event);
+    this.pageIndex = event.pageIndex
+    this.pageSize = event.pageSize
+    this.pageChange.emit(event)
   }
-
 
   onAction(action: (row: any) => void, row: any) {
-    action(row);
+    action(row)
   }
-
 
   getCellValue(row: any, column: any) {
     const value = row[column.field];
     if (column.pipe === 'currency') {
-      return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: column.pipeArgs || 'VND' }).format(value);
+      return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: column.pipeArgs || 'VND' }).format(value)
     }
-
     if (column.pipe === 'date') {
-      return new Date(value).toLocaleDateString('en-US', column.pipeArgs);
+      return new Date(value).toLocaleDateString('en-US', column.pipeArgs)
     }
-    return value;
+    return value
   }
 }

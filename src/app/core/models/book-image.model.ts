@@ -1,6 +1,7 @@
 export interface BookImage {
     id: number;
-    inageUrl: string;
+    imageUrl: string;
     fileName: string;
     isMain: boolean;
+    publicId: string;
 }

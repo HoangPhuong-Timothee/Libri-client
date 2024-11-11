@@ -1,7 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Publisher } from 'src/app/core/models/publisher.model';
+import { AddPublisherRequest } from 'src/app/core/models/publisher.model';
 
 @Component({
   selector: 'app-add-publisher-form',
@@ -11,23 +11,27 @@ import { Publisher } from 'src/app/core/models/publisher.model';
 export class AddPublisherFormComponent implements OnInit {
 
   addPublisherForm!: FormGroup
-  data = inject(MAT_DIALOG_DATA)
 
   constructor(
-    private fb: FormBuilder, 
-    private addDialogRef: MatDialogRef<AddPublisherFormComponent>
+    private fb: FormBuilder,
+    private addPublisherDialogRef: MatDialogRef<AddPublisherFormComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit() {
+    this.initializeForm()
+  }
+
+  initializeForm() {
     this.addPublisherForm = this.fb.group({
       name: ['', [Validators.required]]
     })
   }
 
-  addNewPublisher() {
+  addNewPublisher(): void {
     if(this.addPublisherForm.valid) {
-      let publisher: Publisher = this.addPublisherForm.value
-      this.addDialogRef.close({ publisher })
+      let addPublisher: AddPublisherRequest = this.addPublisherForm.value
+      this.addPublisherDialogRef.close({ addPublisher })
     }
   }
 

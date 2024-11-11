@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BookParams } from 'src/app/core/models/params.model';
 import { Book } from 'src/app/core/models/book.model';
 import { Genre } from 'src/app/core/models/genre.model';
 import { Pagination } from 'src/app/core/models/pagination.model';
+import { BookParams } from 'src/app/core/models/params.model';
 import { Publisher } from 'src/app/core/models/publisher.model';
 import { BookService } from 'src/app/core/services/book.service';
 import { GenreService } from 'src/app/core/services/genre.service';
@@ -25,34 +25,19 @@ export class BookcaseComponent implements OnInit {
   bookParams = new BookParams()
   totalCount = 0
   sortOptions = [
-    {
-      name: 'Theo bảng chữ cái',
-      value: 'title'
-    },
-    {
-      name: 'Giá: Tăng dần',
-      value: 'priceAsc'
-    },
-    {
-      name: 'Giá: Giảm dần',
-      value: 'priceDesc'
-    },
-    {
-      name: 'Mới nhất',
-      value: 'latest'
-    },
-    {
-      name: 'Cũ nhất',
-      value: 'oldest'
-    }
+    { name: 'Theo bảng chữ cái', value: 'title' },
+    { name: 'Giá: Tăng dần', value: 'priceAsc' },
+    { name: 'Giá: Giảm dần', value: 'priceDesc' },
+    { name: 'Mới nhất', value: 'latest' },
+    { name: 'Cũ nhất', value: 'oldest' }
   ]
 
   constructor(
-    private bookService: BookService, 
-    private genreService: GenreService, 
-    private publisherService: PublisherService, 
+    private bookService: BookService,
+    private genreService: GenreService,
+    private publisherService: PublisherService,
     private router: Router
-  ) 
+  )
   { this.searchTerm = '' }
 
   ngOnInit(): void {
@@ -63,7 +48,7 @@ export class BookcaseComponent implements OnInit {
 
   getAllBooks() {
     this.bookService.getAllBooks(this.bookParams).subscribe({
-      next: (response) => {  
+      next: (response) => {
         this.books = response.data
         this.bookParams.pageIndex = response.pageIndex
         this.bookParams.pageSize = response.pageSize
@@ -81,7 +66,7 @@ export class BookcaseComponent implements OnInit {
 
   getAllGenres(){
     this.genreService.getAllGenres().subscribe({
-      next: (response) => {  
+      next: (response) => {
         this.genres = [{id: 0, name: 'Tất cả'}, ...response];
       },
       error: (error) => {
@@ -92,7 +77,7 @@ export class BookcaseComponent implements OnInit {
 
   getAllPublishers(){
     this.publisherService.getAllPublishers().subscribe({
-      next: (response) => {  
+      next: (response) => {
         this.publishers = [{id: 0, name: 'Tất cả'}, ...response];
       },
       error: (error) => {
@@ -101,22 +86,37 @@ export class BookcaseComponent implements OnInit {
     })
   }
 
-  onGenreSelected(genreId: number) {
-    this.bookParams.genreId = genreId
-    this.bookParams.pageIndex = 1
-    this.getAllBooks()
-  }
+  // onGenreSelected(genreId: number) {
+  //   this.bookParams.genreId = genreId
+  //   this.bookParams.pageIndex = 1
+  //   this.getAllBooks()
+  // }
 
-  onPublisherSelected(publisherId: number) {
-    this.bookParams.publisherId = publisherId
-    this.bookParams.pageIndex = 1
-    this.getAllBooks()
-  }
+  // onPublisherSelected(publisherId: number) {
+  //   this.bookParams.publisherId = publisherId
+  //   this.bookParams.pageIndex = 1
+  //   this.getAllBooks()
+  // }
 
   onSortSelected(event: any) {
     this.bookParams.sort = event.target.value
     this.getAllBooks()
   }
+
+  onGenreSelected(event: any) {
+    const selectedGenreId = event.target.value
+    this.bookParams.genreId = selectedGenreId === '0' ? null : selectedGenreId
+    this.bookParams.pageIndex = 1
+    this.getAllBooks()
+  }
+
+  onPublisherSelected(event: any) {
+    const selectedPublisherId = event.target.value
+    this.bookParams.publisherId = selectedPublisherId === '0' ? null : selectedPublisherId
+    this.bookParams.pageIndex = 1
+    this.getAllBooks()
+  }
+
 
   onPageChanged(event: any) {
     if (this.bookParams.pageIndex !== event) {
@@ -138,7 +138,7 @@ export class BookcaseComponent implements OnInit {
       this.searchTerm = ''
     }
     this.bookParams = new BookParams()
-    this.getAllBooks()  
+    this.getAllBooks()
   }
 
 }

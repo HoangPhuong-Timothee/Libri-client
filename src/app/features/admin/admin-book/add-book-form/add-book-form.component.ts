@@ -1,8 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Author } from 'src/app/core/models/author.model';
-import { Book } from 'src/app/core/models/book.model';
+import { AddBookRequest } from 'src/app/core/models/book.model';
 import { Genre } from 'src/app/core/models/genre.model';
 import { Publisher } from 'src/app/core/models/publisher.model';
 import { AuthorService } from 'src/app/core/services/author.service';
@@ -20,29 +20,19 @@ export class AddBookFormComponent implements OnInit {
   genreOptions: Genre[] = []
   authorOptions: Author[] = []
   publisherOptions: Publisher[] = []
-  data = inject(MAT_DIALOG_DATA)
+
 
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private addDialogRef: MatDialogRef<AddBookFormComponent>,
-    public publisherService: PublisherService,
-    public genreService: GenreService,
-    public authorService: AuthorService
+    private publisherService: PublisherService,
+    private genreService: GenreService,
+    private authorService: AuthorService
   ) { }
 
   ngOnInit(): void {
-    this.addBookForm = this.fb.group({
-      title: ['', [Validators.required]],
-      authorId: ['', [Validators.required]],
-      genreId: ['', [Validators.required]],
-      publisherId: ['', [Validators.required]],
-      description: ['', [Validators.required]],
-      price: [0, [Validators.required, Validators.min(0)]],
-      imageUrl: ['', [Validators.required]],
-      publishYear: [2024, [Validators.required]],
-      isAvailable: [true, [Validators.required]],
-      quantityInStock: [0, [Validators.required, Validators.min(0)]]
-    })
+    this.initializeForm()
     setTimeout(() => {
       this.loadAuthors()
       this.loadGenres()
@@ -50,9 +40,23 @@ export class AddBookFormComponent implements OnInit {
     })
   }
 
+  initializeForm() {
+    this.addBookForm = this.fb.group({
+      title: ['', [Validators.required]],
+      author: new FormControl('', [Validators.required]),
+      genre: new FormControl('', [Validators.required]),
+      publisher: new FormControl('', [Validators.required]),
+      description: ['', [Validators.required]],
+      price: [0, [Validators.required, Validators.min(0)]],
+      imageUrl: ['', [Validators.required]],
+      publishYear: ['', [Validators.required]],
+      isAvailable: [true, [Validators.required]]
+    })
+  }
+
   addNewBook(): void {
     if (this.addBookForm.valid) {
-      let book: Book = this.addBookForm.value
+      let book: AddBookRequest = this.addBookForm.value
       this.addDialogRef.close({ book })
     }
   }

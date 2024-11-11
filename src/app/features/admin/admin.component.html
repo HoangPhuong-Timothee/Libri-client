@@ -1,8 +1,8 @@
 <div class="tw-min-h-screen">
-    <mat-tab-group 
+    <mat-tab-group
         [(selectedIndex)]="selectedTabIndex"
         (selectedTabChange)="onTabChange($event)"
-        class="tw-bg-white"  
+        class="tw-bg-white"
         mat-stretch-tabs="false"
     >
         <mat-tab label="SÁCH">
@@ -25,14 +25,14 @@
             <app-admin-publisher></app-admin-publisher>
 
         </mat-tab>
+        <mat-tab label="QUẢN LÝ KHO">
+
+          <app-admin-inventory></app-admin-inventory>
+
+      </mat-tab>
         <mat-tab label="ĐƠN ĐẶT SÁCH">
 
             <app-admin-order></app-admin-order>
-
-        </mat-tab>
-        <mat-tab label="QUẢN LÝ KHO">
-
-            <app-admin-inventory></app-admin-inventory>
 
         </mat-tab>
     </mat-tab-group>

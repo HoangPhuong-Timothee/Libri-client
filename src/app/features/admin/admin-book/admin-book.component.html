@@ -15,7 +15,7 @@
     <button (click)="onReset()" class="btn btn-danger"><i class="fa-solid fa-rotate-left"></i></button>
   </div>
   <div class="tw-flex tw-justify-between">
-    <button class="btn btn-success mt-3">
+    <button (click)="openImportBooksDialog()" class="btn btn-success mt-3">
       <i class="fa fa-upload"></i>
       <i class="fa fa-book tw-me-1"></i>
       Thêm từ file
@@ -34,11 +34,11 @@
 </div>
 
 <app-custom-table
-    [columns]="columns" 
-    [dataSource]="bookList" 
-    [actions]="actions" 
+    [columns]="columns"
+    [dataSource]="bookList"
+    [actions]="actions"
     [totalItems]="totalBooks"
-    [pageSize]="adminBookParams.pageSize" 
-    (pageChange)="onPageChange($event)" 
+    [pageSize]="adminBookParams.pageSize"
+    (pageChange)="onPageChange($event)"
 >
 </app-custom-table>

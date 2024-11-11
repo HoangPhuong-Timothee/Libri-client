@@ -14,7 +14,7 @@ export class DialogService {
     confirmDialog(message: string, title: string) {
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             data: { message, title },
-            width: "300px"
+            width: "350px"
         })
         return firstValueFrom(dialogRef.afterClosed())
     }
