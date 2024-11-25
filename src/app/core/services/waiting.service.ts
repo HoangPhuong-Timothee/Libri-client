@@ -13,7 +13,7 @@ export class WaitingService {
   waiting() {
     this.waitingRequestCount++
     this.spinnerService.show(undefined, {
-      type: 'square-loader',
+      type: 'line-scale-pulse-out',
       bdColor: 'rgba(255,255,255,0.7)',
       color: '#333333'
     })

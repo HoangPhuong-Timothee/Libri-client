@@ -4,10 +4,10 @@ export interface Author {
 }
 
 export interface AddAuthorRequest {
-    name: string;
+  name: string
 }
 
 export interface UpdateAuthorRequest {
-    id: number;
-    name: string;
+  id: number
+  name: string
 }

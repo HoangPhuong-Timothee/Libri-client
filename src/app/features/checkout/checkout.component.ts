@@ -9,7 +9,10 @@ import { UserService } from 'src/app/core/services/user.service';
 })
 export class CheckoutComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private userService: UserService) { }
+  constructor(
+    private fb: FormBuilder,
+    private userService: UserService
+  ) { }
 
   checkoutForm = this.fb.group({
     userInfoForm: this.fb.group({

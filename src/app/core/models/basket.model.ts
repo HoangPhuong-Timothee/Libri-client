@@ -1,21 +1,20 @@
 import * as cuid from 'cuid'
 
 export interface Basket {
-    id: string;
-    basketItems: BasketItem[];
-    clientSecrect?: string;
-    paymentIntentId?: string;
-    deliveryMethodId?: number;
-    deliveryPrice?: number;
+    id: string
+    basketItems: BasketItem[]
+    clientSecrect?: string
+    paymentIntentId?: string
+    deliveryMethodId?: number
 }
 
 export interface BasketItem {
-    id: number;
-    bookTitle: string;
-    price: number;
-    quantity: number;
-    imageUrl: string;
-    author: string; 
+    id: number
+    bookTitle: string
+    price: number
+    quantity: number
+    imageUrl: string
+    author: string
 }
 
 export interface BasketTotals {

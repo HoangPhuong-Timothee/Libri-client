@@ -1,13 +1,12 @@
 export interface Genre {
-    id: number;
-    name: string;
+    id: number
+    name: string
 }
-
 export interface AddGenreRequest {
-    name: string;
+  name: string
 }
 
 export interface UpdateGenreRequest {
-    id: number;
-    name: string;
+  id: number
+  name: string
 }

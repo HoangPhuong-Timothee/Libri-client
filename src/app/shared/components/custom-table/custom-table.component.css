@@ -2,5 +2,7 @@
   position: sticky;
   top: 0;
   z-index: 1;
-  background-color: white; /* Ensure the header background covers content behind it */
+  background-color: white;
 }
+
+

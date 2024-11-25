@@ -1,8 +1,12 @@
-<h2 mat-dialog-title>{{ data.title }}</h2>
+<h2 class="text-center text-uppercase fw-bold pt-3" mat-dialog-title>{{ data.title }}</h2>
 <mat-dialog-content class="tw-p-3">
   <form [formGroup]="addGenreForm" class="tw-p-4 tw-w-full" (ngSubmit)="addNewGenre()">
-      
-    <app-text-input label="Tên thể loại sách" formControlName="name"></app-text-input>
+
+    <app-input-text
+      [formControl]="addGenreForm.controls['name']"
+      [label]="'Tên thể loại'"
+    >
+    </app-input-text>
 
     <div class="tw-flex tw-justify-end tw-gap-3">
       <button mat-button color="warn" type="button" mat-dialog-close>Hủy</button>

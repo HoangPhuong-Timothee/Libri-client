@@ -1,14 +1,14 @@
 <div class="mt-4">
 
-    <app-basket-item></app-basket-item>
+    <app-basket-item [isBasket]="false"></app-basket-item>
 
 </div>
 <div class="d-flex justify-content-between flex-row mb-5">
     <button class="btn btn-secondary" cdkStepperPrevious>
-        <i class="fa fa-angle-left"></i>
         Quay lại
+        <i class="fa fa-angle-left"></i>
     </button>
-    <button class="btn btn-primary" cdkStepperNext>
+    <button class="btn btn-warning" cdkStepperNext>
         <i class="fa fa-angle-right"></i>
         Chọn phương thức thanh toán
     </button>

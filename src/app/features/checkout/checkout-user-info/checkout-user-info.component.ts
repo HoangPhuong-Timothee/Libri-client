@@ -18,7 +18,7 @@ export class CheckoutUserInfoComponent {
     const userInfo = this.checkoutForm?.get('userInfoForm')?.value
     this.userService.modifyUserAddress(userInfo).subscribe({
       next: () => {
-        this.toastr.success("Lưu thông tin thành công")
+        this.toastr.success("Đã lưu thành thông tin mặc định thành công")
         this.checkoutForm?.get("userInfoForm")?.reset(userInfo)
       }
     })

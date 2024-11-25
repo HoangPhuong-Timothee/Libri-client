@@ -14,9 +14,9 @@ export class CustomPaginator extends MatPaginatorIntl {
             return `0 của ${length} kết quả`
         }
         const startIndex = page * pageSize
-        const endIndex = startIndex < length 
+        const endIndex = startIndex < length
             ? Math.min(startIndex + pageSize, length)
             : startIndex + pageSize
-        return `Hiển thị ${startIndex + 1} - ${endIndex} của ${length} kết quả` 
+        return `Hiển thị ${startIndex + 1} - ${endIndex} của ${length} kết quả`
     }
 }

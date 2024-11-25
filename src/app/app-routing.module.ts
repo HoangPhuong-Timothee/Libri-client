@@ -12,22 +12,20 @@ const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-    data: { breadcrumb: 'Trang chủ' },
+    data: { breadcrumb: 'Trang chủ' }
   },
   {
     path: 'admin',
     loadChildren: () => import('./features/admin/admin.module').then(m => m.AdminModule),
-    canActivate: [AuthGuard, AdminGuard],
-    data: { breadcrumb: { skip: true } }
+    canActivate: [AuthGuard, AdminGuard]
   },
   {
-    path: 'bookcase', 
-    loadChildren: () => import('./features/book/book.module').then(m => m.BookModule) 
+    path: 'bookcase',
+    loadChildren: () => import('./features/book/book.module').then(m => m.BookModule)
   },
   {
     path: '',
-    loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule),
-    data: { breadcrumb: { skip: true } }
+    loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule)
   },
   {
     path: 'wishlist',
@@ -54,7 +52,7 @@ const routes: Routes = [
     path: 'order',
     canActivate: [AuthGuard],
     loadChildren: () => import('./features/order/order.module').then(m => m.OrderModule),
-    data: { breadcrumb: 'Đơn đặt sách' }
+    data: { breadcrumb: 'Danh sách đơn đặt' }
   },
   {
     path: 'introduction',

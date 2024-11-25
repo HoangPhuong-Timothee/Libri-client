@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
-import { firstValueFrom } from 'rxjs';
 import { Inventory } from 'src/app/core/models/inventory.model';
 import { InventoryParams } from 'src/app/core/models/params.model';
-import { DialogService } from 'src/app/core/services/dialog.service';
 import { InventoryService } from 'src/app/core/services/inventory.service';
-import { EditInventoryFormComponent } from './edit-inventory-form/edit-inventory-form.component';
-import { ImportInventoriesFormComponent } from './import-inventories-form/import-inventories-form.component';
+import { BottomSheetComponent } from "./bottom-sheet/bottom-sheet.component";
+import { FilterDialogComponent } from './filter-dialog/filter-dialog.component';
 
 @Component({
   selector: 'app-admin-inventory',
@@ -18,58 +17,98 @@ export class AdminInventoryComponent implements OnInit {
 
   searchTerm: string = ''
   bookInventories: Inventory[] = []
-  inventoryParams = new InventoryParams()
-  totalInventories = 0
+  inventoryParams: InventoryParams
+  totalInventories: number = 0
   columns = [
     { field: 'bookId', header: 'Mã sách' },
     { field: ['bookTitle', 'bookThumbnail'], header: 'Sách', haveImage: true },
     { field: 'quantity', header: 'Số lượng kho' },
-    { field: 'updatedAt', header: 'Ngày nhập kho' },
-    { field: 'updatedBy', header: 'Nhập kho bởi' }
-  ]
-  actions = [
-    {
-      label: 'Cập nhật',
-      icon: 'edit',
-      tooltip: 'Cập nhật kho',
-      action: (row: any) => {
-        this.openUpdateBookInventoryDialog(row)
-      }
-    }
+    { field: 'bookStatus', header: 'Tình trạng sách' },
+    { field: 'storeName', header: 'Hiệu sách' },
+    { field: 'createInfo', header: 'Thông tin tạo' },
+    { field: 'updateInfo', header: 'Thông tin cập nhật' }
   ]
 
   constructor(
     private inventoryService: InventoryService,
     private dialog: MatDialog,
-    private dialogService: DialogService
-  ) { }
-
-  ngOnInit(): void {
-    this.searchTerm = ''
-    this.getAllBookInvnetories()
+    private bottomSheet: MatBottomSheet
+  )
+  {
+    this.inventoryParams = inventoryService.getInventoryParams()
   }
 
-  getAllBookInvnetories() {
-    this.inventoryService.getAllBookInventories(this.inventoryParams).subscribe({
-      next: reponse => {
-        if (reponse.data) {
-          this.bookInventories = reponse.data
-          this.totalInventories = reponse.count
+  ngOnInit(): void {
+    this.getAllBookInventories()
+  }
+
+  getAllBookInventories() {
+    this.inventoryService.getAllBookInventories().subscribe({
+      next: response => {
+        this.bookInventories = response.data
+        this.totalInventories = response.count
+      },
+      error: error => {
+        console.log(error)
+      }
+    })
+  }
+
+  openBottomSheet() {
+    const bottomSheet = this.bottomSheet.open(BottomSheetComponent)
+    bottomSheet.afterDismissed().subscribe(
+      result => {
+        if (result && result.success) {
+          const params = this.inventoryService.getInventoryParams()
+          params.pageIndex = 1
+          this.inventoryService.setInventoryParams(params)
+          this.inventoryParams = params
+          this.getAllBookInventories()
+        }
+      }
+    )
+  }
+
+  openFilterDialog() {
+    let dialog = this.dialog.open(FilterDialogComponent, {
+      minWidth: '500px',
+      autoFocus: false,
+      data: {
+        selectedGenreId: this.inventoryParams.genreId,
+        selectedBookStoreId: this.inventoryParams.bookStoreId
+      }
+    })
+    dialog.afterClosed().subscribe({
+      next: result => {
+        if (result) {
+          const params = this.inventoryService.getInventoryParams()
+          params.genreId = result.selectedGenreId
+          params.bookStoreId = result.selectedBookStoreId
+          params.pageIndex = 1
+          this.inventoryService.setInventoryParams(params)
+          this.inventoryParams = params
+          this.getAllBookInventories()
         }
       }
     })
   }
 
   onPageChange(event: PageEvent) {
-    this.inventoryParams.pageIndex = event.pageIndex + 1
-    this.inventoryParams.pageSize = event.pageSize
-    this.getAllBookInvnetories()
+    const params = this.inventoryService.getInventoryParams()
+    params.pageIndex = event.pageIndex + 1
+    params.pageSize = event.pageSize
+    this.inventoryService.setInventoryParams(params)
+    this.inventoryParams = params
+    this.getAllBookInventories()
   }
 
   onSearch() {
-    this.inventoryParams.search = this.searchTerm
-    this.inventoryParams.pageIndex = 1
-    this.getAllBookInvnetories()
+    const params = this.inventoryService.getInventoryParams()
+    params.search = this.searchTerm
+    params.pageIndex = 1
+    this.inventoryService.setInventoryParams(params)
+    this.inventoryParams = params
+    this.getAllBookInventories()
   }
 
   onReset() {
@@ -77,50 +116,8 @@ export class AdminInventoryComponent implements OnInit {
       this.searchTerm = ''
     }
     this.inventoryParams = new InventoryParams()
-    this.getAllBookInvnetories()
-  }
-
-  openImportBookInventoriesDialog(errors?: Array<{ location: string; message: string }>) {
-    const dialog = this.dialog.open(ImportInventoriesFormComponent, {
-      minWidth: '500px',
-      autoFocus: false,
-      data: {
-        title: 'Nhập dữ liệu kho',
-        errors: errors || []
-      },
-      panelClass: 'dynamic-dialog'
-    });
-    dialog.afterClosed().subscribe({
-      next: async (result) => {
-        if (result && result.fileUploaded) {
-          this.inventoryParams.pageIndex = 1
-          this.getAllBookInvnetories()
-        } else if (result && result.errors) {
-          this.openImportBookInventoriesDialog(result.errors)
-        }
-      }
-    })
-  }
-
-  openUpdateBookInventoryDialog(inventory: Inventory) {
-    const dialog = this.dialog.open(EditInventoryFormComponent, {
-      minWidth: '500px',
-      data: {
-        title: 'Cập nhật kho sách',
-        inventory
-      }
-    })
-    dialog.afterClosed().subscribe({
-      next: async result => {
-        if (result) {
-          await firstValueFrom(this.inventoryService.updateBookInventory(result.inventory.bookId, result.quantity))
-          const index = this.bookInventories.findIndex(p => p.bookId === result.inventory.bookId)
-          if (index !== -1) {
-            this.bookInventories[index] = result.inventory
-          }
-        }
-      }
-    })
+    this.inventoryService.setInventoryParams(this.inventoryParams)
+    this.getAllBookInventories()
   }
 
 }

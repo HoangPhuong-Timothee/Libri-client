@@ -5,23 +5,26 @@
           <h1 class="mb-3">Đăng nhập tài khoản Libri</h1>
         </div>
 
-        <app-input-text [formControl]="loginForm.controls['email']" [label]="'Email'" type="email"></app-input-text>
+        <app-input-text
+          [formControl]="loginForm.controls['email']"
+          [label]="'Email'"
+          type="email">
+        </app-input-text>
 
-        <div class="form-floating mb-3 position-relative">
-          <input
-            [type]="passwordFieldType"
-            formControlName="password"
-            class="form-control"
-            placeholder="Mật khẩu"
+        <div class="position-relative">
+
+          <app-input-text
+          [formControl]="loginForm.controls['password']"
+          [label]="'Mật khẩu'"
+          [type]="passwordVisible ? 'text' : 'password'"
           >
-          <span class="position-absolute top-50 end-0 translate-middle-y me-2" (click)="togglePasswordVisibility()">
+          </app-input-text>
+
+          <span class="position-absolute top-50 end-0 translate-middle-y me-5" (click)="togglePasswordVisibility()">
             <i class="fa" [ngClass]="{'fa-eye-slash': !passwordVisible, 'fa-eye': passwordVisible}"></i>
           </span>
-          <label for="floatingPassword">Mật khẩu</label>
-          <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="invalid-feedback">
-            * Vui lòng điền Mật khẩu
-          </div>
         </div>
+
        <div class="d-grid">
           <button [disabled]="loginForm.invalid" class="btn btn-lg mt-3" type="submit" style="color: black;background-color: orange;">Đăng nhập</button>
           <p class="ms-5 small fw-bold mt-2 pt-1 mb-0">

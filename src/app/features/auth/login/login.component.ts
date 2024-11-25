@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { LoginRequest } from 'src/app/core/models/auth.model';
 import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
@@ -28,7 +29,8 @@ export class LoginComponent {
   }
 
   onLogin() {
-    this.authService.login(this.loginForm.value).subscribe({
+    let loginRequest = this.loginForm.value as LoginRequest
+    this.authService.login(loginRequest).subscribe({
       next: () => {
         this.loginForm.reset()
         this.router.navigateByUrl(this.returnUrl)
@@ -42,10 +44,6 @@ export class LoginComponent {
 
   togglePasswordVisibility(): void {
     this.passwordVisible = !this.passwordVisible
-  }
-
-  get passwordFieldType(): string {
-    return this.passwordVisible ? 'text' : 'password'
   }
 
 }

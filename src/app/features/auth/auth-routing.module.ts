@@ -6,11 +6,13 @@ import { RegisterComponent } from './register/register.component';
 const routes: Routes = [
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent,
+    data: { breadcrumb: 'Đăng nhập' }
   },
   {
     path: 'register',
-    component: RegisterComponent
+    component: RegisterComponent,
+    data: { breadcrumb: 'Đăng ký' }
   }
 ];
 

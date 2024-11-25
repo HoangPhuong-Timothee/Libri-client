@@ -9,3 +9,14 @@ export interface User {
   roles: string[]
   token: string
 }
+
+export interface Member {
+  id: number
+  email: string
+  imageUrl: string
+  dateOfBirth: string
+  gender: string
+  phoneNumber: string
+  address: string
+  roles: string
+}

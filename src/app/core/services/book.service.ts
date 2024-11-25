@@ -1,7 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { map, Observable, of } from "rxjs";
 import { environment } from 'src/environments/environment';
-import { AddBookRequest, Book, UpdateBookRequest } from '../models/book.model';
+import { Book } from '../models/book.model';
 import { Pagination } from '../models/pagination.model';
 import { BookParams } from '../models/params.model';
 
@@ -10,51 +11,108 @@ import { BookParams } from '../models/params.model';
 })
 export class BookService {
 
+  books: Book[] = []
+  booksList: Book[] = []
+  latestBooks: Book[] = []
+  similarBooks: Book[] = []
+  bookPagination?: Pagination<Book[]>
+  bookParams = new BookParams()
+  bookCache = new Map<string, Pagination<Book[]>>()
+
   constructor(private http: HttpClient) { }
 
-  getAllBooks(bookParams: BookParams) {
+  getAllBooks(useCache = true): Observable<Pagination<Book[]>> {
+    if (!useCache) {
+      this.bookCache = new Map()
+    }
+    if (this.bookCache.size > 0 && useCache) {
+      if (this.bookCache.has(Object.values(this.bookParams).join('-'))) {
+        this.bookPagination = this.bookCache.get(Object.values(this.bookParams).join('-'))
+
+        if(this.bookPagination) {
+          return of(this.bookPagination)
+        }
+      }
+    }
     let params = new HttpParams()
-    if (bookParams.genreId) params = params.append('genreId', bookParams.genreId)
-    if (bookParams.publisherId) params = params.append('publisherId', bookParams.publisherId)
-    if (bookParams.search) params = params.append('search', bookParams.search)
-    params = params.append('sort', bookParams.sort)
-    params = params.append('pageIndex', bookParams.pageIndex)
-    params = params.append('pageSize', bookParams.pageSize)
-    return this.http.get<Pagination<Book[]>>(`${environment.baseAPIUrl}/api/Books`, { params })
+    if (this.bookParams.genreId) params = params.append('genreId', this.bookParams.genreId)
+    if (this.bookParams.publisherId) params = params.append('publisherId', this.bookParams.publisherId)
+    if (this.bookParams.search) params = params.append('search', this.bookParams.search)
+    params = params.append('sort', this.bookParams.sort)
+    params = params.append('pageIndex', this.bookParams.pageIndex)
+    params = params.append('pageSize', this.bookParams.pageSize)
+    return this.http.get<Pagination<Book[]>>(`${environment.baseAPIUrl}/api/Books`, { params }).pipe(
+      map(response => {
+        this.books = [...this.books, ...response.data]
+        this.bookPagination = response
+        return response
+      })
+    )
   }
 
-  getSingleBook(id: number) {
+  loadAllBook() {
+    return this.http.get<Pagination<Book[]>>(`${environment.baseAPIUrl}/api/Books`).pipe(
+      map(response => {
+        this.booksList = response.data
+        return this.booksList
+      })
+    )
+  }
+
+  setBookParams(params: BookParams) {
+    this.bookParams = params
+  }
+
+  getBookParams() {
+    return this.bookParams
+  }
+
+  getSingleBook(id: number): Observable<Book> {
+    const book = [...this.bookCache.values()].reduce((acc, paginationResult) => {
+      return {
+        ...acc,
+        ...paginationResult.data.find(x => x.id === id)
+      }
+    }, {} as Book)
+    if (Object.keys(book).length !== 0) {
+      return of(book)
+    }
     return this.http.get<Book>(`${environment.baseAPIUrl}/api/Books/${id}`)
   }
 
-  getSimilarBook(id: number) {
-    return this.http.get<Book[]>(`${environment.baseAPIUrl}/api/Books/${id}/similar`)
+  getSimilarBook(id: number): Observable<Book[]> {
+    if (this.similarBooks.length > 0) {
+      return of(this.similarBooks)
+    }
+    return this.http.get<Book[]>(`${environment.baseAPIUrl}/api/Books/${id}/similar`).pipe(
+      map(response => this.similarBooks = response)
+    )
   }
 
-  getLatestBook() {
-    return this.http.get<Book[]>(`${environment.baseAPIUrl}/api/Books/latest`)
-  }
-
-  addNewBook(model: AddBookRequest) {
-    return this.http.post(`${environment.baseAPIUrl}/api/Books/`, model)
+  getLatestBook(): Observable<Book[]> {
+    if (this.latestBooks.length > 0) {
+      return of(this.latestBooks)
+    }
+    return this.http.get<Book[]>(`${environment.baseAPIUrl}/api/Books/latest`).pipe(
+      map(response => this.latestBooks = response)
+    )
   }
 
   importBooksFromFile(file: File) {
     const formData = new FormData()
     formData.append('file', file, file.name)
-    return this.http.post(`${environment.baseAPIUrl}/api/Books/import`, formData, { reportProgress: true, observe: 'events' })
-  }
-
-  updateBook(model: UpdateBookRequest) {
-    return this.http.put(`${environment.baseAPIUrl}/api/Books/${model.id}`, model)
-  }
-
-  updateQuantityInStock(id: number, quantity: number) {
-    return this.http.put(`${environment.baseAPIUrl}/api/Books/stocks/${id}`, quantity)
+    return this.http.post(`${environment.baseAPIUrl}/api/Books/import-from-file`, formData, {
+      reportProgress: true,
+      observe: 'events'
+    })
   }
 
   deleteBook(id: number) {
     return this.http.delete(`${environment.baseAPIUrl}/api/Books/${id}`)
+  }
+
+  checkBookExists(title: string) {
+    return this.http.get<boolean>(`${environment.baseAPIUrl}/api/Books/book-exists?bookTile=${title}`)
   }
 
 }

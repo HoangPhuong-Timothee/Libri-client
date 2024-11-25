@@ -12,9 +12,9 @@ export class CustomTableComponent {
   @Input() dataSource: any[] = []
   @Input() actions: { label: string, icon: string, tooltip: string, action: (row: any) => void, disabled?: (row: any) => boolean }[] = []
   @Input() totalItems: number = 0
-  @Input() pageSize: number = 12
+  @Input() pageSize: number = 20
   @Input() pageIndex: number = 0
-  @Input() isErrorData: boolean = false
+  @Input() isErrorData?: boolean
   @Output() pageChange = new EventEmitter<PageEvent>()
 
   constructor() { }

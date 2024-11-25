@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
-import { Router } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { Book } from 'src/app/core/models/book.model';
+import { ErrorDetails } from 'src/app/core/models/error-response.model';
 import { BookParams } from 'src/app/core/models/params.model';
 import { BookService } from 'src/app/core/services/book.service';
 import { DialogService } from 'src/app/core/services/dialog.service';
-import { AddBookFormComponent } from './add-book-form/add-book-form.component';
-import { EditBookFormComponent } from './edit-book-form/edit-book-form.component';
+import { AdminBookDetailsComponent } from './admin-book-details/admin-book-details.component';
+import { BookFilterDialogComponent } from './book-filter-dialog/book-filter-dialog.component';
 import { ImportBooksFormComponent } from './import-books-form/import-books-form.component';
 
 @Component({
@@ -17,9 +17,11 @@ import { ImportBooksFormComponent } from './import-books-form/import-books-form.
   styleUrls: ['./admin-book.component.css'],
 })
 export class AdminBookComponent implements OnInit {
+
+  book?: Book
   searchTerm: string = ''
-  bookList: Book[] = [];
-  adminBookParams = new BookParams()
+  bookList: Book[] = []
+  bookParams: BookParams
   totalBooks = 0
   columns = [
     { field: 'id', header: 'Mã sách' },
@@ -35,15 +37,8 @@ export class AdminBookComponent implements OnInit {
       icon: 'visibility',
       tooltip: 'Xem thông tin chi tiết sách',
       action: (row: any) => {
-        this.router.navigateByUrl(`/bookcase/${row.id}`);
-      },
-    },
-    {
-      label: 'Cập nhật',
-      icon: 'edit',
-      tooltip: 'Chỉnh sửa thông tin sách',
-      action: (row: any) => {
-        this.openUpdateBookDialog(row);
+        console.log(row.id)
+        this.openBookDetailsDialog(row.id)
       },
     },
     {
@@ -51,86 +46,55 @@ export class AdminBookComponent implements OnInit {
       icon: 'delete',
       tooltip: 'Xóa sách khỏi kho',
       action: (row: any) => {
-        this.openDeleteBookDialog(row.id);
+        this.openDeleteBookDialog(row.id, row.title)
       },
     },
   ]
 
   constructor(
     private bookService: BookService,
-    private router: Router,
     private dialog: MatDialog,
-    private dialogService: DialogService
-  ) {}
+    private dialogService: DialogService,
+    private toastr: ToastrService
+  )
+  {
+    this.bookParams = bookService.getBookParams()
+  }
 
   ngOnInit(): void {
     this.getAllBooks()
   }
 
   getAllBooks() {
-    this.bookService.getAllBooks(this.adminBookParams).subscribe({
-      next: (response) => {
-        if (response.data) {
-          this.bookList = response.data;
-          this.totalBooks = response.count;
-        }
+    this.bookService.getAllBooks().subscribe({
+      next: response => {
+        this.bookList = response.data
+        this.totalBooks = response.count
+      },
+      error: error => {
+        console.log(error)
       }
     })
   }
 
-  onPageChange(event: PageEvent) {
-    this.adminBookParams.pageIndex = event.pageIndex + 1
-    this.adminBookParams.pageSize = event.pageSize
-    this.getAllBooks()
-  }
-
-  onSearch() {
-    this.adminBookParams.search = this.searchTerm
-    this.adminBookParams.pageIndex = 1
-    this.getAllBooks()
-  }
-
-  onReset() {
-    if (this.searchTerm) this.searchTerm = ''
-    this.adminBookParams = new BookParams()
-    this.getAllBooks()
-  }
-
-  openAddNewBookDialog() {
-    const dialog = this.dialog.open(AddBookFormComponent, {
-      minWidth: '500px',
-      data: {
-        title: 'Thêm sách mới',
-      },
-    });
-    dialog.afterClosed().subscribe({
-      next: async (result) => {
-        if (result) {
-          const book: any = await firstValueFrom(
-            this.bookService.addNewBook(result.book)
-          );
-          if (book) {
-            this.bookList.push(book)
-          }
-        }
-      },
-    });
-  }
-
-  openImportBooksDialog(errors?: Array<{ location: string; message: string }>) {
+  openImportBooksDialog(errors?: ErrorDetails[]) {
     const dialog = this.dialog.open(ImportBooksFormComponent, {
       minWidth: '500px',
-      autoFocus: false,
+      maxHeight: '500px',
+      autoFocus: true,
       data: {
         title: 'Nhập dữ liệu sách',
-        errors: errors || []
+        errors: errors
       },
-      panelClass: 'dynamic-dialog'
-    });
+      panelClass: 'custom-dialog-container'
+    })
     dialog.afterClosed().subscribe({
       next: async (result) => {
         if (result && result.fileUploaded) {
-          this.adminBookParams.pageIndex = 1
+          const params = this.bookService.getBookParams()
+          params.pageIndex = 1
+          this.bookService.setBookParams(params)
+          this.bookParams = params
           this.getAllBooks()
         } else if (result && result.errors) {
           this.openImportBooksDialog(result.errors)
@@ -139,38 +103,94 @@ export class AdminBookComponent implements OnInit {
     })
   }
 
-  openUpdateBookDialog(book: Book) {
-    const dialog = this.dialog.open(EditBookFormComponent, {
+  openBookDetailsDialog(id: number) {
+    this.bookService.getSingleBook(id).subscribe({
+      next: (response) => {
+        this.book = response
+        this.dialog.open(AdminBookDetailsComponent, {
+          minWidth: '300px',
+          maxWidth: '1000px',
+          minHeight: '200px',
+          maxHeight: '580px',
+          data: {
+            title: `Thông tin sách ${this.book.title}`,
+            book: this.book
+          }
+        })
+      },
+      error: (error) => {
+        console.error('Có lỗi xảy ra:', error)
+      }
+    })
+  }
+
+  async openDeleteBookDialog(id: number, title: string) {
+    const confirmed = await this.dialogService.confirmDialog(
+      'XÁC NHẬN XÓA',
+      `Bạn chắc chắn muốn xóa sách "${title}"?`
+    )
+    if (confirmed) {
+      this.bookService.deleteBook(id).subscribe({
+        next: () => {
+          this.bookList = this.bookList.filter(b => b.id !== id)
+          this.toastr.success(`Xóa sách "${title}" thành công`)
+        },
+        error: error => {
+          console.log("Có lỗi xảy ra: ", error.errors, error.message)
+        }
+      })
+    }
+  }
+
+  openFilterDialog() {
+    let dialog = this.dialog.open(BookFilterDialogComponent, {
       minWidth: '500px',
+      autoFocus: false,
       data: {
-        title: 'Chỉnh sửa thông tin sách',
-        book,
+        selectedGenreId: this.bookParams.genreId,
+        selectedPublisherId: this.bookParams.publisherId
       }
     })
     dialog.afterClosed().subscribe({
-      next: async (result) => {
+      next: result => {
         if (result) {
-          await firstValueFrom(this.bookService.updateBook(result.book))
-          const index = this.bookList.findIndex((b) => b.id === result.book.id)
-          if (index !== -1) {
-            this.bookList[index] = result.book
-          }
+          const params = this.bookService.getBookParams()
+          params.genreId = result.selectedGenreId
+          params.publisherId = result.selectedPublisherId
+          params.pageIndex = 1
+          this.bookService.setBookParams(params)
+          this.bookParams = params
+          this.getAllBooks()
         }
       }
     })
   }
 
-  async openDeleteBookDialog(id: number) {
-    const confirmed = await this.dialogService.confirmDialog(
-      'Xác nhận xóa sách',
-      'Bạn chắc chắn muốn xóa sách ? Vui lòng xác nhận bên dưới!'
-    );
-    if (confirmed) {
-      this.bookService.deleteBook(id).subscribe({
-        next: () => {
-          this.bookList = this.bookList.filter((b) => b.id !== id);
-        }
-      })
-    }
+  onPageChange(event: PageEvent) {
+    const params = this.bookService.getBookParams()
+    params.pageIndex = event.pageIndex + 1
+    params.pageSize = event.pageSize
+    this.bookService.setBookParams(params)
+    this.bookParams = params
+    this.getAllBooks()
   }
+
+  onSearch() {
+    const params = this.bookService.getBookParams()
+    params.search = this.searchTerm
+    params.pageIndex = 1
+    this.bookService.setBookParams(params)
+    this.bookParams = params
+    this.getAllBooks()
+  }
+
+  onReset() {
+    if (this.searchTerm) {
+      this.searchTerm = ''
+    }
+    this.bookParams = new BookParams()
+    this.bookService.setBookParams(this.bookParams)
+    this.getAllBooks()
+  }
+
 }

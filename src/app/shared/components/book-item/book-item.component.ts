@@ -12,7 +12,10 @@ export class BookItemComponent {
 
   @Input() book?: Book
 
-  constructor(private basketService: BasketService, private toastr: ToastrService) { }
+  constructor(
+    private basketService: BasketService,
+    private toastr: ToastrService
+  ) { }
 
   addItemToBasket() {
     this.book && this.basketService.addItemToBasket(this.book)

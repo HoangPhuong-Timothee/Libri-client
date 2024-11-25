@@ -1,7 +1,11 @@
-import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { AbstractControl, AsyncValidatorFn, FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+import { debounceTime, finalize, map, switchMap, take } from 'rxjs';
+import { BookStore } from "src/app/core/models/book-store.model";
+import { BookService } from 'src/app/core/services/book.service';
+import { BookstoreService } from "src/app/core/services/bookstore.service";
 import { InventoryService } from 'src/app/core/services/inventory.service';
 
 @Component({
@@ -9,78 +13,53 @@ import { InventoryService } from 'src/app/core/services/inventory.service';
   templateUrl: './import-inventories-form.component.html',
   styleUrls: ['./import-inventories-form.component.css']
 })
-export class ImportInventoriesFormComponent {
+export class ImportInventoriesFormComponent implements OnInit {
 
-  selectedFile: File | null = null
-  uploadedPercent: number = 0
-  errorsList: Array<{ location: string; message: string }> = []
-  columns = [
-    { field: 'location', header: 'Vị trí' },
-    { field: 'message', header: 'Nội dung' }
-  ]
-  dataSource: any
-
+  bookStoresList: BookStore[] = []
+  rowArr: any [] = []
+  headerTitle = ['STT', 'Tiều đề sách', 'Số lượng nhập', 'Ngày nhập']
   constructor(
-    private invnetoryService: InventoryService,
+    private bookService: BookService,
+    private fb: FormBuilder,
+    private inventoryService: InventoryService,
+    private bookStoreService: BookstoreService,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private uploadFileDialogRef: MatDialogRef<ImportInventoriesFormComponent>,
-    private toastr: ToastrService,
-    private cd: ChangeDetectorRef
-  ) { }
+    private dialogRef: MatDialogRef<ImportInventoriesFormComponent>,
+    private toastr: ToastrService
+  ) {}
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0]
-    if (!file) {
-      this.toastr.warning('Vui lòng chọn file để tải lên.')
-      return
-    }
-    this.selectedFile = file
+  ngOnInit(): void {
+    this.loadAllBookStore()
   }
 
-  onSubmit() {
-    if (!this.selectedFile) {
-      this.toastr.warning('Chưa có file nào được tải lên.')
-      return
-    }
-    this.importInventoriesFile()
-  }
 
-  importInventoriesFile() {
-    if (!this.selectedFile) {
-      this.toastr.warning('Chưa có file nào được tải lên.');
-      return;
-    }
-    this.invnetoryService.importBookInventories(this.selectedFile).subscribe({
-      next: (event) => {
-        if (event.type === HttpEventType.UploadProgress) {
-          if (event.loaded !== undefined && event.total !== undefined) {
-            this.uploadedPercent = Math.round(100 * event.loaded / event.total);
-            if (this.uploadedPercent >= 100) {
-              this.uploadFileDialogRef.close({ fileUploaded: true });
-            }
-          } else {
-            this.toastr.warning('Không thể xác định file.');
-          }
-        } else if (event instanceof HttpResponse) {
-          this.toastr.success('Thêm thông tin kho từ file thành công.');
-          this.uploadFileDialogRef.close({ fileUploaded: true });
-        }
-      },
-      error: (error) => {
-        // console.error('Có lỗi khi tải file lên.', error)
-        if (error.status === 400 && error.errors) {
-          this.toastr.error('Có lỗi xảy ra! File không đúng yêu cầu!')
-          this.cd.detectChanges();
-          this.uploadFileDialogRef.close({ errors: error.errors })
-        } else {
-          this.toastr.error('Có lỗi xảy ra khi tải file lên. Vui lòng thử lại!')
-        }
-      }
+  loadAllBookStore() {
+    this.bookStoreService.getAllBookStores().subscribe({
+      next: response => this.bookStoresList = response,
+      error: error => console.log("Có lỗi: ", error)
     })
   }
 
-  isErrorData(): boolean {
-    return this.errorsList.length > 0
+  addRow() {
+    this.rowArr.push({ bookTitle: '', quantity: 0, bookStoreId: '', date: '' })
   }
 
+  checkBookExists(): AsyncValidatorFn {
+    return (control: AbstractControl) => {
+      return control.valueChanges.pipe(
+        debounceTime(1000),
+        take(1),
+        switchMap(() => {
+          return this.bookService.checkBookExists(control.value).pipe(
+            map((result) => (result ? { bookExists: true } : null)),
+            finalize(() => control.markAllAsTouched())
+          )
+        })
+      )
+    }
+  }
+
+  onSubmit() {
+
+  }
 }

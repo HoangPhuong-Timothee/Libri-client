@@ -1,7 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Address } from '../models/address.model';
+import { Pagination } from '../models/pagination.model';
+import { MemberParams } from '../models/params.model';
+import { Member } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +12,13 @@ import { Address } from '../models/address.model';
 export class UserService {
 
   constructor(private http: HttpClient) { }
+
+  getUsersList(memberParams: MemberParams) {
+    let params = new HttpParams()
+    params = params.append('pageIndex', memberParams.pageIndex)
+    params = params.append('pageSize', memberParams.pageSize)
+    return this.http.get<Pagination<Member[]>>(`${environment.baseAPIUrl}/api/Users/admin/users-list`, { params })
+  }
 
   getUserAddress() {
     return this.http.get<Address>(`${environment.baseAPIUrl}/api/Users/address`)

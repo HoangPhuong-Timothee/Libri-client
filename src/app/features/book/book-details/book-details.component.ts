@@ -15,11 +15,16 @@ import { BreadcrumbService } from 'xng-breadcrumb';
 export class BookDetailsComponent implements OnInit {
 
   book?: Book
-  similarBooks: Book[] = []
+  similarBooks?: Book[] = []
   quantity = 1
   quantityInBasket = 0
 
-  constructor(private toastr: ToastrService, private bookService: BookService, private route: ActivatedRoute, private bcService: BreadcrumbService, private basketService: BasketService) {
+  constructor(
+    private toastr: ToastrService,
+    private bookService: BookService,
+    private route: ActivatedRoute,
+    private bcService: BreadcrumbService,
+    private basketService: BasketService) {
     this.bcService.set('@bookDetails', ' ')
    }
 
@@ -27,19 +32,16 @@ export class BookDetailsComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       let id = params.get('id')
       if (id) {
-        this.showBookDetails(+id) 
-        this.showSimilarBooks(+id) 
+        this.showBookDetails(+id)
+        this.showSimilarBooks(+id)
       }
     })
-    // this.showBookDetails()
-    // this.showSimilarBooks()
   }
 
   showBookDetails(id: number) {
-    // let id = this.route.snapshot.paramMap.get('id')
-    /*if(id)*/ this.bookService.getSingleBook(id).subscribe({
-      next: (reponse) => {
-        this.book = reponse
+    this.bookService.getSingleBook(id).subscribe({
+      next: (response) => {
+        this.book = response
         this.bcService.set('@bookDetails', this.book.title)
         this.basketService.basket$.pipe(take(1)).subscribe({
           next: ((basket) => {
@@ -58,9 +60,9 @@ export class BookDetailsComponent implements OnInit {
   }
 
   showSimilarBooks(id: number) {
-    // let id = this.route.snapshot.paramMap.get('id')
-    /*if (id)*/ this.bookService.getSimilarBook(id).subscribe({
-      next: response => this.similarBooks = response
+    this.bookService.getSimilarBook(id).subscribe({
+      next: (response) => this.similarBooks = response,
+      error: (error) => console.error(error)
     })
   }
 

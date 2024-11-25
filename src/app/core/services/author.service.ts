@@ -1,7 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { map, of } from "rxjs";
 import { environment } from 'src/environments/environment';
-import { AddAuthorRequest, Author, UpdateAuthorRequest } from '../models/author.model';
+import { AddAuthorRequest, Author } from '../models/author.model';
 import { Pagination } from '../models/pagination.model';
 import { AuthorParams } from '../models/params.model';
 
@@ -10,33 +11,68 @@ import { AuthorParams } from '../models/params.model';
 })
 export class AuthorService {
 
-  authors?: Author[]
+  authors: Author[] = []
+  authorsList: Author[] = []
+  authorPagination?: Pagination<Author[]>
+  authorParams = new AuthorParams()
+  authorCache = new Map<string, Pagination<Author[]>>()
 
   constructor(private http: HttpClient) { }
 
   getAllAuthors() {
+    if (this.authors.length > 0) {
+      return of(this.authors);
+    }
     return this.http.get<Author[]>(`${environment.baseAPIUrl}/api/Authors`);
   }
 
-  getAuthorsForAdmin(authorParams: AuthorParams) {
+  getAuthorsForAdmin(useCache = true) {
+    if (!useCache) {
+      this.authorCache = new Map()
+    }
+    if (this.authorCache.size > 0 && useCache) {
+      if (this.authorCache.has(Object.values(this.authorParams).join('-'))) {
+        this.authorPagination = this.authorCache.get(Object.values(this.authorParams).join('-'))
+        if(this.authorPagination) {
+          return of(this.authorPagination)
+        }
+      }
+    }
     let params = new HttpParams()
-    if (authorParams.search) params = params.append('search', authorParams.search)
-    params = params.append('pageIndex', authorParams.pageIndex)
-    params = params.append('pageSize', authorParams.pageSize)
-    return this.http.get<Pagination<Author[]>>(`${environment.baseAPIUrl}/api/Authors/admin/authors-list`, { params })
+    if (this.authorParams.search) params = params.append('search', this.authorParams.search)
+    params = params.append('pageIndex', this.authorParams.pageIndex)
+    params = params.append('pageSize', this.authorParams.pageSize)
+    return this.http.get<Pagination<Author[]>>(`${environment.baseAPIUrl}/api/Authors/admin/authors-list`, { params }).pipe(
+      map(response => {
+        this.authorsList = [...this.authorsList, ...response.data]
+        this.authorPagination = response
+        return response
+      })
+    )
   }
 
-  addNewAuthor(model: AddAuthorRequest) {
-    return this.http.post(`${environment.baseAPIUrl}/api/Authors`, model);
+  setAuthorParams(params: AuthorParams) {
+    this.authorParams = params
+  }
+
+  getAuthorParams() {
+    return this.authorParams
+  }
+
+  addNewAuthor(addAuthorReqest: AddAuthorRequest) {
+    return this.http.post(`${environment.baseAPIUrl}/api/Authors`, addAuthorReqest);
   }
 
   importAuthorsFromFile(file: File) {
     const formData = new FormData()
     formData.append('file', file, file.name)
-    return this.http.post(`${environment.baseAPIUrl}/api/Authors/import`, formData, { reportProgress: true, observe: 'events' })
+    return this.http.post(`${environment.baseAPIUrl}/api/Authors/import-from-file`, formData, {
+      reportProgress: true,
+      observe: 'events'
+    })
   }
 
-  updateAuthor(model: UpdateAuthorRequest) {
+  updateAuthor(model: Author) {
     return this.http.put(`${environment.baseAPIUrl}/api/Authors/${model.id}`, model);
   }
 

@@ -1,6 +1,6 @@
 <div class="table-responsive" *ngIf="basketService.basket$ | async as basket">
     <table class="table">
-      <thead class="bg-light text-uppercase" [class.bg-light]="isBasket">
+      <thead class="text-uppercase" [class.bg-light]="isBasket">
         <tr>
           <th><div class="py-2">Thông tin sách</div></th>
           <th><div class="py-2">Giá</div></th>
@@ -31,7 +31,7 @@
                   </a>
                 </h5>
                 <span class="text-muted fst-italic">
-                  Tác giả: {{ basketItem.author }}
+                  {{ basketItem.author }}
                 </span>
               </div>
             </div>
@@ -77,4 +77,3 @@
       </tbody>
     </table>
   </div>
-  

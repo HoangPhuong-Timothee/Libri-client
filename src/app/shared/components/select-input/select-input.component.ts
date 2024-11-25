@@ -10,7 +10,7 @@ import { MatSelectChange } from '@angular/material/select';
 export class SelectInputComponent {
 
   @Input() label = '';
-  @Input() options: string[] = [];
+  @Input() options: any[] = [];
 
   filteredOptions: string[] = [];
   value: string = '';

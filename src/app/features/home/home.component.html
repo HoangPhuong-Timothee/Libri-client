@@ -17,12 +17,13 @@
     <div class="row">
         <div class="col-12 mb-5">
             <h2 class="display-6 fw-bolder text-center">
-                <i class="fa-solid fa-plus"></i>Sách mới
+                <i class="fa-solid fa-plus"></i>
+                Sách mới
             </h2>
             <hr />
-            
+
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-2 mb-4">
-                <div class="col" *ngFor="let book of books">
+                <div class="col" *ngFor="let book of latestBooks">
 
                     <app-book-item [book]="book"></app-book-item>
 

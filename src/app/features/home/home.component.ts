@@ -10,9 +10,9 @@ import { BookService } from 'src/app/core/services/book.service';
 })
 export class HomeComponent implements OnInit {
 
-  books?: Book[]
+  latestBooks?: Book[]
 
-  constructor(private httpClient: HttpClient, private bookService: BookService) { }
+  constructor(private bookService: BookService) { }
 
   ngOnInit(): void {
     this.getLatestBooks()
@@ -20,8 +20,8 @@ export class HomeComponent implements OnInit {
 
   getLatestBooks() {
     this.bookService.getLatestBook().subscribe({
-      next: (books) => this.books = books,
-      error: (error) => console.error(error)
+      next: response => this.latestBooks = response,
+      error: error => console.error(error)
     })
   }
 

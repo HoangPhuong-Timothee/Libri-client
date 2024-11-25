@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { map, Observable, of, ReplaySubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { LoginRequest } from '../models/auth.model';
 import { User } from '../models/user.model';
 
 @Injectable({
@@ -16,8 +17,8 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router, private toastr: ToastrService) {}
 
-  login(model: any) {
-    return this.http.post<User>(`${environment.baseAPIUrl}/api/Auth/login`, model).pipe(
+  login(loginRequest: LoginRequest) {
+    return this.http.post<User>(`${environment.baseAPIUrl}/api/Auth/login`, loginRequest).pipe(
       map((user) => {
         if (user) {
           localStorage.setItem('access_token', user.token)

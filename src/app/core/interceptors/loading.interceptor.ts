@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
 import {
-  HttpRequest,
-  HttpHandler,
   HttpEvent,
-  HttpInterceptor
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest
 } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { delay, finalize, Observable } from 'rxjs';
 import { WaitingService } from '../services/waiting.service';
 
@@ -15,12 +15,13 @@ export class LoadingInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     if (!request.url.includes('email-exists'))
-    {
-      this.waitingService.waiting()
-    }
-    return next.handle(request).pipe(
-      delay(250),
-      finalize(() => this.waitingService.idle())
-    )
+      {
+        this.waitingService.waiting();
+      }
+
+      return next.handle(request).pipe(
+        delay(250),
+        finalize(() => this.waitingService.idle())
+      );
   }
 }

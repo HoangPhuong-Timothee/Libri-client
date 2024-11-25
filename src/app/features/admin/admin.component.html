@@ -1,39 +1,38 @@
-<div class="tw-min-h-screen">
-    <mat-tab-group
-        [(selectedIndex)]="selectedTabIndex"
-        (selectedTabChange)="onTabChange($event)"
-        class="tw-bg-white"
-        mat-stretch-tabs="false"
-    >
-        <mat-tab label="SÁCH">
-
-            <app-admin-book></app-admin-book>
-
-        </mat-tab>
-        <mat-tab label="TÁC GIẢ">
-
-            <app-admin-author></app-admin-author>
-
-        </mat-tab>
-        <mat-tab label="THỂ LOẠI">
-
-            <app-admin-genre></app-admin-genre>
-
-        </mat-tab>
-        <mat-tab label="NHÀ XUẤT BẢN">
-
-            <app-admin-publisher></app-admin-publisher>
-
-        </mat-tab>
-        <mat-tab label="QUẢN LÝ KHO">
-
+<div class="vertical-tab-container" style="margin-top: 110px;">
+  <mat-tab-group
+      [(selectedIndex)]="selectedTabIndex"
+      (selectedTabChange)="onTabChange($event)"
+      class="vertical-tabs"
+  >
+      <mat-tab label="SÁCH"></mat-tab>
+      <mat-tab label="TÁC GIẢ"></mat-tab>
+      <mat-tab label="THỂ LOẠI"></mat-tab>
+      <mat-tab label="NHÀ XUẤT BẢN"></mat-tab>
+      <mat-tab label="KHO SÁCH"></mat-tab>
+      <mat-tab label="ĐƠN ĐẶT SÁCH"></mat-tab>
+      <mat-tab label="NGƯỜI DÙNG"></mat-tab>
+  </mat-tab-group>
+  <div class="tab-content">
+      <ng-container *ngIf="selectedTabIndex === 0">
+          <app-admin-book></app-admin-book>
+      </ng-container>
+      <ng-container *ngIf="selectedTabIndex === 1">
+          <app-admin-author></app-admin-author>
+      </ng-container>
+      <ng-container *ngIf="selectedTabIndex === 2">
+          <app-admin-genre></app-admin-genre>
+      </ng-container>
+      <ng-container *ngIf="selectedTabIndex === 3">
+          <app-admin-publisher></app-admin-publisher>
+      </ng-container>
+      <ng-container *ngIf="selectedTabIndex === 4">
           <app-admin-inventory></app-admin-inventory>
-
-      </mat-tab>
-        <mat-tab label="ĐƠN ĐẶT SÁCH">
-
-            <app-admin-order></app-admin-order>
-
-        </mat-tab>
-    </mat-tab-group>
+      </ng-container>
+      <ng-container *ngIf="selectedTabIndex === 5">
+          <app-admin-order></app-admin-order>
+      </ng-container>
+      <ng-container *ngIf="selectedTabIndex === 6">
+        <app-admin-user></app-admin-user>
+    </ng-container>
+  </div>
 </div>

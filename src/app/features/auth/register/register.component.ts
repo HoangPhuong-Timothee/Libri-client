@@ -12,19 +12,9 @@ import { AuthService } from 'src/app/core/services/auth.service';
 })
 export class RegisterComponent implements OnInit {
 
-  errors: string[] | null = null;
-  maxDate!: Date
-  passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
-  registerForm = this.fb.group({
-    username: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email], [this.validateEmailNotTaken()]],
-    password: ['', [Validators.required, Validators.pattern(this.passwordRegex)]],
-    confirmPassword: ['', [Validators.required, this.validateMatchValues('password')]],
-    phoneNumber: ['', Validators.required],
-    gender: ['male'],
-    dateOfBirth: ['', Validators.required]
-  })
+  errors: string[] | null = null
+  // maxDate!: Date
+
   passwordVisible = false
   confirmPasswordVisible = false
 
@@ -36,10 +26,22 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.registerForm
-    this.maxDate = new Date()
-    this.maxDate.setFullYear(this.maxDate.getFullYear() - 18)
+    // this.maxDate = new Date()
+    // this.maxDate.setFullYear(this.maxDate.getFullYear() - 18)
   }
+
+  passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+
+  registerForm = this.fb.group({
+    username: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email], [this.validateEmailNotTaken()]],
+    password: ['', [Validators.required, Validators.pattern(this.passwordRegex)]],
+    confirmPassword: ['', [Validators.required, this.validateMatchValues('password')]],
+    phoneNumber: ['', Validators.required],
+    gender: ['male'],
+    dateOfBirth: ['', Validators.required]
+  })
 
   onRegister() {
     this.authService.register(this.registerForm.value).subscribe({
@@ -49,7 +51,7 @@ export class RegisterComponent implements OnInit {
         this.router.navigateByUrl('/login');
       },
       error: (error) => {
-        this.errors = error.errors;
+        this.errors = error.errors
         this.toastr.error('Có lỗi xảy ra trong quá trình đăng ký!');
       }
     })
@@ -87,14 +89,6 @@ export class RegisterComponent implements OnInit {
 
   toggleConfirmPasswordVisibility(): void {
     this.confirmPasswordVisible = !this.confirmPasswordVisible
-  }
-
-  get passwordFieldType(): string {
-    return this.passwordVisible ? 'text' : 'password'
-  }
-
-  get confirmPasswordFieldType(): string {
-    return this.confirmPasswordFieldType ? 'text' : 'password'
   }
 
 }

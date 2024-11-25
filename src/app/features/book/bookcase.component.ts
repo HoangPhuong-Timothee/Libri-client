@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Book } from 'src/app/core/models/book.model';
 import { Genre } from 'src/app/core/models/genre.model';
-import { Pagination } from 'src/app/core/models/pagination.model';
 import { BookParams } from 'src/app/core/models/params.model';
 import { Publisher } from 'src/app/core/models/publisher.model';
 import { BookService } from 'src/app/core/services/book.service';
@@ -16,14 +14,12 @@ import { PublisherService } from 'src/app/core/services/publisher.service';
 })
 export class BookcaseComponent implements OnInit {
 
-  searchTerm: string
-  // @ViewChild('search') searchViewChild?: ElementRef
+  searchTerm: string = ''
   books?: Book[]
   genres: Genre[] = []
   publishers: Publisher[] = []
-  pagination?: Pagination<Book[]>
-  bookParams = new BookParams()
-  totalCount = 0
+  bookParams: BookParams
+  totalBooks = 0
   sortOptions = [
     { name: 'Theo bảng chữ cái', value: 'title' },
     { name: 'Giá: Tăng dần', value: 'priceAsc' },
@@ -35,10 +31,11 @@ export class BookcaseComponent implements OnInit {
   constructor(
     private bookService: BookService,
     private genreService: GenreService,
-    private publisherService: PublisherService,
-    private router: Router
+    private publisherService: PublisherService
   )
-  { this.searchTerm = '' }
+  {
+    this.bookParams = bookService.getBookParams()
+  }
 
   ngOnInit(): void {
     this.getAllBooks()
@@ -47,21 +44,15 @@ export class BookcaseComponent implements OnInit {
   }
 
   getAllBooks() {
-    this.bookService.getAllBooks(this.bookParams).subscribe({
+    this.bookService.getAllBooks().subscribe({
       next: (response) => {
         this.books = response.data
-        this.bookParams.pageIndex = response.pageIndex
-        this.bookParams.pageSize = response.pageSize
-        this.totalCount = response.count
+        this.totalBooks = response.count
       },
       error: (error) => {
         console.log(error);
       }
     })
-  }
-
-  showBookDetails(id: number) {
-    this.router.navigate(['/bookcase', id])
   }
 
   getAllGenres(){
@@ -86,58 +77,59 @@ export class BookcaseComponent implements OnInit {
     })
   }
 
-  // onGenreSelected(genreId: number) {
-  //   this.bookParams.genreId = genreId
-  //   this.bookParams.pageIndex = 1
-  //   this.getAllBooks()
-  // }
-
-  // onPublisherSelected(publisherId: number) {
-  //   this.bookParams.publisherId = publisherId
-  //   this.bookParams.pageIndex = 1
-  //   this.getAllBooks()
-  // }
-
   onSortSelected(event: any) {
-    this.bookParams.sort = event.target.value
+    const params = this.bookService.getBookParams()
+    params.sort = event.target.value
+    this.bookService.setBookParams(params)
+    this.bookParams = params
     this.getAllBooks()
   }
 
   onGenreSelected(event: any) {
+    const params = this.bookService.getBookParams()
     const selectedGenreId = event.target.value
-    this.bookParams.genreId = selectedGenreId === '0' ? null : selectedGenreId
-    this.bookParams.pageIndex = 1
+    params.genreId = selectedGenreId === '0' ? null : selectedGenreId
+    params.pageIndex = 1
+    this.bookService.setBookParams(params)
+    this.bookParams = params
     this.getAllBooks()
   }
 
   onPublisherSelected(event: any) {
+    const params = this.bookService.getBookParams()
     const selectedPublisherId = event.target.value
-    this.bookParams.publisherId = selectedPublisherId === '0' ? null : selectedPublisherId
-    this.bookParams.pageIndex = 1
+    params.publisherId = selectedPublisherId === '0' ? null : selectedPublisherId
+    params.pageIndex = 1
+    this.bookService.setBookParams(params)
+    this.bookParams = params
     this.getAllBooks()
   }
 
-
   onPageChanged(event: any) {
-    if (this.bookParams.pageIndex !== event) {
-      this.bookParams.pageIndex = event
+    const params = this.bookService.getBookParams()
+    if (params.pageIndex !== event) {
+      params.pageIndex = event
+      this.bookService.setBookParams(params)
+      this.bookParams = params
       this.getAllBooks()
     }
   }
 
   onSearch() {
-    // this.bookParams.search = this.searchViewChild?.nativeElement.value
-    this.bookParams.search = this.searchTerm
-    this.bookParams.pageIndex = 1
+    const params = this.bookService.getBookParams()
+    params.search = this.searchTerm
+    params.pageIndex = 1
+    this.bookService.setBookParams(params)
+    this.bookParams = params
     this.getAllBooks()
   }
 
   onReset() {
-    // if (this.searchViewChild) this.searchViewChild.nativeElement.value = '';
     if (this.searchTerm) {
       this.searchTerm = ''
     }
     this.bookParams = new BookParams()
+    this.bookService.setBookParams(this.bookParams)
     this.getAllBooks()
   }
 

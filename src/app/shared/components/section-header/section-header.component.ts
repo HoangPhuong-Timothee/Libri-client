@@ -10,4 +10,11 @@ import { BreadcrumbService } from 'xng-breadcrumb';
 export class SectionHeaderComponent {
 
   constructor(public bcService: BreadcrumbService, public router: Router) { }
+
+  ignorePath(): boolean {
+    return this.router.url.includes('/admin') ||
+      this.router.url.includes('/login') ||
+      this.router.url.includes('/register')
+  }
+
 }

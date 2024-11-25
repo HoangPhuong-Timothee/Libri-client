@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom } from 'rxjs';
 import { Genre } from 'src/app/core/models/genre.model';
 import { GenreParams } from 'src/app/core/models/params.model';
 import { DialogService } from 'src/app/core/services/dialog.service';
 import { GenreService } from 'src/app/core/services/genre.service';
+import { ErrorDetails } from "../../../core/models/error-response.model";
 import { AddGenreFormComponent } from './add-genre-form/add-genre-form.component';
 import { EditGenreFormComponent } from './edit-genre-form/edit-genre-form.component';
 import { ImportGenresFormComponent } from './import-genres-form/import-genres-form.component';
@@ -19,7 +21,7 @@ export class AdminGenreComponent implements OnInit {
 
   searchTerm: string = ''
   genreList: Genre[] = []
-  adminGenreParams = new GenreParams()
+  adminGenreParams: GenreParams
   totalGenres = 0
   columns = [
     { field: 'id', header: 'Mã thể loại' },
@@ -39,84 +41,80 @@ export class AdminGenreComponent implements OnInit {
       icon: 'delete',
       tooltip: 'Xóa thể loại sách',
       action: (row: any) => {
-        this.openDeleteGenreDialog(row.id)
+        this.openDeleteGenreDialog(row.id, row.name)
       }
-
     }
   ]
 
   constructor(
     private genreService: GenreService,
     private dialog: MatDialog,
-    private dialogService: DialogService
-  ) {}
+    private dialogService: DialogService,
+    private toastr: ToastrService
+  )
+  {
+    this.adminGenreParams = genreService.getGenreParams()
+  }
 
   ngOnInit(): void {
     this.getAllGenresForAdmin()
   }
 
   getAllGenresForAdmin() {
-    this.genreService.getGenresForAdmin(this.adminGenreParams).subscribe({
-      next: (response) => {
-        if (response.data) {
-          this.genreList = response.data
-          this.totalGenres = response.count
-        }
+    this.genreService.getGenresForAdmin().subscribe({
+      next: response => {
+        this.genreList = response.data
+        this.totalGenres = response.count
+      },
+      error: error => {
+        console.log(error)
       }
     })
-  }
-
-  onPageChange(event: PageEvent) {
-    this.adminGenreParams.pageIndex = event.pageIndex + 1
-    this.adminGenreParams.pageSize = event.pageSize
-    this.getAllGenresForAdmin()
-  }
-
-  onSearch() {
-    this.adminGenreParams.search = this.searchTerm
-    this.adminGenreParams.pageIndex = 1
-    this.getAllGenresForAdmin()
-  }
-
-  onReset() {
-    if (this.searchTerm) this.searchTerm = ''
-    this.adminGenreParams = new GenreParams()
-    this.getAllGenresForAdmin()
   }
 
   openAddNewGenreDialog() {
     const dialog = this.dialog.open(AddGenreFormComponent, {
-      minWidth: '500px',
-      data: {
-        title: 'Thêm thể loại sách'
-      }
+        minWidth: '500px',
+        data: {
+            title: 'Thêm thể loại sách'
+        }
     })
     dialog.afterClosed().subscribe({
-      next: async result => {
+      next: result => {
         if (result) {
-          const genre: any = await firstValueFrom(this.genreService.addNewGenre(result.genre))
-          if (genre) {
-            this.genreList.push(genre)
-          }
+          this.genreService.addNewGenre(result.addGenreRequest).subscribe({
+            next: response  => {
+              if (response.statusCode === 400) {
+                this.toastr.error(response.message)
+              } else if (response.statusCode === 201) {
+                this.toastr.success(response.message)
+                this.getAllGenresForAdmin()
+              }
+            }
+          })
         }
       }
     })
   }
 
-  openImportGenresDialog(errors?: Array<{ location: string; message: string }>) {
+  openImportGenresDialog(errors?: ErrorDetails[]) {
     const dialog = this.dialog.open(ImportGenresFormComponent, {
       minWidth: '500px',
-      autoFocus: false,
+      maxHeight: '500px',
+      autoFocus: true,
       data: {
-        title: 'Nhập dữ liệu thể loại sách',
-        errors: errors || []
+        title: 'Nhập dữ liệu thể loại',
+        errors: errors
       },
-      panelClass: 'dynamic-dialog'
-    });
+      panelClass: 'custom-dialog-container'
+    })
     dialog.afterClosed().subscribe({
-      next: async (result) => {
+      next: (result) => {
         if (result && result.fileUploaded) {
-          this.adminGenreParams.pageIndex = 1
+          const params = this.genreService.getGenreParams()
+          params.pageIndex = 1
+          this.genreService.setGenreParams(params)
+          this.adminGenreParams = params
           this.getAllGenresForAdmin()
         } else if (result && result.errors) {
           this.openImportGenresDialog(result.errors)
@@ -146,18 +144,49 @@ export class AdminGenreComponent implements OnInit {
     })
   }
 
-  async openDeleteGenreDialog(id: number) {
+  async openDeleteGenreDialog(id: number, name: string) {
     const confirmed = await this.dialogService.confirmDialog(
-      'Xác nhận xóa thể loại sách',
-      'Bạn chắc chắn muốn xóa thể loại sách ? Vui lòng xác nhận bên dưới!'
+      'XÁC NHẬN XÓA',
+      `Bạn chắc chắn muốn xóa thể loại "${name}"?`
     )
     if (confirmed) {
       this.genreService.deleteGenre(id).subscribe({
         next: () => {
           this.genreList = this.genreList.filter(g => g.id !== id)
+          this.toastr.success(`Xóa thể loại "${name}" thành công`)
+        },
+        error: error => {
+          console.log("Có lỗi xảy ra: ", error.errors, error.message)
         }
       })
     }
+  }
+
+  onPageChange(event: PageEvent) {
+    const params = this.genreService.getGenreParams()
+    params.pageIndex = event.pageIndex + 1
+    params.pageSize = event.pageSize
+    this.genreService.setGenreParams(params)
+    this.adminGenreParams = params
+    this.getAllGenresForAdmin()
+  }
+
+  onSearch() {
+    const params = this.genreService.getGenreParams()
+    params.search = this.searchTerm
+    params.pageIndex = 1
+    this.genreService.setGenreParams(params)
+    this.adminGenreParams = params
+    this.getAllGenresForAdmin()
+  }
+
+  onReset() {
+    if (this.searchTerm) {
+      this.searchTerm = ''
+    }
+    this.adminGenreParams = new GenreParams()
+    this.genreService.setGenreParams(this.adminGenreParams)
+    this.getAllGenresForAdmin()
   }
 
 }

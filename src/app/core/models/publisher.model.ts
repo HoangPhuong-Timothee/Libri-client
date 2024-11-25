@@ -4,10 +4,9 @@ export interface Publisher {
 }
 
 export interface AddPublisherRequest {
-    name: string;
+  name: string
 }
-
 export interface UpdatePublisherRequest {
-    id: number;
-    name: string;
+  id: number;
+  name: string;
 }

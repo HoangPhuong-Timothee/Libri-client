@@ -3,25 +3,30 @@
         <div class="col-7">
 
             <app-stepper [linearModeSelected]="false" #appStepper>
+
                 <cdk-step [label]="'Khách hàng'" [completed]="checkoutForm.get('userInfoForm')?.valid">
                     <app-checkout-user-info [checkoutForm]="checkoutForm"></app-checkout-user-info>
                 </cdk-step>
+
                 <cdk-step [label]="'Dịch vụ'" [completed]="checkoutForm.get('deliveryForm')?.valid">
                     <app-checkout-delivery [checkoutForm]="checkoutForm"></app-checkout-delivery>
                 </cdk-step>
+
                 <cdk-step [label]="'Giỏ sách'">
                     <app-checkout-review></app-checkout-review>
                 </cdk-step>
+
                 <cdk-step [label]="'Thanh toán'">
-                    <app-checkout-payment></app-checkout-payment>
+                    <app-checkout-payment [checkoutForm]="checkoutForm"></app-checkout-payment>
                 </cdk-step>
+
             </app-stepper>
-        
+
         </div>
         <div class="col-5">
 
             <app-order-totals></app-order-totals>
-        
+
         </div>
     </div>
 </div>

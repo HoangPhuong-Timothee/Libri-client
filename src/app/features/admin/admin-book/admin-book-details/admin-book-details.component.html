@@ -1,0 +1,26 @@
+<div class="row mb-5" *ngIf="data.book">
+  <div class="col-6">
+      <img src="{{data.book.imageUrl}}" alt="{{data.book.title}}" class="w-100">
+  </div>
+  <div class="col-6 mt-5">
+      <h2 class="fw-bold text-start">{{data.book.title}}</h2>
+      <p class="my-4 text-muted" style="font-size: 2em">{{data.book.price | customCurrency: 'VND'}}</p>
+      <div *ngIf="data.book.quantityInStock > 0 || data.book.isAvailable" class="d-flex my-3">
+          <p>Tình trạng:<span class="ms-2 text-success" style="font-weight: bold;">Có sẵn</span></p>
+          <p class="ms-5">Số lượng:<span class="ms-1 text-secondary" style="font-weight: bold;">{{ data.book.quantityInStock }}</span> sách trong tủ</p>
+      </div>
+      <div class="row mt-4 me-4">
+        <div class="col-12 d-grid grid-template">
+          <div class="grid-item">Tác giả: <strong>{{ data.book.author }}</strong></div>
+          <div class="grid-item">Thể loại: <strong>{{ data.book.genre }}</strong></div>
+          <div class="grid-item">Nhà xuất bản: <strong>{{ data.book.publisher }}</strong></div>
+          <div class="grid-item">Năm xuất bản: <strong>{{ data.book.publishYear }}</strong></div>
+        </div>
+        <div>
+          Mô tả:
+          <p>{{ data.book.description }}</p>
+        </div>
+      </div>
+
+  </div>
+</div>

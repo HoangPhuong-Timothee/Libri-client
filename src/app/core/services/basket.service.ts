@@ -7,7 +7,6 @@ import { mapToBasketItem } from 'src/app/shared/helpers/map-to-basketItem';
 import { environment } from 'src/environments/environment';
 import { Basket, BasketItem, BasketTotals } from '../models/basket.model';
 import { Book } from '../models/book.model';
-import { Coupon } from '../models/coupon.model';
 import { DeliveryMethod } from '../models/delivery-method.model';
 
 @Injectable({
@@ -19,8 +18,6 @@ export class BasketService {
   basket$ = this.basketSource.asObservable()
   private basketTotalSource = new BehaviorSubject<BasketTotals | null>(null)
   basketTotal$ = this.basketTotalSource.asObservable()
-  private couponSource = new BehaviorSubject<Coupon | null>(null)
-  coupon$ = this.couponSource.asObservable()
   delivery = 0
 
   constructor(private http: HttpClient, private toastr: ToastrService) { }
@@ -67,9 +64,20 @@ export class BasketService {
     return this.basketSource.value
   }
 
-  //Delete basket
   deleteBasket(basket: Basket) {
-    return this.http.delete(`${environment.baseAPIUrl}/api/Baskets?id=${basket.id}`)
+    return this.http.delete(`${environment.baseAPIUrl}/api/Baskets?id=${basket.id}`).subscribe({
+      next: () => {
+        this.deleteLocalBasket()
+        this.toastr.info('Bạn không còn sách nào trong giỏ')
+      }
+    })
+  }
+
+  //Delete basket
+  deleteLocalBasket() {
+    this.basketSource.next(null)
+    this.basketTotalSource.next(null)
+    localStorage.removeItem('basket_key')
   }
 
   //Add an item/book to the basket
@@ -77,9 +85,12 @@ export class BasketService {
     if (isBook(item)) {
       item = mapToBasketItem(item);
     }
-    const basket = this.getCurrentBasketValue() ?? this.createBasket() //Check if is there any current basket in storage, if not create new basket
-    basket.basketItems = this.addOrUpdateBasketItem(basket.basketItems, item, quantity) //Add/update basket item
-    this.setBasket(basket) //Set basket item change in storage
+    //Check if is there any current basket in storage, if not create new basket
+    const basket = this.getCurrentBasketValue() ?? this.createBasket()
+    //Add or update basket item
+    basket.basketItems = this.addOrUpdateBasketItem(basket.basketItems, item, quantity)
+    //Set basket item change in storage
+    this.setBasket(basket)
   }
 
   createBasket(): Basket {
@@ -101,10 +112,6 @@ export class BasketService {
       if (basket.basketItems.length > 0) {
         this.setBasket(basket)
       } else {
-        this.basketSource.next(null)
-        this.basketTotalSource.next(null)
-        localStorage.removeItem('basket_key')
-        this.toastr.info('Bạn không còn sách nào trong giỏ')
         this.deleteBasket(basket)
       }
     }

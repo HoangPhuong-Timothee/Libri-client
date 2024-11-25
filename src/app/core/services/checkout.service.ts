@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DeliveryMethod } from '../models/delivery-method.model';
-import { environment } from 'src/environments/environment';
 import { map, of } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { DeliveryMethod } from '../models/delivery-method.model';
+import { CreateOrderRequest, Order } from '../models/order.model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,4 +23,9 @@ export class CheckoutService {
       })
     )
   }
+
+  createOrder(model: CreateOrderRequest) {
+    return this.http.post<Order>(`${environment.baseAPIUrl}/api/Orders`, model)
+  }
+
 }

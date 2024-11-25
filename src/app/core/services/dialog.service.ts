@@ -8,14 +8,15 @@ import { ConfirmationDialogComponent } from "src/app/shared/components/confirmat
 })
 
 export class DialogService {
-    
-    constructor(private dialog: MatDialog) { }
 
-    confirmDialog(message: string, title: string) {
-        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-            data: { message, title },
-            width: "350px"
-        })
-        return firstValueFrom(dialogRef.afterClosed())
-    }
+  constructor(private dialog: MatDialog) { }
+
+  confirmDialog(message: string, title: string) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        data: { message, title },
+        width: "500px"
+    })
+    return firstValueFrom(dialogRef.afterClosed())
+  }
+
 }

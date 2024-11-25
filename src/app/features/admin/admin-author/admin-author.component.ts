@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { firstValueFrom } from 'rxjs';
 import { Author } from 'src/app/core/models/author.model';
+import { ErrorDetails } from 'src/app/core/models/error-response.model';
 import { AuthorParams } from 'src/app/core/models/params.model';
 import { AuthorService } from 'src/app/core/services/author.service';
 import { DialogService } from 'src/app/core/services/dialog.service';
@@ -19,7 +20,7 @@ export class AdminAuthorComponent implements OnInit {
 
   searchTerm: string = ''
   authorList: Author[] = []
-  adminAuthorParams = new AuthorParams()
+  adminAuthorParams: AuthorParams
   totalAuthors = 0
   columns = [
     { field: 'id', header: 'Mã tác giả' },
@@ -39,7 +40,7 @@ export class AdminAuthorComponent implements OnInit {
       icon: 'delete',
       tooltip: 'Xóa tác giả',
       action: (row: any) => {
-        this.openDeleteAuthorDialog(row.id)
+        this.openDeleteAuthorDialog(row.id, row.name)
       }
 
     }
@@ -49,38 +50,52 @@ export class AdminAuthorComponent implements OnInit {
     private authorService: AuthorService,
     private dialog: MatDialog,
     private dialogService: DialogService
-  ) { }
+  )
+  {
+    this.searchTerm = ''
+    this.adminAuthorParams = authorService.getAuthorParams()
+  }
 
   ngOnInit(): void {
     this.getAllAuthorsForAdmin()
   }
 
   getAllAuthorsForAdmin() {
-    this.authorService.getAuthorsForAdmin(this.adminAuthorParams).subscribe({
+    this.authorService.getAuthorsForAdmin().subscribe({
       next: reponse => {
-        if (reponse.data) {
-          this.authorList = reponse.data
-          this.totalAuthors = reponse.count
-        }
+        this.authorList = reponse.data
+        this.totalAuthors = reponse.count
+      },
+      error: error => {
+        console.log(error)
       }
     })
   }
 
   onPageChange(event: PageEvent) {
-    this.adminAuthorParams.pageIndex = event.pageIndex + 1
-    this.adminAuthorParams.pageSize = event.pageSize
+    const params = this.authorService.getAuthorParams()
+    params.pageIndex = event.pageIndex + 1
+    params.pageSize = event.pageSize
+    this.authorService.setAuthorParams(params)
+    this.adminAuthorParams = params
     this.getAllAuthorsForAdmin()
   }
 
   onSearch() {
-    this.adminAuthorParams.search = this.searchTerm
-    this.adminAuthorParams.pageIndex = 1
+    const params = this.authorService.getAuthorParams()
+    params.search = this.searchTerm
+    params.pageIndex = 1
+    this.authorService.setAuthorParams(params)
+    this.adminAuthorParams = params
     this.getAllAuthorsForAdmin()
   }
 
   onReset() {
-    if (this.searchTerm) this.searchTerm = ''
+    if (this.searchTerm) {
+      this.searchTerm = ''
+    }
     this.adminAuthorParams = new AuthorParams()
+    this.authorService.setAuthorParams(this.adminAuthorParams)
     this.getAllAuthorsForAdmin()
   }
 
@@ -92,29 +107,31 @@ export class AdminAuthorComponent implements OnInit {
       }
     })
     dialog.afterClosed().subscribe({
-      next: async result => {
+      next: result => {
         if (result) {
-          const author: any = await firstValueFrom(this.authorService.addNewAuthor(result.author))
-          if (author) {
-            this.authorList.push(author)
-          }
+          this.authorService.addNewAuthor(result.author).subscribe({
+            next: response => {
+
+            }
+          })
         }
       }
     })
   }
 
-  openImportAuthorsDialog(errors?: Array<{ location: string; message: string }>) {
+  openImportAuthorsDialog(errors?: ErrorDetails[]) {
     const dialog = this.dialog.open(ImportAuthorsFormComponent, {
       minWidth: '500px',
-      autoFocus: false,
+      maxHeight: '500px',
+      autoFocus: true,
       data: {
         title: 'Nhập dữ liệu tác giả',
-        errors: errors || []
+        errors: errors
       },
-      panelClass: 'dynamic-dialog'
-    });
+      panelClass: 'custom-dialog-container'
+    })
     dialog.afterClosed().subscribe({
-      next: async (result) => {
+      next: (result) => {
         if (result && result.fileUploaded) {
           this.adminAuthorParams.pageIndex = 1
           this.getAllAuthorsForAdmin()
@@ -146,10 +163,10 @@ export class AdminAuthorComponent implements OnInit {
     })
   }
 
-  async openDeleteAuthorDialog(id: number) {
+  async openDeleteAuthorDialog(id: number, name: string) {
     const confirmed = await this.dialogService.confirmDialog(
-      'Xác nhận xóa tác giả',
-      'Bạn chắc chắn muốn xóa tác giả ? Vui lòng xác nhận bên dưới!'
+      'XÁC NHẬN XÓA',
+      `Bạn chắc chắn muốn xóa tác giả "${name}"?`
     )
     if (confirmed) {
       this.authorService.deleteAuthor(id).subscribe({
