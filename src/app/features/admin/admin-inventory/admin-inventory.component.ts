@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { InventoryTransaction } from 'src/app/core/models/inventory-transaction.model';
 import { Inventory } from 'src/app/core/models/inventory.model';
 import { InventoryParams } from 'src/app/core/models/params.model';
 import { InventoryService } from 'src/app/core/services/inventory.service';
 import { BottomSheetComponent } from "./bottom-sheet/bottom-sheet.component";
 import { FilterDialogComponent } from './filter-dialog/filter-dialog.component';
+import { InventoryTransactionDialogComponent } from './inventory-transaction-dialog/inventory-transaction-dialog.component';
 
 @Component({
   selector: 'app-admin-inventory',
@@ -17,16 +19,27 @@ export class AdminInventoryComponent implements OnInit {
 
   searchTerm: string = ''
   bookInventories: Inventory[] = []
+  transactions: InventoryTransaction[] = []
   inventoryParams: InventoryParams
   totalInventories: number = 0
   columns = [
     { field: 'bookId', header: 'Mã sách' },
-    { field: ['bookTitle', 'bookThumbnail'], header: 'Sách', haveImage: true },
-    { field: 'quantity', header: 'Số lượng kho' },
-    { field: 'bookStatus', header: 'Tình trạng sách' },
+    { field: 'bookTitle' , header: 'Sách' },
+    { field: 'quantity', header: 'Số lượng' },
+    { field: 'bookStatus', header: 'Tình trạng' },
     { field: 'storeName', header: 'Hiệu sách' },
-    { field: 'createInfo', header: 'Thông tin tạo' },
-    { field: 'updateInfo', header: 'Thông tin cập nhật' }
+    { field: 'createInfo', header: 'Tạo kho' },
+    { field: 'updateInfo', header: 'Cập nhật kho' }
+  ]
+  actions = [
+    {
+      label: 'Lịch sử kho',
+      icon: 'visibility',
+      tooltip: 'Xem lịch sử xuất/nhập kho của sách',
+      action: (row: any) => {
+        this.openBookInventoryTransactionsDialog(row.bookId, row.bookTitle, row.storeName)
+      }
+    }
   ]
 
   constructor(
@@ -59,6 +72,7 @@ export class AdminInventoryComponent implements OnInit {
     bottomSheet.afterDismissed().subscribe(
       result => {
         if (result && result.success) {
+          console.log(result)
           const params = this.inventoryService.getInventoryParams()
           params.pageIndex = 1
           this.inventoryService.setInventoryParams(params)
@@ -70,7 +84,7 @@ export class AdminInventoryComponent implements OnInit {
   }
 
   openFilterDialog() {
-    let dialog = this.dialog.open(FilterDialogComponent, {
+    const dialog = this.dialog.open(FilterDialogComponent, {
       minWidth: '500px',
       autoFocus: false,
       data: {
@@ -89,6 +103,18 @@ export class AdminInventoryComponent implements OnInit {
           this.inventoryParams = params
           this.getAllBookInventories()
         }
+      }
+    })
+  }
+
+  openBookInventoryTransactionsDialog(bookId: number, bookTitle: string, storeName: string) {
+    this.dialog.open(InventoryTransactionDialogComponent, {
+      minWidth: '630px',
+      autoFocus: true,
+      data: {
+        title: `Lịch sử xuất/nhập kho của sách '${bookTitle}'`,
+        bookId,
+        storeName
       }
     })
   }

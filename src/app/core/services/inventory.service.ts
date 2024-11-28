@@ -2,9 +2,10 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map, Observable, of } from "rxjs";
 import { environment } from "src/environments/environment";
-import { ImportInventoriesRequest, Inventory } from "../models/inventory.model";
+import { InventoryTransaction } from "../models/inventory-transaction.model";
+import { ExportInventoriesRequest, ImportInventoriesRequest, Inventory } from "../models/inventory.model";
 import { Pagination } from "../models/pagination.model";
-import { InventoryParams } from "../models/params.model";
+import { InventoryParams, InventoryTransactionParams } from "../models/params.model";
 
 @Injectable({
     providedIn: 'root'
@@ -14,6 +15,7 @@ export class InventoryService {
     inventories: Inventory[] = []
     inventoryPagination?: Pagination<Inventory[]>
     inventoryParams = new InventoryParams()
+    inventoryTransactionParams = new InventoryTransactionParams()
     inventoryCache = new Map<string, Pagination<Inventory[]>>()
 
     constructor(private http: HttpClient) {}
@@ -54,6 +56,19 @@ export class InventoryService {
       return this.inventoryParams
     }
 
+    setInventoryTransactionParams(params: InventoryTransactionParams) {
+      this.inventoryTransactionParams = params
+    }
+
+    getInventoryTransactionParams() {
+      return this.inventoryTransactionParams
+    }
+
+
+    getBookQuantityByTitleAndStoreId(title: string, bookStoreId: number) {
+      return this.http.get<number>(`${environment.baseAPIUrl}/api/Inventories/quantity?bookTitle=${title}&bookStoreId=${bookStoreId}`)
+    }
+
     importInventoriesFromFile(file: File) {
       const formData = new FormData()
       formData.append('file', file, file.name)
@@ -61,10 +76,6 @@ export class InventoryService {
         reportProgress: true,
         observe: 'events'
       })
-    }
-
-    importInventoriesManual(request: ImportInventoriesRequest[]) {
-      return this.http.post(`${environment.baseAPIUrl}/api/Inventories/import-manual`, request)
     }
 
     exportInventoriesFromFile(file: File) {
@@ -76,8 +87,20 @@ export class InventoryService {
       })
     }
 
-    exportInventoriesManual(exportInventoriesRequest: any) {
-      return this.http.post(`${environment.baseAPIUrl}/api/Inventories/export-manual`, exportInventoriesRequest)
+    importInventoriesManual(importRequests: ImportInventoriesRequest[]) {
+      return this.http.post(`${environment.baseAPIUrl}/api/Inventories/import-manual`, importRequests)
+    }
+
+    exportInventoriesManual(exportRequests: ExportInventoriesRequest[]) {
+      return this.http.post(`${environment.baseAPIUrl}/api/Inventories/export-manual`, exportRequests)
+    }
+
+    getBookInventoryTransactions(bookId: number, storeName: string) {
+      // let params = new HttpParams()
+      // if (this.inventoryTransactionParams.transactionType) params = params.append('transactionType', this.inventoryTransactionParams.transactionType)
+      // if (this.inventoryTransactionParams.startDate) params = params.append('startDate', this.inventoryTransactionParams.startDate.toISOString())
+      // if (this.inventoryTransactionParams.endDate) params = params.append('endDate', this.inventoryTransactionParams.endDate.toISOString())
+      return this.http.get<InventoryTransaction[]>(`${environment.baseAPIUrl}/api/Inventories/inventory-transactions/${bookId}?storeName=${storeName}`)
     }
 
 }

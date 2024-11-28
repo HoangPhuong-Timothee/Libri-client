@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-center mt-5">
+<div class="d-flex justify-content-center" style="margin-top: 110px;">
     <div class="col-3">
       <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
         <div class="text-center mb-4">
@@ -64,7 +64,7 @@
         <!-- [maxDate]="maxDate"  dùng cho giới hạn tuổi -->
         <app-date-input
           [formControl]="registerForm.controls['dateOfBirth']"
-          [label]="'Ngày sinh'"
+          [label]="'Ngày sinh: '"
           dateMode="date"
         >
         </app-date-input>

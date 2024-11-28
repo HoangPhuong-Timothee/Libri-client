@@ -1,0 +1,28 @@
+<h1 mat-dialog-title class="text-center text-uppercase fw-bold">{{ data.title }}</h1>
+<mat-divider></mat-divider>
+<div mat-dialog-content>
+  <div *ngIf="transactions.length > 0" class="timeline">
+    <div *ngFor="let transaction of transactions" class="timeline-item">
+      <div [ngClass]="{'left': transaction.transactionType === 'Xuất kho', 'right': transaction.transactionType === 'Nhập kho'}">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title">{{ transaction.transactionType }} - Số lượng: {{ transaction.quantity }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted fst-italic">{{ transaction.transactionDate }} bởi {{ transaction.performedBy }}</h6>
+            <!-- <div style="max-width: 100px;" class="card-subtitle mb-2 text-muted fst-italic">
+              <span>Hiệu sách: {{ transaction.storeName }}</span>
+              <span>Địa chỉ: {{ transaction.storeAddress }}</span>
+          </div> -->
+          <div class="text-danger card-body">
+            <strong>* Ghi chú: </strong>
+            {{ transaction.notes }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="transactions.length <= 0" class="text-center text-uppercase">Sách chưa có lịch sử xuất/nhập kho</div>
+</div>
+<mat-divider></mat-divider>
+<div mat-dialog-actions>
+  <button mat-button color="warn" mat-dialog-close="">Đóng</button>
+</div>

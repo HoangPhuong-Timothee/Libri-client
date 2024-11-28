@@ -37,3 +37,9 @@ export class InventoryParams {
   pageSize = 20
   search = ''
 }
+
+export class InventoryTransactionParams {
+  transactionType = ''
+  startDate = new Date()
+  endDate = new Date()
+}

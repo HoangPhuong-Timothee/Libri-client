@@ -1,6 +1,6 @@
 <div class="mt-3">
   <h1 class="tw-fs-2 tw-fw-semibold tw-mt-4 text-uppercase">
-    Quản lý tồn kho
+    Quản lý kho
   </h1>
   <div class="d-flex justify-content-around mt-3">
     <div>
@@ -26,6 +26,7 @@
 
 <app-custom-table
     [columns]="columns"
+    [actions]="actions"
     [dataSource]="bookInventories"
     [totalItems]="totalInventories"
     [pageSize]="inventoryParams.pageSize"

@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -77,7 +78,7 @@ import { TruncateTitlePipe } from './pipes/truncate-title.pipe';
     BsDropdownModule.forRoot(),
     NgxSpinnerModule,
     ToastrModule.forRoot({
-      positionClass: 'toast-top-right',
+      positionClass: 'toast-top-left',
       preventDuplicates: true
     }),
     ReactiveFormsModule,
@@ -102,7 +103,8 @@ import { TruncateTitlePipe } from './pipes/truncate-title.pipe';
     MatListModule,
     ScrollingModule,
     MatBottomSheetModule,
-    MatTableModule
+    MatTableModule,
+    MatCardModule
   ],
   exports: [
     NavbarComponent,
@@ -147,7 +149,8 @@ import { TruncateTitlePipe } from './pipes/truncate-title.pipe';
     MatDivider,
     ScrollingModule,
     MatBottomSheetModule,
-    MatTableModule
+    MatTableModule,
+    MatCardModule
   ]
 })
 export class SharedModule { }

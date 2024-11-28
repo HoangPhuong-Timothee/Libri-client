@@ -6,9 +6,12 @@
             <button [routerLink]="['/bookcase', book.id]" class="btn btn-secondary"><i class="fa-solid fa-eye"></i></button>
             <button class="btn btn-danger ms-2"><i class="fa-regular fa-heart "></i></button>
         </div>
-        <div *ngIf="!book.isAvailable || book.quantityInStock <= 0" class="bg-dark text-danger fw-bold d-flex align-items-center justify-content-center hover-overlay">
-            <span>HẾT SÁCH</span>
+        <div *ngIf="book.quantityInStock <= 0" class="text-uppercase bg-dark text-danger fw-bold d-flex align-items-center justify-content-center hover-overlay">
+            <span>Hết sách</span>
         </div>
+        <div *ngIf="!book.isAvailable" class="text-uppercase bg-dark text-danger fw-bold d-flex align-items-center justify-content-center hover-overlay">
+          <span>Tạm ngưng kinh doanh</span>
+      </div>
     </div>
     <div class="card-body d-flex flex-column">
         <a *ngIf="book.isAvailable || book.quantityInStock >= 0" routerLink="/bookcase/{{ book.id }}" class="text-decoration-none">

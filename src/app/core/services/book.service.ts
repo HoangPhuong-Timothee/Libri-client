@@ -111,8 +111,12 @@ export class BookService {
     return this.http.delete(`${environment.baseAPIUrl}/api/Books/${id}`)
   }
 
-  checkBookExists(title: string) {
-    return this.http.get<boolean>(`${environment.baseAPIUrl}/api/Books/book-exists?bookTile=${title}`)
+  checkBookExistByTitle(title: string) {
+    return this.http.get<boolean>(`${environment.baseAPIUrl}/api/Books/book-exists?bookTitle=${title}`)
+  }
+
+  checkBookExistInBookStore(title: string, bookStoreId: number) {
+    return this.http.get<boolean>(`${environment.baseAPIUrl}/api/Books/exists-in-bookstore?bookTitle=${title}&bookStoreId=${bookStoreId}`)
   }
 
 }

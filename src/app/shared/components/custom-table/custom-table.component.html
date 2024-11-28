@@ -4,12 +4,12 @@
       <thead>
         <tr>
           <th *ngFor="let column of columns" class="text-start bg-warning text-dark sticky-header text-uppercase">{{ column.header }}</th>
-          <th class="px-4 text-start bg-warning text-dark sticky-header text-uppercase" *ngIf="actions.length">Thao tác</th>
+          <th class="px-4 text-start bg-warning text-dark sticky-header text-uppercase" *ngIf="actions.length"></th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let row of dataSource" class="border-bottom">
-          <td *ngFor="let column of columns" class="py-2">
+          <td *ngFor="let column of columns" class="py-2" style="max-width: 350px;">
             <div *ngIf="column.haveImage" class="d-flex align-items-center" style="max-width: 350px;">
               <img src="{{ row[column.field[1]] }}" alt="book image" style="width: 70px; height: auto;">
               <span class="ms-2">{{ row[column.field[0]] }}</span>

@@ -1,11 +1,11 @@
 <div class="mb-3">
-  <label>{{label}}</label>
+  <label class="mb-1">{{label}}</label>
   <input
     type="text"
     [class.is-invalid]="control.touched && control.invalid"
     class="form-control"
     [formControl]="control"
-    placeholder="{{ dateMode === 'year' ? 'Chọn năm xuất bản' : 'Chọn ngày sinh' }}"
+    placeholder="{{ dateMode === 'year' ? 'Chọn năm xuất bản' : 'Chọn ngày' }}"
     bsDatepicker
     [bsConfig]="bsConfig"
     [maxDate]="maxDate"

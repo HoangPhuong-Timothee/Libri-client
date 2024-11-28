@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, FormBuilder, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -10,7 +10,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent {
 
   errors: string[] | null = null
   // maxDate!: Date
@@ -25,10 +25,10 @@ export class RegisterComponent implements OnInit {
     private toastr: ToastrService
   ) {}
 
-  ngOnInit(): void {
-    // this.maxDate = new Date()
-    // this.maxDate.setFullYear(this.maxDate.getFullYear() - 18)
-  }
+  // ngOnInit(): void {
+  //   this.maxDate = new Date()
+  //   this.maxDate.setFullYear(this.maxDate.getFullYear() - 18)
+  // }
 
   passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
