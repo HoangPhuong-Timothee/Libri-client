@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom } from 'rxjs';
-import { ErrorDetails } from 'src/app/core/models/error-response.model';
 import { PublisherParams } from 'src/app/core/models/params.model';
 import { Publisher } from 'src/app/core/models/publisher.model';
 import { DialogService } from 'src/app/core/services/dialog.service';
@@ -73,7 +72,7 @@ export class AdminPublisherComponent implements OnInit {
     })
   }
 
-  openImportPublishersDialog(errors?: ErrorDetails[]) {
+  openImportPublishersDialog(errors?: any) {
     const dialog = this.dialog.open(ImportPublishersFormComponent, {
       minWidth: '500px',
       maxHeight: '500px',

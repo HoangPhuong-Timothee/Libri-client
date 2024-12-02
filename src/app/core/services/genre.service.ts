@@ -2,7 +2,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable, of } from "rxjs";
 import { environment } from 'src/environments/environment';
-import { APIResponse } from '../models/error-response.model';
 import { AddGenreRequest, Genre } from '../models/genre.model';
 import { Pagination } from '../models/pagination.model';
 import { GenreParams } from '../models/params.model';
@@ -60,8 +59,8 @@ export class GenreService {
     return this.genreParams
   }
 
-  addNewGenre(addGenreRequest: AddGenreRequest): Observable<APIResponse> {
-    return this.http.post<APIResponse>(`${environment.baseAPIUrl}/api/Genres`, addGenreRequest)
+  addNewGenre(addGenreRequest: AddGenreRequest) {
+    return this.http.post(`${environment.baseAPIUrl}/api/Genres`, addGenreRequest)
   }
 
   importGenresFromFile(file: File) {

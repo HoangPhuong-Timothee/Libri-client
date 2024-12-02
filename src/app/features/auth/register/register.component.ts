@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { AbstractControl, AsyncValidatorFn, FormBuilder, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { debounceTime, finalize, map, switchMap, take } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { validateEmailExist, validateMatchValues } from 'src/app/shared/helpers/validates/validate-auth-inputs';
 
 @Component({
   selector: 'app-register',
@@ -35,9 +35,9 @@ export class RegisterComponent {
 
   registerForm = this.fb.group({
     username: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email], [this.validateEmailNotTaken()]],
+    email: ['', [Validators.required, Validators.email], [validateEmailExist(this.authService)]],
     password: ['', [Validators.required, Validators.pattern(this.passwordRegex)]],
-    confirmPassword: ['', [Validators.required, this.validateMatchValues('password')]],
+    confirmPassword: ['', [Validators.required, validateMatchValues('password')]],
     phoneNumber: ['', Validators.required],
     gender: ['male'],
     dateOfBirth: ['', Validators.required]
@@ -55,32 +55,6 @@ export class RegisterComponent {
         this.toastr.error('Có lỗi xảy ra trong quá trình đăng ký!');
       }
     })
-  }
-
-  validateEmailNotTaken(): AsyncValidatorFn {
-    return (control: AbstractControl) => {
-      return control.valueChanges.pipe(
-        debounceTime(1000),
-        take(1),
-        switchMap(() => {
-          return this.authService.checkEmailExists(control.value).pipe(
-            map((result) => (result ? { emailExists: true } : null)),
-            finalize(() => control.markAllAsTouched())
-          )
-        })
-      )
-    }
-  }
-
-  validateMatchValues(matchTo: string): ValidatorFn {
-    return (control: AbstractControl) => {
-      const parent = control?.parent
-      const matchControl = parent ? parent.get(matchTo) : null
-      if (!parent || !matchControl) {
-        return null
-      }
-      return control.value === matchControl.value ? null : { isMatching: true }
-    }
   }
 
   togglePasswordVisibility(): void {

@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { InventoryTransaction } from 'src/app/core/models/inventory-transaction.model';
 import { Inventory } from 'src/app/core/models/inventory.model';
 import { InventoryParams } from 'src/app/core/models/params.model';
 import { InventoryService } from 'src/app/core/services/inventory.service';
-import { BottomSheetComponent } from "./bottom-sheet/bottom-sheet.component";
+import { ExportInventoriesFormComponent } from './export-inventories-form/export-inventories-form.component';
 import { FilterDialogComponent } from './filter-dialog/filter-dialog.component';
+import { ImportInventoriesFormComponent } from './import-inventories-form/import-inventories-form.component';
 import { InventoryTransactionDialogComponent } from './inventory-transaction-dialog/inventory-transaction-dialog.component';
 
 @Component({
@@ -44,8 +44,7 @@ export class AdminInventoryComponent implements OnInit {
 
   constructor(
     private inventoryService: InventoryService,
-    private dialog: MatDialog,
-    private bottomSheet: MatBottomSheet
+    private dialog: MatDialog
   )
   {
     this.inventoryParams = inventoryService.getInventoryParams()
@@ -67,12 +66,17 @@ export class AdminInventoryComponent implements OnInit {
     })
   }
 
-  openBottomSheet() {
-    const bottomSheet = this.bottomSheet.open(BottomSheetComponent)
-    bottomSheet.afterDismissed().subscribe(
-      result => {
-        if (result && result.success) {
-          console.log(result)
+  openImportInventoriesDialog() {
+    const dialog = this.dialog.open(ImportInventoriesFormComponent, {
+      minWidth: '500px',
+      data: {
+        title: 'Nhập kho'
+      },
+      panelClass: 'dynamic-dialog'
+    });
+    dialog.afterClosed().subscribe({
+      next: (result) => {
+        if (result && result.importSucess) {
           const params = this.inventoryService.getInventoryParams()
           params.pageIndex = 1
           this.inventoryService.setInventoryParams(params)
@@ -80,7 +84,28 @@ export class AdminInventoryComponent implements OnInit {
           this.getAllBookInventories()
         }
       }
-    )
+    })
+  }
+
+  openExportInventoriesDialog() {
+    const dialog = this.dialog.open(ExportInventoriesFormComponent, {
+      minWidth: '400px',
+      data: {
+        title: 'Xuất kho'
+      },
+      panelClass: 'dynamic-dialog'
+    });
+    dialog.afterClosed().subscribe({
+      next: (result) => {
+        if (result && result.exportSuccess) {
+          const params = this.inventoryService.getInventoryParams()
+          params.pageIndex = 1
+          this.inventoryService.setInventoryParams(params)
+          this.inventoryParams = params
+          this.getAllBookInventories()
+        }
+      }
+    })
   }
 
   openFilterDialog() {
@@ -109,8 +134,8 @@ export class AdminInventoryComponent implements OnInit {
 
   openBookInventoryTransactionsDialog(bookId: number, bookTitle: string, storeName: string) {
     this.dialog.open(InventoryTransactionDialogComponent, {
-      minWidth: '630px',
-      autoFocus: true,
+      minWidth: '1200px',
+      maxHeight: '500px',
       data: {
         title: `Lịch sử xuất/nhập kho của sách '${bookTitle}'`,
         bookId,

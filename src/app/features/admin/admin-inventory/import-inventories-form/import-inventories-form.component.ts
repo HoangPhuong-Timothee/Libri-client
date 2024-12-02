@@ -1,13 +1,14 @@
+import { HttpEventType } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
-import { AbstractControl, AsyncValidatorFn, FormArray, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { debounceTime, finalize, map, switchMap, take } from 'rxjs';
 import { BookStore } from 'src/app/core/models/book-store.model';
 import { ImportInventoriesRequest } from 'src/app/core/models/inventory.model';
 import { BookService } from 'src/app/core/services/book.service';
 import { BookstoreService } from 'src/app/core/services/bookstore.service';
 import { InventoryService } from 'src/app/core/services/inventory.service';
+import { validateBookExist, validatePastDate } from 'src/app/shared/helpers/validates/validate-inventory-inputs';
 
 @Component({
   selector: 'app-import-inventories-form',
@@ -17,8 +18,14 @@ import { InventoryService } from 'src/app/core/services/inventory.service';
 export class ImportInventoriesFormComponent implements OnInit {
 
   importForm!: FormGroup
-  isCheckedAll: boolean = false
-  headerColumns: string[] = ['Tên sách', 'Hiệu sách', 'Số lượng nhập', 'Ngày nhập', 'Ghi chú nhập kho', '']
+  importFileMode: boolean = false
+  errorsList: any[] = []
+  selectedFile: File | null = null
+  columns = [
+    { field: 'location', header: 'Vị trí' },
+    { field: 'message', header: 'Nội dung' }
+  ]
+  headerColumns: string[] = ['Tên sách', 'Hiệu sách', 'Số lượng', 'Ngày nhập', 'Ghi chú nhập kho', '']
   bookStoresList: BookStore[] = []
 
   constructor(
@@ -50,12 +57,16 @@ export class ImportInventoriesFormComponent implements OnInit {
     })
   }
 
+  changeMode() {
+    return this.importFileMode = !this.importFileMode
+  }
+
   createFormGroup(): FormGroup {
     return this.fb.group({
-      bookTitle: ['', [Validators.required], [this.validateBookExist()]],
+      bookTitle: ['', [Validators.required], [validateBookExist(this.bookService)]],
       quantity: [0, [Validators.required, Validators.min(0)]],
       bookStoreId: ['', [Validators.required]],
-      importDate: ['', [Validators.required, this.validatePastDate()]],
+      importDate: ['', [Validators.required, validatePastDate()]],
       importNotes: ['', Validators.maxLength(100)]
     })
   }
@@ -72,49 +83,55 @@ export class ImportInventoriesFormComponent implements OnInit {
     this.rows.removeAt(index)
   }
 
-  onSubmit(): void {
+  submitForm() {
     if (this.importForm.valid) {
-      const requestData: ImportInventoriesRequest[] = this.importForm.value.rows
-      this.inventoryService.importInventoriesManual(requestData).subscribe({
+        const requestData: ImportInventoriesRequest[] = this.importForm.value.rows
+        this.inventoryService.importInventoriesManual(requestData).subscribe({
         next: response => {
           if (response) {
-            this.dialogRef.close({ importSuccess: true })
+            this.toastr.success("Nhập kho thành công")
+            this.dialogRef.close({ exportSuccess: true })
           }
         },
         error: error => {
-          console.log("Có lỗi: ", error)
           this.toastr.error("Có lỗi xảy ra trong quá trình nhập kho")
         }
       })
-    } else {
+    }else {
       this.toastr.warning("Dữ liệu nhập vào không hợp lệ")
     }
   }
 
-  validateBookExist(): AsyncValidatorFn {
-    return (control: AbstractControl) => {
-      return control.valueChanges.pipe(
-        debounceTime(1000),
-        take(1),
-        switchMap(() => {
-          return this.bookService.checkBookExistByTitle(control.value).pipe(
-            map((result) => (result ? { bookExist: true } : null)),
-            finalize(() => control.markAllAsTouched())
-          )
-        })
-      )
-    }
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0]
   }
 
-  validatePastDate(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      if (!control.value) {
-        return null
-      }
-      const today = new Date()
-      const inputDate = new Date(control.value)
-      return inputDate <= today ? null : { 'futureDate': { value: control.value } }
+  submitFile() {
+    if (!this.selectedFile) {
+      this.toastr.warning('Chưa có file nào được tải lên')
+      return
     }
+    this.inventoryService.importInventoriesFromFile(this.selectedFile).subscribe({
+      next: (event) => {
+        if (event.type === HttpEventType.Response) {
+          if (event.status === 400) {
+            this.toastr.error('Có lỗi xảy ra! File không đúng yêu cầu!')
+            this.dialogRef.close({ errors: event.body })
+          } else {
+            this.toastr.success("Nhập kho thành công")
+            this.dialogRef.close({ importSuccess: true })
+          }
+        }
+      },
+      error: (error) => {
+        if (error.status === 400 && error.errors) {
+          this.toastr.error('Có lỗi xảy ra! File không đúng yêu cầu!')
+          this.errorsList = error.errors
+        } else {
+          this.toastr.error('Lỗi không xác định! Vui lòng thử lại.')
+        }
+      }
+    })
   }
 
 }

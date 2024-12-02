@@ -14,12 +14,10 @@ import { AdminGenreComponent } from './admin-genre/admin-genre.component';
 import { EditGenreFormComponent } from './admin-genre/edit-genre-form/edit-genre-form.component';
 import { ImportGenresFormComponent } from './admin-genre/import-genres-form/import-genres-form.component';
 import { AdminInventoryComponent } from './admin-inventory/admin-inventory.component';
-import { BottomSheetComponent } from './admin-inventory/bottom-sheet/bottom-sheet.component';
 import { ExportInventoriesFormComponent } from './admin-inventory/export-inventories-form/export-inventories-form.component';
-import { ExportInventoryFileFormComponent } from './admin-inventory/export-inventory-file-form/export-inventory-file-form.component';
 import { FilterDialogComponent } from './admin-inventory/filter-dialog/filter-dialog.component';
 import { ImportInventoriesFormComponent } from './admin-inventory/import-inventories-form/import-inventories-form.component';
-import { ImportInventoryFileFormComponent } from './admin-inventory/import-inventory-file-form/import-inventory-file-form.component';
+import { InventoryTransactionDialogComponent } from './admin-inventory/inventory-transaction-dialog/inventory-transaction-dialog.component';
 import { AdminOrderComponent } from './admin-order/admin-order.component';
 import { AddPublisherFormComponent } from './admin-publisher/add-publisher-form/add-publisher-form.component';
 import { AdminPublisherComponent } from './admin-publisher/admin-publisher.component';
@@ -28,7 +26,6 @@ import { ImportPublishersFormComponent } from './admin-publisher/import-publihse
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminUserComponent } from './admin-user/admin-user.component';
 import { AdminComponent } from './admin.component';
-import { InventoryTransactionDialogComponent } from './admin-inventory/inventory-transaction-dialog/inventory-transaction-dialog.component';
 
 
 @NgModule({
@@ -55,10 +52,7 @@ import { InventoryTransactionDialogComponent } from './admin-inventory/inventory
     FilterDialogComponent,
     BookFilterDialogComponent,
     AdminUserComponent,
-    BottomSheetComponent,
-    ImportInventoryFileFormComponent,
     ExportInventoriesFormComponent,
-    ExportInventoryFileFormComponent,
     InventoryTransactionDialogComponent
   ],
   imports: [

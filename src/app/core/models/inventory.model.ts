@@ -6,6 +6,7 @@ export interface Inventory {
   storeName: string
   createInfo: string
   updateInfo: string
+
 }
 export interface ImportInventoriesRequest {
   bookTitle: string

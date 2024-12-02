@@ -45,7 +45,6 @@ export class FilterDialogComponent implements OnInit {
   }
 
   applyFilters() {
-    console.log(this.selectedBookStoreId, this.selectedGenreId)
     this.filterDialogRef.close({
       selectedGenreId: this.selectedGenreId,
       selectedBookStoreId: this.selectedBookStoreId

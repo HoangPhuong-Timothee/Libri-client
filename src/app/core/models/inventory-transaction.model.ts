@@ -1,6 +1,5 @@
 export interface InventoryTransaction {
-  transactionId: number
-  bookTitle: string
+  id: number
   storeName: string
   storeAddress: string
   transactionType: string
@@ -8,4 +7,5 @@ export interface InventoryTransaction {
   transactionDate: string
   performedBy: string
   notes: string
+  showDetails?: boolean
 }

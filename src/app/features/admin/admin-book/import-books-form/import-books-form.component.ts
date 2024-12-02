@@ -2,7 +2,6 @@ import { HttpEventType } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { ErrorDetails } from 'src/app/core/models/error-response.model';
 import { BookService } from 'src/app/core/services/book.service';
 
 @Component({
@@ -12,7 +11,7 @@ import { BookService } from 'src/app/core/services/book.service';
 })
 export class ImportBooksFormComponent implements OnInit {
 
-  errorsList: ErrorDetails[] = []
+  errorsList: any
   selectedFile: File | null = null
   uploadedPercent: number = 0
   columns = [

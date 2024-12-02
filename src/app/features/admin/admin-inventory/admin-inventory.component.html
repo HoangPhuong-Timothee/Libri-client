@@ -4,10 +4,16 @@
   </h1>
   <div class="d-flex justify-content-around mt-3">
     <div>
-      <button class="match-input-height me-1" mat-stroked-button (click)="openFilterDialog()">
-        <mat-icon>filter_list</mat-icon>
-        Lọc dữ liệu
+      <button class="me-2" (click)="openImportInventoriesDialog()">
+        <i class="fa-solid fa-file-import"></i>
+        Nhập nho
       </button>
+      <button class="me-2" (click)="openExportInventoriesDialog()">
+        <i class="fa-solid fa-file-export"></i>
+        Xuất kho
+      </button>
+    </div>
+    <div>
       <input
       (keyup.enter)="onSearch()"
       [(ngModel)]="searchTerm"
@@ -16,11 +22,12 @@
       placeholder="Nhập từ khóa..."
       style="width: 300px;"
       >
+      <button class="match-input-height me-1" mat-stroked-button (click)="openFilterDialog()">
+        <mat-icon>filter_list</mat-icon>
+        Lọc dữ liệu
+      </button>
       <button (click)="onReset()"><i class="fa-solid fa-rotate-left"></i></button>
     </div>
-    <button mat-raised-button (click)="openBottomSheet()"><i class="fa-solid fa-bars"></i></button>
-    <div>
-  </div>
   </div>
 </div>
 

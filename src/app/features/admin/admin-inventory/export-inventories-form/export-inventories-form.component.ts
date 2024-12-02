@@ -1,13 +1,15 @@
+import { HttpEventType } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
-import { AbstractControl, AsyncValidatorFn, FormArray, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { catchError, debounceTime, finalize, map, of, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { BookStore } from 'src/app/core/models/book-store.model';
 import { ExportInventoriesRequest } from 'src/app/core/models/inventory.model';
 import { BookService } from 'src/app/core/services/book.service';
 import { BookstoreService } from 'src/app/core/services/bookstore.service';
 import { InventoryService } from 'src/app/core/services/inventory.service';
+import { validateBookExist, validateBookInStore, validatePastDate, validateQuantityInStore } from 'src/app/shared/helpers/validates/validate-inventory-inputs';
 
 @Component({
   selector: 'app-export-inventories-form',
@@ -17,9 +19,16 @@ import { InventoryService } from 'src/app/core/services/inventory.service';
 export class ExportInventoriesFormComponent implements OnInit {
 
   exportForm!: FormGroup
-  availableQuantity?: number
-  headerColumns: string[] = ['Tên sách', 'Hiệu sách', 'Số lượng xuất', 'Ngày xuất', 'Ghi chú xuất kho', '']
+  errorsList: any[] = []
+  selectedFile: File | null = null
+  columns = [
+    { field: 'location', header: 'Vị trí' },
+    { field: 'message', header: 'Nội dung' }
+  ]
+  headerColumns: string[] = ['Tên sách', 'Hiệu sách', 'Số lượng', 'Ngày xuất kho', 'Ghi chú', '']
   bookStoresList: BookStore[] = []
+  availableQuantity$ = new BehaviorSubject<number>(0)
+  importFileMode: boolean = true
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -50,13 +59,17 @@ export class ExportInventoriesFormComponent implements OnInit {
     })
   }
 
+  changeMode() {
+    this.importFileMode = !this.importFileMode
+  }
+
   createFormGroup(): FormGroup {
     return this.fb.group({
-      bookTitle: ['', [Validators.required], [this.validateBookExist()]],
-      quantity: [0, [Validators.required, Validators.min(0)], [this.validateQuantityInStore()]],
-      bookStoreId: ['', [Validators.required], [this.validateBookInStore()]],
-      exportDate: ['', [Validators.required, this.validatePastDate()]],
-      exportNotes: ['', [Validators.maxLength(100)]]
+      bookTitle: ['', [Validators.required], [validateBookExist(this.bookService)]],
+      quantity: [0, [Validators.required, Validators.min(0)], [validateQuantityInStore(this.inventoryService, this.availableQuantity$)]],
+      bookStoreId: ['', [Validators.required], [validateBookInStore(this.bookService)]],
+      exportDate: ['', [Validators.required, validatePastDate()]],
+      exportNotes: ['', [Validators.required, Validators.maxLength(100)]]
     })
   }
 
@@ -72,12 +85,13 @@ export class ExportInventoriesFormComponent implements OnInit {
     this.rows.removeAt(index)
   }
 
-  onSubmit(): void {
+  submitForm() {
     if (this.exportForm.valid) {
-      const requestData: ExportInventoriesRequest[] = this.exportForm.value.rows
-      this.inventoryService.exportInventoriesManual(requestData).subscribe({
+        const requestData: ExportInventoriesRequest[] = this.exportForm.value.rows
+        this.inventoryService.exportInventoriesManual(requestData).subscribe({
         next: response => {
           if (response) {
+            this.toastr.success("Xuất kho thành công")
             this.dialogRef.close({ exportSuccess: true })
           }
         },
@@ -91,69 +105,36 @@ export class ExportInventoriesFormComponent implements OnInit {
     }
   }
 
-  validateBookExist(): AsyncValidatorFn {
-    return (control: AbstractControl) => {
-      return control.valueChanges.pipe(
-        debounceTime(1000),
-        take(1),
-        switchMap((bookTitle) => {
-          return this.bookService.checkBookExistByTitle(bookTitle).pipe(
-            map((result) => (result ? { bookExists: true } : null)),
-            catchError(() => of(null)),
-            finalize(() => control.markAllAsTouched())
-          )
-        })
-      )
-    }
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0]
   }
 
-  validateBookInStore(): AsyncValidatorFn {
-    return (control: AbstractControl) => {
-      const bookTitle = control.parent?.get('bookTitle')?.value
-      const bookStoreId = control.value
-      if (bookTitle && bookStoreId) {
-        return this.bookService.checkBookExistInBookStore(bookTitle, bookStoreId).pipe(
-          map((result) => result ? null : { bookExistInStore: true }),
-          catchError(() => of(null)),
-      )} else {
-          return of(null)
+  submitFile() {
+    if (!this.selectedFile) {
+      this.toastr.warning('Chưa có file nào được tải lên')
+      return
+    }
+    this.inventoryService.exportInventoriesFromFile(this.selectedFile).subscribe({
+      next: (event) => {
+        if (event.type === HttpEventType.Response) {
+          if (event.status === 400) {
+            this.toastr.error('Có lỗi xảy ra! File không đúng yêu cầu!')
+            this.dialogRef.close({ errors: event.body })
+          } else {
+            this.toastr.success("Xuất kho thành công")
+            this.dialogRef.close({ exportSuccess: true })
+          }
+        }
+      },
+      error: (error) => {
+        if (error.status === 400 && error.errors) {
+          this.toastr.error('Có lỗi xảy ra! File không đúng yêu cầu!')
+          this.errorsList = error.errors
+        } else {
+          this.toastr.error('Lỗi không xác định! Vui lòng thử lại.')
         }
       }
-  }
-
-  validateQuantityInStore(): AsyncValidatorFn {
-    return (control: AbstractControl) => {
-      const bookTitle = control.parent?.get('bookTitle')?.value
-      const bookStoreId = control.parent?.get('bookStoreId')?.value
-      const inputQuatity = control.value
-      if (bookTitle && bookStoreId) {
-          return control.valueChanges.pipe(
-           debounceTime(1000),
-           take(1),
-           switchMap(() => {
-            return this.inventoryService.getBookQuantityByTitleAndStoreId(bookTitle, bookStoreId).pipe(
-              debounceTime(1000),
-              tap(result => this.availableQuantity = result),
-              map((result) => result >= inputQuatity ? null : { validQuantity: true }),
-              catchError(() => of(null))
-            )
-           })
-          )
-      } else {
-          return of(null)
-        }
-      }
-  }
-
-  validatePastDate(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      if (!control.value) {
-        return null
-      }
-      const today = new Date()
-      const inputDate = new Date(control.value)
-      return inputDate <= today ? null : { 'futureDate': { value: control.value } }
-    }
+    })
   }
 
 }

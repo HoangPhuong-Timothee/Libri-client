@@ -3,7 +3,6 @@ import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -78,7 +77,7 @@ import { TruncateTitlePipe } from './pipes/truncate-title.pipe';
     BsDropdownModule.forRoot(),
     NgxSpinnerModule,
     ToastrModule.forRoot({
-      positionClass: 'toast-top-left',
+      positionClass: 'toast-bottom-right',
       preventDuplicates: true
     }),
     ReactiveFormsModule,
@@ -102,7 +101,6 @@ import { TruncateTitlePipe } from './pipes/truncate-title.pipe';
     MatOptionModule,
     MatListModule,
     ScrollingModule,
-    MatBottomSheetModule,
     MatTableModule,
     MatCardModule
   ],
@@ -148,7 +146,6 @@ import { TruncateTitlePipe } from './pipes/truncate-title.pipe';
     MatListModule,
     MatDivider,
     ScrollingModule,
-    MatBottomSheetModule,
     MatTableModule,
     MatCardModule
   ]

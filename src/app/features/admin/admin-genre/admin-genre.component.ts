@@ -7,7 +7,6 @@ import { Genre } from 'src/app/core/models/genre.model';
 import { GenreParams } from 'src/app/core/models/params.model';
 import { DialogService } from 'src/app/core/services/dialog.service';
 import { GenreService } from 'src/app/core/services/genre.service';
-import { ErrorDetails } from "../../../core/models/error-response.model";
 import { AddGenreFormComponent } from './add-genre-form/add-genre-form.component';
 import { EditGenreFormComponent } from './edit-genre-form/edit-genre-form.component';
 import { ImportGenresFormComponent } from './import-genres-form/import-genres-form.component';
@@ -84,12 +83,6 @@ export class AdminGenreComponent implements OnInit {
         if (result) {
           this.genreService.addNewGenre(result.addGenreRequest).subscribe({
             next: response  => {
-              if (response.statusCode === 400) {
-                this.toastr.error(response.message)
-              } else if (response.statusCode === 201) {
-                this.toastr.success(response.message)
-                this.getAllGenresForAdmin()
-              }
             }
           })
         }
@@ -97,7 +90,7 @@ export class AdminGenreComponent implements OnInit {
     })
   }
 
-  openImportGenresDialog(errors?: ErrorDetails[]) {
+  openImportGenresDialog(errors?: any[]) {
     const dialog = this.dialog.open(ImportGenresFormComponent, {
       minWidth: '500px',
       maxHeight: '500px',

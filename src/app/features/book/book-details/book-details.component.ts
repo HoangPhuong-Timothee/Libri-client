@@ -61,7 +61,10 @@ export class BookDetailsComponent implements OnInit {
 
   showSimilarBooks(id: number) {
     this.bookService.getSimilarBook(id).subscribe({
-      next: (response) => this.similarBooks = response,
+      next: (response) => {
+        this.similarBooks = response
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      },
       error: (error) => console.error(error)
     })
   }

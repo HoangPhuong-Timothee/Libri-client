@@ -39,7 +39,7 @@ export class InventoryParams {
 }
 
 export class InventoryTransactionParams {
-  transactionType = ''
-  startDate = new Date()
-  endDate = new Date()
+  transactionType?: string
+  startDate?: Date
+  endDate?: Date
 }

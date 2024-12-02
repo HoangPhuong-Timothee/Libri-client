@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
 import { Book } from 'src/app/core/models/book.model';
-import { ErrorDetails } from 'src/app/core/models/error-response.model';
 import { BookParams } from 'src/app/core/models/params.model';
 import { BookService } from 'src/app/core/services/book.service';
 import { DialogService } from 'src/app/core/services/dialog.service';
@@ -77,7 +76,7 @@ export class AdminBookComponent implements OnInit {
     })
   }
 
-  openImportBooksDialog(errors?: ErrorDetails[]) {
+  openImportBooksDialog(errors?: any) {
     const dialog = this.dialog.open(ImportBooksFormComponent, {
       minWidth: '500px',
       maxHeight: '500px',
@@ -145,7 +144,6 @@ export class AdminBookComponent implements OnInit {
   openFilterDialog() {
     let dialog = this.dialog.open(BookFilterDialogComponent, {
       minWidth: '500px',
-      autoFocus: false,
       data: {
         selectedGenreId: this.bookParams.genreId,
         selectedPublisherId: this.bookParams.publisherId

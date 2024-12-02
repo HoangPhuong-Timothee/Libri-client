@@ -1,12 +1,16 @@
-<h2 class="text-uppercase text-center fw-bold mt-3">{{ data.title }}</h2>
+<h2 class="text-uppercase text-center fw-bold mt-5">{{ data.title }}</h2>
 <div class="row">
-  <div class="col-6"></div>
+  <div class="col-6 text-start">
+    <button class="btn btn-sm btn-outline-secondary" *ngIf="!importFileMode" (click)="addRow()">Thêm dòng</button>
+  </div>
   <div class="col-6 text-end">
-    <button class="btn btn-sm btn-outline-secondary" (click)="addRow()">Thêm dòng</button>
+    <button mat-button color="primary" (click)="changeMode()">
+      {{ importFileMode ? 'Nhập thủ công' : 'Tải file lên' }}
+    </button>
   </div>
 </div>
 <div class="pt-2">
-  <form>
+  <form *ngIf="!importFileMode" (ngSubmit)="submitForm()">
     <table class="table table-bordered">
       <thead>
         <tr class="text-uppercase bg-warning text-dark">
@@ -14,7 +18,7 @@
         </tr>
       </thead>
       <tbody [formGroup]="exportForm">
-        <ng-container formArrayName="rows" *ngFor="let row of rows.controls; let i=index">
+        <ng-container formArrayName="rows" *ngFor="let row of rows.controls; let i = index">
           <tr [formGroupName]="i">
             <td>
               <input
@@ -22,7 +26,6 @@
                 class="form-control"
                 formControlName="bookTitle"
                 [ngClass]="row.get('bookTitle')?.touched ? row.get('bookTitle')?.invalid ? 'is-invalid' : 'is-valid' : null"
-                [ngClass]="row.get('bookStoreId')?.touched ? row.get('bookStoreId')?.invalid ? 'is-invalid' : 'is-valid' : null"
               >
               <div class="text-danger mt-1" *ngIf="rows.controls[i].get('bookTitle')?.touched">
                 <span *ngIf="row.get('bookTitle')?.errors?.['required']">
@@ -31,9 +34,6 @@
                 <span *ngIf="row.get('bookTitle')?.errors?.['bookExists']">
                   * Sách không tồn tại
                 </span>
-              </div>
-              <div class="text-danger" *ngIf="row.get('bookStoreId')?.errors?.['bookExistInStore']">
-                * Sách không tồn tại trong hiệu sách đã chọn
               </div>
               <div *ngIf="row.get('bookTitle')?.status === 'PENDING'" class="fa fa-spinner fa-spin loader"></div>
             </td>
@@ -46,6 +46,9 @@
                 <option value=""><span class="text-danger">* Chọn hiệu sách</span></option>
                 <option *ngFor="let bookStore of bookStoresList" [value]="bookStore.id">{{ bookStore.storeName }}</option>
               </select>
+              <div class="text-danger mt-1" *ngIf="row.get('bookStoreId')?.errors?.['bookExistInStore']">
+                * Sách không tồn tại trong hiệu sách đã chọn
+              </div>
             </td>
             <td>
               <input
@@ -62,7 +65,7 @@
                   * Số lượng xuất phải lớn hơn hoặc bằng 0
                 </span>
                 <span *ngIf="row.get('quantity')?.errors?.['validQuantity']">
-                  * Hiệu sách không đủ số lượng, hiện có {{ availableQuantity }}
+                  * Hiệu không đủ số lượng, còn {{ availableQuantity$ | async }}
                 </span>
               </div>
             </td>
@@ -90,6 +93,9 @@
                 style="padding-right: 5px;"
               >
               <div class="text-danger mt-1" *ngIf="row.get('exportNotes')?.touched">
+                <span *ngIf="row.get('exportNotes')?.errors?.['required']">
+                  * Vui lòng điền lý do/ghi chú xuất kho
+                </span>
                 <span *ngIf="row.get('exportNotes')?.errors?.['maxLength']">
                   * Ghi chú xuất kho kho được quá 100 ký tự
                 </span>
@@ -106,9 +112,9 @@
           <tr>
             <td colspan="7">
               <div class="row">
-                <div class="col-12 text-center">
+                <div class="col-12 text-end">
                   <button class="me-1 btn btn-outline-danger" mat-dialog-close="">Hủy</button>
-                  <button class="btn btn-primary" [disabled]="exportForm.invalid" (click)="onSubmit()">Lấy</button>
+                  <button class="btn btn-primary" [disabled]="exportForm.invalid" type="submit">Cập nhật kho</button>
                 </div>
               </div>
             </td>
@@ -116,5 +122,27 @@
         </ng-container>
       </tbody>
     </table>
+  </form>
+
+  <form *ngIf="importFileMode" (ngSubmit)="submitFile()">
+    <mat-dialog-content class="tw-p-3">
+      <input type="file" (change)="onFileSelected($event)">
+      <div class="tw-flex tw-justify-end tw-gap-3 mt-2">
+        <button class="me-2" mat-button color="warn" type="button" mat-dialog-close>Hủy</button>
+        <button mat-raised-button color="primary" type="submit">Lưu</button>
+      </div>
+      <div *ngIf="errorsList.length > 0" class="mt-3">
+        <hr />
+        <h2 mat-dialog-title class="text-danger text-uppercase fst-italic">* Thông tin lỗi:</h2>
+        <cdk-virtual-scroll-viewport itemSize="50" class="table-viewport">
+          <app-custom-table
+            [columns]="columns"
+            [dataSource]="errorsList"
+            [isErrorData]="true"
+          >
+          </app-custom-table>
+        </cdk-virtual-scroll-viewport>
+      </div>
+    </mat-dialog-content>
   </form>
 </div>

@@ -1,28 +1,87 @@
-<h1 mat-dialog-title class="text-center text-uppercase fw-bold">{{ data.title }}</h1>
-<mat-divider></mat-divider>
-<div mat-dialog-content>
-  <div *ngIf="transactions.length > 0" class="timeline">
-    <div *ngFor="let transaction of transactions" class="timeline-item">
-      <div [ngClass]="{'left': transaction.transactionType === 'Xuất kho', 'right': transaction.transactionType === 'Nhập kho'}">
-        <div class="card">
-          <div class="card-header">
-            <h5 class="card-title">{{ transaction.transactionType }} - Số lượng: {{ transaction.quantity }}</h5>
-            <h6 class="card-subtitle mb-2 text-muted fst-italic">{{ transaction.transactionDate }} bởi {{ transaction.performedBy }}</h6>
-            <!-- <div style="max-width: 100px;" class="card-subtitle mb-2 text-muted fst-italic">
-              <span>Hiệu sách: {{ transaction.storeName }}</span>
-              <span>Địa chỉ: {{ transaction.storeAddress }}</span>
-          </div> -->
-          <div class="text-danger card-body">
-            <strong>* Ghi chú: </strong>
-            {{ transaction.notes }}
-          </div>
-        </div>
-      </div>
+<h2 class="text-uppercase text-center mt-3 fw-bold">{{ data.title }}</h2>
+<mat-divider class="my-1"></mat-divider>
+<div class="d-flex">
+
+  <div class="filters">
+    <label for="transactionType">Loại:</label>
+    <select class="py-2" id="transactionType" [(ngModel)]="selectedType">
+      <option value="">Tất cả</option>
+      <option value="import">Nhập kho</option>
+      <option value="export">Xuất kho</option>
+    </select>
+
+    <label for="startDate">Từ ngày:</label>
+    <input type="date" id="startDate" [(ngModel)]="startDate">
+
+    <label for="endDate">Đến ngày:</label>
+    <input type="date" id="endDate" [(ngModel)]="endDate">
+
+    <div class="d-flex mt-2">
+      <button mat-raised-button color="primary" (click)="applyFilters()">Áp dụng</button>
+      <button mat-button color="warn" (click)="onReset()"><i class="fa-solid fa-rotate-left"></i></button>
     </div>
   </div>
-  <div *ngIf="transactions.length <= 0" class="text-center text-uppercase">Sách chưa có lịch sử xuất/nhập kho</div>
+
+  <div
+    class="timeline-container ms-3"
+    [ngClass]="{'empty': transactions.length === 0}"
+  >
+    <div
+      *ngIf="transactions.length === 0"
+      class="text-center fst-italic text-danger"
+    >
+      Không có lịch sử nhập/xuất
+    </div>
+    <cdk-virtual-scroll-viewport itemSize="120" class="timeline-viewport" style="height: 600px;">
+      <div *ngIf="transactions.length > 0" class="timeline"></div>
+      <ng-container *cdkVirtualFor="let transaction of transactions">
+        <div
+          *ngIf="transaction.transactionType === 'Xuất kho'"
+          class="timeline-item left"
+          [ngClass]="{'show-details': transaction.showDetails}"
+          (click)="transaction.showDetails = !transaction.showDetails"
+        >
+          <div class="card">
+            <div class="card-header">
+              <strong *ngIf="!transaction.showDetails">{{ transaction.transactionType }} - </strong>
+              {{ transaction.transactionDate }} bởi
+              <span class="fst-italic">{{ transaction.performedBy }}</span>
+            </div>
+            <div class="card-body" *ngIf="transaction.showDetails">
+              <h5 class="card-title">{{transaction.transactionType}} - Số lượng: {{ transaction.quantity }}</h5>
+              <p class="card-text"><strong>Hiệu sách:</strong> {{ transaction.storeName }}</p>
+              <p class="card-text"><strong>Tại:</strong> {{ transaction.storeAddress }}</p>
+            </div>
+            <div class="card-footer text-danger fst-italic" *ngIf="transaction.showDetails">
+              {{ transaction.notes }}
+            </div>
+          </div>
+        </div>
+        <div
+          *ngIf="transaction.transactionType === 'Nhập kho'"
+          class="timeline-item right"
+          [ngClass]="{'show-details': transaction.showDetails}"
+          (click)="transaction.showDetails = !transaction.showDetails"
+        >
+          <div class="card">
+            <div class="card-header">
+              <strong *ngIf="!transaction.showDetails">{{ transaction.transactionType }} - </strong>
+              {{ transaction.transactionDate }} bởi
+              <span class="fst-italic">{{ transaction.performedBy }}</span>
+            </div>
+            <div class="card-body" *ngIf="transaction.showDetails">
+              <h5 class="card-title">{{transaction.transactionType}} - Số lượng: {{ transaction.quantity }}</h5>
+              <p class="card-text"><strong>Hiệu sách:</strong> {{ transaction.storeName }}</p>
+              <p class="card-text"><strong>Tại:</strong> {{ transaction.storeAddress }}</p>
+            </div>
+            <div class="card-footer text-danger fst-italic" *ngIf="transaction.notes && transaction.showDetails">
+              {{ transaction.notes }}
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </cdk-virtual-scroll-viewport>
+  </div>
 </div>
-<mat-divider></mat-divider>
-<div mat-dialog-actions>
-  <button mat-button color="warn" mat-dialog-close="">Đóng</button>
-</div>
+<mat-divider class="my-1"></mat-divider>
+<button mat-button color="warn" mat-dialog-close="">Đóng</button>

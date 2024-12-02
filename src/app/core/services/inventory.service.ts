@@ -15,7 +15,6 @@ export class InventoryService {
     inventories: Inventory[] = []
     inventoryPagination?: Pagination<Inventory[]>
     inventoryParams = new InventoryParams()
-    inventoryTransactionParams = new InventoryTransactionParams()
     inventoryCache = new Map<string, Pagination<Inventory[]>>()
 
     constructor(private http: HttpClient) {}
@@ -56,17 +55,16 @@ export class InventoryService {
       return this.inventoryParams
     }
 
-    setInventoryTransactionParams(params: InventoryTransactionParams) {
-      this.inventoryTransactionParams = params
-    }
-
-    getInventoryTransactionParams() {
-      return this.inventoryTransactionParams
-    }
-
-
     getBookQuantityByTitleAndStoreId(title: string, bookStoreId: number) {
       return this.http.get<number>(`${environment.baseAPIUrl}/api/Inventories/quantity?bookTitle=${title}&bookStoreId=${bookStoreId}`)
+    }
+
+    getBookInventoryTransactions(bookId: number, storeName: string, invTranParams: InventoryTransactionParams) {
+      let params = new HttpParams().set('bookId', bookId).set('storeName', storeName)
+      if (invTranParams.transactionType) params = params.append('transactionType', invTranParams.transactionType)
+      if (invTranParams.startDate) params = params.append('startDate', new Date(invTranParams.startDate).toDateString())
+      if (invTranParams.endDate) params = params.append('endDate', new Date(invTranParams.endDate).toDateString())
+      return this.http.get<InventoryTransaction[]>(`${environment.baseAPIUrl}/api/Inventories/inventory-transactions`, { params })
     }
 
     importInventoriesFromFile(file: File) {
@@ -81,6 +79,7 @@ export class InventoryService {
     exportInventoriesFromFile(file: File) {
       const formData = new FormData()
       formData.append('file', file, file.name)
+      console.log(file)
       return this.http.post(`${environment.baseAPIUrl}/api/Inventories/export-from-file`, formData, {
         reportProgress: true,
         observe: 'events'
@@ -93,14 +92,6 @@ export class InventoryService {
 
     exportInventoriesManual(exportRequests: ExportInventoriesRequest[]) {
       return this.http.post(`${environment.baseAPIUrl}/api/Inventories/export-manual`, exportRequests)
-    }
-
-    getBookInventoryTransactions(bookId: number, storeName: string) {
-      // let params = new HttpParams()
-      // if (this.inventoryTransactionParams.transactionType) params = params.append('transactionType', this.inventoryTransactionParams.transactionType)
-      // if (this.inventoryTransactionParams.startDate) params = params.append('startDate', this.inventoryTransactionParams.startDate.toISOString())
-      // if (this.inventoryTransactionParams.endDate) params = params.append('endDate', this.inventoryTransactionParams.endDate.toISOString())
-      return this.http.get<InventoryTransaction[]>(`${environment.baseAPIUrl}/api/Inventories/inventory-transactions/${bookId}?storeName=${storeName}`)
     }
 
 }

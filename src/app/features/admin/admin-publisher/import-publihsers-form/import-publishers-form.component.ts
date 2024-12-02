@@ -2,7 +2,6 @@ import { HttpEventType } from '@angular/common/http';
 import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { ErrorDetails } from 'src/app/core/models/error-response.model';
 import { PublisherService } from 'src/app/core/services/publisher.service';
 
 @Component({
@@ -13,7 +12,7 @@ import { PublisherService } from 'src/app/core/services/publisher.service';
 export class ImportPublishersFormComponent implements OnInit {
 
   selectedFile: File | null = null
-  errorsList: ErrorDetails[] = []
+  errorsList: any
   columns = [
     { field: 'location', header: 'Vị trí' },
     { field: 'message', header: 'Nội dung' }
@@ -68,10 +67,6 @@ export class ImportPublishersFormComponent implements OnInit {
         }
       }
     })
-  }
-
-  get IsError(): boolean {
-    return this.errorsList.length > 0
   }
 
 }

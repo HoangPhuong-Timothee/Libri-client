@@ -9,7 +9,6 @@ import { Injectable } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, Observable, throwError } from 'rxjs';
-import { ErrorDetails } from '../models/error-response.model';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
@@ -24,7 +23,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         if (error) {
           if (error.status === 400) {
             if (error.error.errors) {
-              const detailErrors = error.error.errors.map((err: ErrorDetails) => ({
+              const detailErrors = error.error.errors.map((err: any) => ({
                 location: err.location,
                 message: err.message
               }))

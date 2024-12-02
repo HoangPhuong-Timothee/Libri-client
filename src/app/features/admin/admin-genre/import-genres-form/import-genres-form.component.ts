@@ -1,8 +1,7 @@
 import { HttpEventType } from "@angular/common/http";
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { ErrorDetails } from 'src/app/core/models/error-response.model';
 import { GenreService } from 'src/app/core/services/genre.service';
 
 @Component({
@@ -10,9 +9,9 @@ import { GenreService } from 'src/app/core/services/genre.service';
   templateUrl: './import-genres-form.component.html',
   styleUrls: ['./import-genres-form.component.css']
 })
-export class ImportGenresFormComponent implements OnInit {
+export class ImportGenresFormComponent {
 
-  errorsList: ErrorDetails[] = []
+  errorsList: [] = []
   selectedFile: File | null = null
   columns = [
     { field: 'location', header: 'Vị trí' },
@@ -25,19 +24,8 @@ export class ImportGenresFormComponent implements OnInit {
     private uploadFileDialogRef: MatDialogRef<ImportGenresFormComponent>,
     private toastr: ToastrService ) { }
 
-  ngOnInit(): void {
-    if (this.data && this.data.errors) {
-      this.errorsList = this.data.errors
-    }
-  }
-
   onFileSelected(event: any) {
-    const file = event.target.files[0]
-    if (!file) {
-      this.toastr.warning('Vui lòng chọn file để tải lên.')
-      return
-    }
-    this.selectedFile = file
+    this.selectedFile = event.target.files[0]
   }
 
   onSubmit() {
@@ -47,10 +35,10 @@ export class ImportGenresFormComponent implements OnInit {
     }
     this.genreService.importGenresFromFile(this.selectedFile).subscribe({
       next: (event) => {
+        console.log("Đây là event: ", event)
         if (event.type === HttpEventType.Response) {
           if (event.status === 400) {
             this.toastr.error('Có lỗi xảy ra! File không đúng yêu cầu!')
-            console.log(event.body)
             this.uploadFileDialogRef.close({ errors: event.body })
           } else {
             this.toastr.success("Thêm dữ liệu từ file thành công")
@@ -66,10 +54,6 @@ export class ImportGenresFormComponent implements OnInit {
         }
       }
     })
-  }
-
-  get IsError(): boolean {
-    return this.errorsList.length > 0
   }
 
 }

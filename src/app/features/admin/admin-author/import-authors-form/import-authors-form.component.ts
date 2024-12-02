@@ -2,7 +2,6 @@ import { HttpEventType } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { ErrorDetails } from 'src/app/core/models/error-response.model';
 import { AuthorService } from 'src/app/core/services/author.service';
 
 @Component({
@@ -13,7 +12,7 @@ import { AuthorService } from 'src/app/core/services/author.service';
 export class ImportAuthorsFormComponent implements OnInit {
 
   selectedFile: File | null = null
-  errorsList: ErrorDetails[] = []
+  errorsList: any
   columns = [
     { field: 'location', header: 'Vị trí' },
     { field: 'message', header: 'Nội dung' }

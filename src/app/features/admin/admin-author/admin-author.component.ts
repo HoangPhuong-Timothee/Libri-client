@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { firstValueFrom } from 'rxjs';
 import { Author } from 'src/app/core/models/author.model';
-import { ErrorDetails } from 'src/app/core/models/error-response.model';
 import { AuthorParams } from 'src/app/core/models/params.model';
 import { AuthorService } from 'src/app/core/services/author.service';
 import { DialogService } from 'src/app/core/services/dialog.service';
@@ -119,7 +118,7 @@ export class AdminAuthorComponent implements OnInit {
     })
   }
 
-  openImportAuthorsDialog(errors?: ErrorDetails[]) {
+  openImportAuthorsDialog(errors?: any) {
     const dialog = this.dialog.open(ImportAuthorsFormComponent, {
       minWidth: '500px',
       maxHeight: '500px',
