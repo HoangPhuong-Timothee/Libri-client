@@ -8,7 +8,8 @@ import { ImportInventoriesRequest } from 'src/app/core/models/inventory.model';
 import { BookService } from 'src/app/core/services/book.service';
 import { BookstoreService } from 'src/app/core/services/bookstore.service';
 import { InventoryService } from 'src/app/core/services/inventory.service';
-import { validateBookExist, validatePastDate } from 'src/app/shared/helpers/validates/validate-inventory-inputs';
+import { validateBookExist } from 'src/app/shared/helpers/validates/validate-exist';
+import { validatePastDate } from 'src/app/shared/helpers/validates/validate-inventory-inputs';
 
 @Component({
   selector: 'app-import-inventories-form',
@@ -18,12 +19,12 @@ import { validateBookExist, validatePastDate } from 'src/app/shared/helpers/vali
 export class ImportInventoriesFormComponent implements OnInit {
 
   importForm!: FormGroup
-  importFileMode: boolean = false
+  importFileMode: boolean = true
   errorsList: any[] = []
   selectedFile: File | null = null
   columns = [
     { field: 'location', header: 'Vị trí' },
-    { field: 'message', header: 'Nội dung' }
+    { field: 'details', header: 'Nội dung' }
   ]
   headerColumns: string[] = ['Tên sách', 'Hiệu sách', 'Số lượng', 'Ngày nhập', 'Ghi chú nhập kho', '']
   bookStoresList: BookStore[] = []
@@ -94,10 +95,11 @@ export class ImportInventoriesFormComponent implements OnInit {
           }
         },
         error: error => {
+          console.log("Có lỗi: ", error)
           this.toastr.error("Có lỗi xảy ra trong quá trình nhập kho")
         }
       })
-    }else {
+    } else {
       this.toastr.warning("Dữ liệu nhập vào không hợp lệ")
     }
   }
@@ -119,7 +121,7 @@ export class ImportInventoriesFormComponent implements OnInit {
             this.dialogRef.close({ errors: event.body })
           } else {
             this.toastr.success("Nhập kho thành công")
-            this.dialogRef.close({ importSuccess: true })
+            this.dialogRef.close({ exportSuccess: true })
           }
         }
       },
@@ -129,6 +131,7 @@ export class ImportInventoriesFormComponent implements OnInit {
           this.errorsList = error.errors
         } else {
           this.toastr.error('Lỗi không xác định! Vui lòng thử lại.')
+          this.dialogRef.close()
         }
       }
     })

@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, of } from "rxjs";
 import { environment } from 'src/environments/environment';
-import { AddAuthorRequest, Author } from '../models/author.model';
+import { AddAuthorRequest, Author, UpdateAuthorRequest } from '../models/author.model';
 import { Pagination } from '../models/pagination.model';
 import { AuthorParams } from '../models/params.model';
 
@@ -59,8 +59,8 @@ export class AuthorService {
     return this.authorParams
   }
 
-  addNewAuthor(addAuthorReqest: AddAuthorRequest) {
-    return this.http.post(`${environment.baseAPIUrl}/api/Authors`, addAuthorReqest);
+  addNewAuthor(request: AddAuthorRequest) {
+    return this.http.post(`${environment.baseAPIUrl}/api/Authors`, request);
   }
 
   importAuthorsFromFile(file: File) {
@@ -72,11 +72,16 @@ export class AuthorService {
     })
   }
 
-  updateAuthor(model: Author) {
-    return this.http.put(`${environment.baseAPIUrl}/api/Authors/${model.id}`, model);
+  updateAuthor(request: UpdateAuthorRequest) {
+    return this.http.put(`${environment.baseAPIUrl}/api/Authors/${request.id}`, request.name)
   }
 
   deleteAuthor(id: number) {
-    return this.http.delete(`${environment.baseAPIUrl}/api/Authors/${id}`);
+    return this.http.delete(`${environment.baseAPIUrl}/api/Authors/${id}`)
   }
+
+  checkAuthorExist(name: string) {
+    return this.http.get(`${environment.baseAPIUrl}/api/Authors/author-exists?name=${name}`)
+  }
+
 }

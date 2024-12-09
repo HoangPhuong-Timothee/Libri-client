@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable, of } from "rxjs";
 import { environment } from 'src/environments/environment';
-import { AddGenreRequest, Genre } from '../models/genre.model';
+import { AddGenreRequest, Genre, UpdateGenreRequest } from '../models/genre.model';
 import { Pagination } from '../models/pagination.model';
 import { GenreParams } from '../models/params.model';
 
@@ -59,8 +59,8 @@ export class GenreService {
     return this.genreParams
   }
 
-  addNewGenre(addGenreRequest: AddGenreRequest) {
-    return this.http.post(`${environment.baseAPIUrl}/api/Genres`, addGenreRequest)
+  addNewGenre(request: AddGenreRequest) {
+    return this.http.post(`${environment.baseAPIUrl}/api/Genres`, request)
   }
 
   importGenresFromFile(file: File) {
@@ -72,11 +72,15 @@ export class GenreService {
     })
   }
 
-  updateGenre(model: Genre) {
-    return this.http.put(`${environment.baseAPIUrl}/api/Genres/${model.id}`, model)
+  updateGenre(request: UpdateGenreRequest) {
+    return this.http.put(`${environment.baseAPIUrl}/api/Genres/${request.id}`, request.name)
   }
 
   deleteGenre(id: number) {
     return this.http.delete(`${environment.baseAPIUrl}/api/Genres/soft-delete/${id}`)
+  }
+
+  checkGenreExist(name: string) {
+    return this.http.get(`${environment.baseAPIUrl}/api/Genres/genre-exists?name=${name}`)
   }
 }

@@ -12,7 +12,6 @@ import { BookParams } from '../models/params.model';
 export class BookService {
 
   books: Book[] = []
-  booksList: Book[] = []
   latestBooks: Book[] = []
   similarBooks: Book[] = []
   bookPagination?: Pagination<Book[]>
@@ -36,6 +35,7 @@ export class BookService {
     }
     let params = new HttpParams()
     if (this.bookParams.genreId) params = params.append('genreId', this.bookParams.genreId)
+    if (this.bookParams.authorId) params = params.append('authorId', this.bookParams.authorId)
     if (this.bookParams.publisherId) params = params.append('publisherId', this.bookParams.publisherId)
     if (this.bookParams.search) params = params.append('search', this.bookParams.search)
     params = params.append('sort', this.bookParams.sort)
@@ -46,15 +46,6 @@ export class BookService {
         this.books = [...this.books, ...response.data]
         this.bookPagination = response
         return response
-      })
-    )
-  }
-
-  loadAllBook() {
-    return this.http.get<Pagination<Book[]>>(`${environment.baseAPIUrl}/api/Books`).pipe(
-      map(response => {
-        this.booksList = response.data
-        return this.booksList
       })
     )
   }

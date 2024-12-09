@@ -4,7 +4,7 @@ import { environment } from 'src/environments/environment';
 import { Address } from '../models/address.model';
 import { Pagination } from '../models/pagination.model';
 import { MemberParams } from '../models/params.model';
-import { Member } from '../models/user.model';
+import {Member, ModifyProfileRequest, User} from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +18,10 @@ export class UserService {
     params = params.append('pageIndex', memberParams.pageIndex)
     params = params.append('pageSize', memberParams.pageSize)
     return this.http.get<Pagination<Member[]>>(`${environment.baseAPIUrl}/api/Users/admin/users-list`, { params })
+  }
+
+  modifyUserInfo(request: ModifyProfileRequest) {
+    return this.http.put(`${environment.baseAPIUrl}/api/Users/profile`, request)
   }
 
   getUserAddress() {

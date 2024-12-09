@@ -25,7 +25,7 @@ export class ErrorInterceptor implements HttpInterceptor {
             if (error.error.errors) {
               const detailErrors = error.error.errors.map((err: any) => ({
                 location: err.location,
-                message: err.message
+                details: err.details
               }))
               throw { status: 400, errors: detailErrors }
             }

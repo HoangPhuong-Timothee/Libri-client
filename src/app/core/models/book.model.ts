@@ -9,5 +9,7 @@ export interface Book {
     publishYear?: number
     price: number
     quantityInStock: number
+    createInfo?: string
+    updateInfo?: string
     isAvailable: boolean
 }

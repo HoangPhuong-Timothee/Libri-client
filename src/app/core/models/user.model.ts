@@ -1,3 +1,5 @@
+import { Address } from "./address.model";
+
 export interface User {
   id: number
   email: string
@@ -6,8 +8,16 @@ export interface User {
   dateOfBirth: string
   gender: string
   phoneNumber: string
-  roles: string[]
+  roles: string[] | string
   token: string
+}
+
+export interface ModifyProfileRequest {
+  email: string
+  userName: string
+  imageUrl: string
+  phoneNumber: string
+  address: Address
 }
 
 export interface Member {

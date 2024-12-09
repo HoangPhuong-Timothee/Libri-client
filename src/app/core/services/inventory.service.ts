@@ -79,7 +79,6 @@ export class InventoryService {
     exportInventoriesFromFile(file: File) {
       const formData = new FormData()
       formData.append('file', file, file.name)
-      console.log(file)
       return this.http.post(`${environment.baseAPIUrl}/api/Inventories/export-from-file`, formData, {
         reportProgress: true,
         observe: 'events'

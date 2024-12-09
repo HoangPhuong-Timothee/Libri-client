@@ -30,6 +30,7 @@ export class AdminUserComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUsersList()
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   getUsersList() {

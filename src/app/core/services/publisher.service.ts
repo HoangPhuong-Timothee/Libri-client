@@ -4,7 +4,7 @@ import { map, Observable, of } from "rxjs";
 import { environment } from 'src/environments/environment';
 import { Pagination } from '../models/pagination.model';
 import { PublisherParams } from '../models/params.model';
-import { AddPublisherRequest, Publisher } from '../models/publisher.model';
+import { AddPublisherRequest, Publisher, UpdatePublisherRequest } from '../models/publisher.model';
 
 @Injectable({
   providedIn: 'root'
@@ -59,8 +59,8 @@ export class PublisherService {
     return this.publisherParams
   }
 
-  addNewPublisher(addPulisherRequest: AddPublisherRequest) {
-    return this.http.post(`${environment.baseAPIUrl}/api/Publishers`, addPulisherRequest)
+  addNewPublisher(request: AddPublisherRequest) {
+    return this.http.post(`${environment.baseAPIUrl}/api/Publishers`, request)
   }
 
   importPublishersFromFile(file: File) {
@@ -72,12 +72,16 @@ export class PublisherService {
     })
   }
 
-  updatePublisher(model: Publisher) {
-    return this.http.put(`${environment.baseAPIUrl}/api/Publishers/${model.id}`, model)
+  updatePublisher(request: UpdatePublisherRequest) {
+    return this.http.put(`${environment.baseAPIUrl}/api/Publishers/${request.id}`, request.name)
   }
 
   deletePublisher(id: number) {
     return this.http.delete(`${environment.baseAPIUrl}/api/Publishers/${id}`)
+  }
+
+  checkPublisherExist(name: string) {
+    return this.http.get<boolean>(`${environment.baseAPIUrl}/api/Publishers/publisher-exists?name=${name}`)
   }
 
 }

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { NavigationExtras, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Address } from 'src/app/core/models/address.model';
 import { Basket } from 'src/app/core/models/basket.model';
@@ -24,23 +24,23 @@ export class CheckoutPaymentComponent {
   ) { }
 
   createOrder() {
-    const basket = this.basketService.getCurrentBasketValue()
-    if (!basket) {
-      return
-    }
-    const createOrder = this.getCreateOrder(basket)
-    if (!createOrder) {
-      return
-    }
-    this.checkoutService.createOrder(createOrder).subscribe({
-      next: order => {
-        this.toastr.success("Đặt đơn sách thành công")
-        this.basketService.deleteLocalBasket()
-        this.basketService.deleteBasket(basket)
-        const navigationExtras: NavigationExtras = { state: order }
-        this.router.navigate(['checkout/order-success'], navigationExtras)
-      }
-    })
+    // const basket = this.basketService.getCurrentBasketValue()
+    // if (!basket) {
+    //   return
+    // }
+    // const createOrder = this.getCreateOrder(basket)
+    // if (!createOrder) {
+    //   return
+    // }
+    // this.checkoutService.createOrder(createOrder).subscribe({
+    //   next: order => {
+    //     this.toastr.success("Đặt đơn sách thành công")
+    //     this.basketService.deleteLocalBasket()
+    //     this.basketService.deleteBasket(basket)
+    //     const navigationExtras: NavigationExtras = { state: order }
+    //     this.router.navigate(['checkout/order-success'], navigationExtras)
+    //   }
+    // })
   }
 
   private getCreateOrder(basket: Basket) {

@@ -1,19 +1,25 @@
-<h2 mat-dialog-title>{{ data.title }}</h2>
+<h2 class="text-center text-uppercase fw-bold pt-3" mat-dialog-title>{{ data.title }}</h2>
+<mat-divider class="my-1"></mat-divider>
 <mat-dialog-content class="tw-p-3">
   <div class="mb-1 col-12 text-end">
     <button mat-button color="primary" (click)="changeMode()">
       {{ importFileMode ? 'Nhập thủ công' : 'Tải file lên' }}
     </button>
   </div>
-  <form *ngIf="!importFileMode" [formGroup]="addPublisherForm" class="tw-p-4 tw-w-full" (ngSubmit)="addNewPublisher()">
+  <form *ngIf="!importFileMode" [formGroup]="addBookStoreForm" class="tw-p-4 tw-w-full" (ngSubmit)="addNewBookStore()">
     <app-input-text
-      [formControl]="addPublisherForm.controls['name']"
-      [label]="'Tên nhà xuất bản'"
+      [formControl]="addBookStoreForm.controls['storeName']"
+      [label]="'Tên hiệu sách'"
     >
     </app-input-text>
+    <app-input-text
+    [formControl]="addBookStoreForm.controls['storeAddress']"
+    [label]="'Địa chỉ'"
+  >
+  </app-input-text>
     <div class="tw-flex tw-justify-end tw-gap-3">
       <button mat-button color="warn" type="button" mat-dialog-close>Hủy</button>
-      <button mat-raised-button color="primary" type="submit" [disabled]="addPublisherForm.invalid">
+      <button mat-raised-button color="primary" type="submit" [disabled]="addBookStoreForm.invalid">
         Thêm
       </button>
     </div>

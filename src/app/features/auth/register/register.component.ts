@@ -2,8 +2,10 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { RegisterRequest } from 'src/app/core/models/auth.model';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { validateEmailExist, validateMatchValues } from 'src/app/shared/helpers/validates/validate-auth-inputs';
+import { validateMatchValues } from 'src/app/shared/helpers/validates/validate-auth-inputs';
+import { validateEmailExist } from 'src/app/shared/helpers/validates/validate-exist';
 
 @Component({
   selector: 'app-register',
@@ -44,7 +46,8 @@ export class RegisterComponent {
   })
 
   onRegister() {
-    this.authService.register(this.registerForm.value).subscribe({
+    var registerRequest = this.registerForm.value as RegisterRequest
+    this.authService.register(registerRequest).subscribe({
       next: () => {
         console.log(this.registerForm.value)
         this.toastr.success('Đăng ký tài khoản thành công.');

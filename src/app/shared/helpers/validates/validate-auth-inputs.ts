@@ -1,21 +1,4 @@
-import { AbstractControl, AsyncValidatorFn, ValidatorFn } from "@angular/forms"
-import { debounceTime, finalize, map, switchMap, take } from "rxjs"
-import { AuthService } from "src/app/core/services/auth.service"
-
-export function validateEmailExist(authService: AuthService): AsyncValidatorFn {
-  return (control: AbstractControl) => {
-    return control.valueChanges.pipe(
-      debounceTime(1000),
-      take(1),
-      switchMap(() => {
-        return authService.checkEmailExists(control.value).pipe(
-          map((result) => (result ? { emailExists: true } : null)),
-          finalize(() => control.markAllAsTouched())
-        )
-      })
-    )
-  }
-}
+import { AbstractControl, ValidatorFn } from "@angular/forms"
 
 export function validateMatchValues(matchTo: string): ValidatorFn {
   return (control: AbstractControl) => {

@@ -3,6 +3,7 @@ import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -34,7 +35,6 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
 import { CustomTableComponent } from './components/custom-table/custom-table.component';
 import { DateInputComponent } from './components/date-input/date-input.component';
 import { InputTextComponent } from './components/input-text/input-text.component';
-import { MatTextInputComponent } from './components/mat-text-input/mat-text-input.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { OrderTotalsComponent } from './components/order-totals/order-totals.component';
@@ -67,7 +67,6 @@ import { TruncateTitlePipe } from './pipes/truncate-title.pipe';
     ConfirmationDialogComponent,
     TextAreaComponent,
     DateInputComponent,
-    MatTextInputComponent,
     SelectInputComponent
   ],
   imports: [
@@ -102,7 +101,8 @@ import { TruncateTitlePipe } from './pipes/truncate-title.pipe';
     MatListModule,
     ScrollingModule,
     MatTableModule,
-    MatCardModule
+    MatCardModule,
+    MatAutocompleteModule
   ],
   exports: [
     NavbarComponent,
@@ -147,7 +147,8 @@ import { TruncateTitlePipe } from './pipes/truncate-title.pipe';
     MatDivider,
     ScrollingModule,
     MatTableModule,
-    MatCardModule
+    MatCardModule,
+    MatAutocompleteModule
   ]
 })
 export class SharedModule { }

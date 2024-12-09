@@ -6,8 +6,8 @@ import { Inventory } from 'src/app/core/models/inventory.model';
 import { InventoryParams } from 'src/app/core/models/params.model';
 import { InventoryService } from 'src/app/core/services/inventory.service';
 import { ExportInventoriesFormComponent } from './export-inventories-form/export-inventories-form.component';
-import { FilterDialogComponent } from './filter-dialog/filter-dialog.component';
 import { ImportInventoriesFormComponent } from './import-inventories-form/import-inventories-form.component';
+import { InventoryFilterDialogComponent } from './inventory-filter-dialog/inventory-filter-dialog.component';
 import { InventoryTransactionDialogComponent } from './inventory-transaction-dialog/inventory-transaction-dialog.component';
 
 @Component({
@@ -28,8 +28,8 @@ export class AdminInventoryComponent implements OnInit {
     { field: 'quantity', header: 'Số lượng' },
     { field: 'bookStatus', header: 'Tình trạng' },
     { field: 'storeName', header: 'Hiệu sách' },
-    { field: 'createInfo', header: 'Tạo kho' },
-    { field: 'updateInfo', header: 'Cập nhật kho' }
+    { field: 'createInfo', header: 'Thông tin tạo' },
+    { field: 'updateInfo', header: 'Thông tin cập nhật' }
   ]
   actions = [
     {
@@ -52,6 +52,7 @@ export class AdminInventoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllBookInventories()
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   getAllBookInventories() {
@@ -109,7 +110,7 @@ export class AdminInventoryComponent implements OnInit {
   }
 
   openFilterDialog() {
-    const dialog = this.dialog.open(FilterDialogComponent, {
+    const dialog = this.dialog.open(InventoryFilterDialogComponent, {
       minWidth: '500px',
       autoFocus: false,
       data: {

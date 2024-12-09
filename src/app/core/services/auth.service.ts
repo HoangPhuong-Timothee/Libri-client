@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { map, Observable, of, ReplaySubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { LoginRequest } from '../models/auth.model';
+import { ChangePasswordRequest, LoginRequest, RegisterRequest } from '../models/auth.model';
 import { User } from '../models/user.model';
 
 @Injectable({
@@ -17,12 +17,11 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router, private toastr: ToastrService) {}
 
-  login(loginRequest: LoginRequest) {
-    return this.http.post<User>(`${environment.baseAPIUrl}/api/Auth/login`, loginRequest).pipe(
+  login(request: LoginRequest) {
+    return this.http.post<User>(`${environment.baseAPIUrl}/api/Auth/login`, request).pipe(
       map((user) => {
         if (user) {
           localStorage.setItem('access_token', user.token)
-          this.currentUserSource.next(user)
         }
       })
     )
@@ -30,14 +29,13 @@ export class AuthService {
 
   loadCurrentUser(token: string | null) {
     if (token === null) {
-      this.currentUserSource.next(null);
-      return of(null);
+      this.currentUserSource.next(null)
+      return of(null)
     }
     let headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<User>(`${environment.baseAPIUrl}/api/Users/current-user`, { headers }).pipe(
      map((user) => {
       if (user) {
-        localStorage.setItem('access_token', user.token)
         this.currentUserSource.next(user)
         return user
       } else {
@@ -56,8 +54,8 @@ export class AuthService {
     )
   }
 
-  register(model: any) {
-    return this.http.post(`${environment.baseAPIUrl}/api/Auth/register`, model)
+  register(request: RegisterRequest) {
+    return this.http.post(`${environment.baseAPIUrl}/api/Auth/register`, request)
   }
 
   logout() {
@@ -71,6 +69,14 @@ export class AuthService {
 
  checkEmailExists(email: string) {
   return this.http.get<boolean>(`${environment.baseAPIUrl}/api/Auth/email-exists?email=${email}`)
+ }
+
+ changePassword(request: ChangePasswordRequest) {
+    return this.http.post(`${environment.baseAPIUrl}/api/Auth/change-password`, request)
+ }
+
+ refreshToken() {
+
  }
 
 }

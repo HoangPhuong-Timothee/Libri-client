@@ -6,10 +6,17 @@ export class MemberParams {
 export class BookParams {
     genreId = 0
     publisherId = 0
+    authorId = 0
     sort = 'title'
     pageIndex = 1
     pageSize = 20
     search = ''
+}
+
+export class BookStoreParams {
+  pageIndex = 1
+  pageSize = 20
+  search = ''
 }
 
 export class GenreParams {

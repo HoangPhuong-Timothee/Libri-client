@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
-import { firstValueFrom } from 'rxjs';
 import { Author } from 'src/app/core/models/author.model';
 import { AuthorParams } from 'src/app/core/models/params.model';
 import { AuthorService } from 'src/app/core/services/author.service';
 import { DialogService } from 'src/app/core/services/dialog.service';
 import { AddAuthorFormComponent } from './add-author-form/add-author-form.component';
 import { EditAuthorFormComponent } from './edit-author-form/edit-author-form.component';
-import { ImportAuthorsFormComponent } from './import-authors-form/import-authors-form.component';
 
 @Component({
   selector: 'app-admin-author',
@@ -24,6 +22,8 @@ export class AdminAuthorComponent implements OnInit {
   columns = [
     { field: 'id', header: 'Mã tác giả' },
     { field: 'name', header: 'Tác giả' },
+    { field: 'createInfo', header: 'Thông tin tạo' },
+    { field: 'updateInfo', header: 'Thông tin cập nhật' }
   ]
   actions = [
     {
@@ -39,7 +39,7 @@ export class AdminAuthorComponent implements OnInit {
       icon: 'delete',
       tooltip: 'Xóa tác giả',
       action: (row: any) => {
-        this.openDeleteAuthorDialog(row.id, row.name)
+        this.openDeleteAuthorDialog(row)
       }
 
     }
@@ -56,6 +56,7 @@ export class AdminAuthorComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
     this.getAllAuthorsForAdmin()
   }
 
@@ -106,36 +107,13 @@ export class AdminAuthorComponent implements OnInit {
       }
     })
     dialog.afterClosed().subscribe({
-      next: result => {
-        if (result) {
-          this.authorService.addNewAuthor(result.author).subscribe({
-            next: response => {
-
-            }
-          })
-        }
-      }
-    })
-  }
-
-  openImportAuthorsDialog(errors?: any) {
-    const dialog = this.dialog.open(ImportAuthorsFormComponent, {
-      minWidth: '500px',
-      maxHeight: '500px',
-      autoFocus: true,
-      data: {
-        title: 'Nhập dữ liệu tác giả',
-        errors: errors
-      },
-      panelClass: 'custom-dialog-container'
-    })
-    dialog.afterClosed().subscribe({
       next: (result) => {
-        if (result && result.fileUploaded) {
-          this.adminAuthorParams.pageIndex = 1
+        if (result && result.success) {
+          const params = this.authorService.getAuthorParams()
+          params.pageIndex = 1
+          this.authorService.setAuthorParams(params)
+          this.adminAuthorParams = params
           this.getAllAuthorsForAdmin()
-        } else if (result && result.errors) {
-          this.openImportAuthorsDialog(result.errors)
         }
       }
     })
@@ -152,25 +130,27 @@ export class AdminAuthorComponent implements OnInit {
     dialog.afterClosed().subscribe({
       next: async result => {
         if (result) {
-          await firstValueFrom(this.authorService.updateAuthor(result.author))
-          const index = this.authorList.findIndex(a => a.id === result.author.id)
-          if (index !== -1) {
-            this.authorList[index] = result.author
+          if (result && result.success) {
+            const params = this.authorService.getAuthorParams()
+            params.pageIndex = 1
+            this.authorService.setAuthorParams(params)
+            this.adminAuthorParams = params
+            this.getAllAuthorsForAdmin()
           }
         }
       }
     })
   }
 
-  async openDeleteAuthorDialog(id: number, name: string) {
+  async openDeleteAuthorDialog(author: Author) {
     const confirmed = await this.dialogService.confirmDialog(
       'XÁC NHẬN XÓA',
-      `Bạn chắc chắn muốn xóa tác giả "${name}"?`
+      `Bạn chắc chắn muốn xóa tác giả "${author.name}"?`
     )
     if (confirmed) {
-      this.authorService.deleteAuthor(id).subscribe({
+      this.authorService.deleteAuthor(author.id).subscribe({
         next: () => {
-          this.authorList = this.authorList.filter(a => a.id !== id)
+          this.authorList = this.authorList.filter(a => a.id !== author.id)
         }
       })
     }

@@ -9,7 +9,8 @@ import { ExportInventoriesRequest } from 'src/app/core/models/inventory.model';
 import { BookService } from 'src/app/core/services/book.service';
 import { BookstoreService } from 'src/app/core/services/bookstore.service';
 import { InventoryService } from 'src/app/core/services/inventory.service';
-import { validateBookExist, validateBookInStore, validatePastDate, validateQuantityInStore } from 'src/app/shared/helpers/validates/validate-inventory-inputs';
+import { validateBookExist, validateBookInStore } from 'src/app/shared/helpers/validates/validate-exist';
+import { validatePastDate, validateQuantityInStore } from 'src/app/shared/helpers/validates/validate-inventory-inputs';
 
 @Component({
   selector: 'app-export-inventories-form',
@@ -23,7 +24,7 @@ export class ExportInventoriesFormComponent implements OnInit {
   selectedFile: File | null = null
   columns = [
     { field: 'location', header: 'Vị trí' },
-    { field: 'message', header: 'Nội dung' }
+    { field: 'details', header: 'Nội dung' }
   ]
   headerColumns: string[] = ['Tên sách', 'Hiệu sách', 'Số lượng', 'Ngày xuất kho', 'Ghi chú', '']
   bookStoresList: BookStore[] = []
@@ -132,6 +133,7 @@ export class ExportInventoriesFormComponent implements OnInit {
           this.errorsList = error.errors
         } else {
           this.toastr.error('Lỗi không xác định! Vui lòng thử lại.')
+          this.dialogRef.close()
         }
       }
     })

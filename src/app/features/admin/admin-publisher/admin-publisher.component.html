@@ -1,34 +1,26 @@
 <div class="mt-3">
   <h1 class="tw-fs-2 tw-fw-semibold tw-mt-4 text-uppercase">
-    Quản lý thông tin nhà xuất bản
+    Quản lý nhà xuất bản
   </h1>
   <div class="d-flex justify-content-around mt-3">
-    <div>
-      <button class="me-2" (click)="openImportPublishersDialog()">
-        <i class="fa fa-upload"></i>
-        Thêm từ file
-      </button>
-      <button class="me-2">
-        <i class="fa fa-download"></i>
-        Tải file mẫu
-      </button>
-      <button (click)="openAddNewPublisherDialog()">
-        <i class="fa fa-plus"></i>
-        <i class="fa fa-p"></i>
-        Thêm nhà xuất bản mới
-      </button>
-    </div>
     <div>
       <input
       (keyup.enter)="onSearch()"
       [(ngModel)]="searchTerm"
       type="text"
-      class="tw-form-control tw-me-2 py-1"
-      placeholder="Nhập từ khóa..."
+      class="tw-form-control me-2 py-1"
+      placeholder="Tên nhà xuất bản..."
       style="width: 300px;"
       >
-      <button (click)="onSearch()" class="mx-2">Tìm kiếm</button>
-      <button (click)="onReset()"><i class="fa-solid fa-rotate-left"></i></button>
+      <button mat-stroked-button color="warn" (click)="onReset()">
+        <i class="fa-solid fa-rotate-left"></i>
+      </button>
+    </div>
+    <div>
+      <button mat-raised-button color="primary" (click)="openAddNewPublisherDialog()">
+        <mat-icon>add</mat-icon>
+        Thêm nhà xuất bản
+      </button>
     </div>
   </div>
 </div>
@@ -42,3 +34,4 @@
   (pageChange)="onPageChange($event)"
 >
 </app-custom-table>
+

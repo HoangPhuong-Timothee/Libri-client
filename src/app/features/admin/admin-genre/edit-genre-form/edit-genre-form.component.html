@@ -1,15 +1,12 @@
-<h2 mat-dialog-title>{{ data.title }}</h2>
-<mat-dialog-content class="tw-p-3">
-  <form [formGroup]="updateGenreForm" class="tw-p-4 tw-w-full" (ngSubmit)="updateGenre()">
-    <mat-label>ID</mat-label>
-    <input matInput [value]="data.id" disabled>
-
-    <app-text-input label="Tên thể loại sách" formControlName="name"></app-text-input>
-
+<h2 class="text-center text-uppercase fw-bold" mat-dialog-title>{{ data.title }}</h2>
+<mat-dialog-content class="p-3">
+  <form [formGroup]="updateGenreForm" class="p-4 w-100" (ngSubmit)="updateGenre()">
+    <span class="mb-2">Mã thể loại: {{ data.genre.id }}</span>
+    <app-input-text [formControl]="updateGenreForm.controls['name']" [label]="'Tên thể loại'"></app-input-text>
     <div class="tw-flex tw-justify-end tw-gap-3">
       <button mat-button color="warn" type="button" mat-dialog-close>Hủy</button>
       <button mat-raised-button color="primary" type="submit" [disabled]="updateGenreForm.invalid">
-        Lưu
+        Cập nhật
       </button>
     </div>
   </form>

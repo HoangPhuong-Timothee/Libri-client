@@ -2,14 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
-import { firstValueFrom } from 'rxjs';
 import { Genre } from 'src/app/core/models/genre.model';
 import { GenreParams } from 'src/app/core/models/params.model';
 import { DialogService } from 'src/app/core/services/dialog.service';
 import { GenreService } from 'src/app/core/services/genre.service';
 import { AddGenreFormComponent } from './add-genre-form/add-genre-form.component';
 import { EditGenreFormComponent } from './edit-genre-form/edit-genre-form.component';
-import { ImportGenresFormComponent } from './import-genres-form/import-genres-form.component';
 
 @Component({
   selector: 'app-admin-genre',
@@ -21,16 +19,18 @@ export class AdminGenreComponent implements OnInit {
   searchTerm: string = ''
   genreList: Genre[] = []
   adminGenreParams: GenreParams
-  totalGenres = 0
+  totalGenres: number = 0
   columns = [
     { field: 'id', header: 'Mã thể loại' },
     { field: 'name', header: 'Thể loại' },
+    { field: 'createInfo', header: 'Thông tin tạo' },
+    { field: 'updateInfo', header: 'Thông tin cập nhật' }
   ]
   actions = [
     {
       label: 'Cập nhật',
       icon: 'edit',
-      tooltip: 'Chỉnh sửa tên thể loại',
+      tooltip: 'Chỉnh sửa thể loại',
       action: (row: any) => {
         this.openUpdateGenreDialog(row)
       }
@@ -38,9 +38,9 @@ export class AdminGenreComponent implements OnInit {
     {
       label: 'Xóa',
       icon: 'delete',
-      tooltip: 'Xóa thể loại sách',
+      tooltip: 'Xóa thể loại',
       action: (row: any) => {
-        this.openDeleteGenreDialog(row.id, row.name)
+        this.openDeleteGenreDialog(row)
       }
     }
   ]
@@ -57,9 +57,10 @@ export class AdminGenreComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllGenresForAdmin()
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  getAllGenresForAdmin() {
+  getAllGenresForAdmin(): void {
     this.genreService.getGenresForAdmin().subscribe({
       next: response => {
         this.genreList = response.data
@@ -71,52 +72,27 @@ export class AdminGenreComponent implements OnInit {
     })
   }
 
-  openAddNewGenreDialog() {
+  openAddNewGenreDialog(): void {
     const dialog = this.dialog.open(AddGenreFormComponent, {
         minWidth: '500px',
         data: {
-            title: 'Thêm thể loại sách'
+            title: 'Thêm thể loại'
         }
-    })
-    dialog.afterClosed().subscribe({
-      next: result => {
-        if (result) {
-          this.genreService.addNewGenre(result.addGenreRequest).subscribe({
-            next: response  => {
-            }
-          })
-        }
-      }
-    })
-  }
-
-  openImportGenresDialog(errors?: any[]) {
-    const dialog = this.dialog.open(ImportGenresFormComponent, {
-      minWidth: '500px',
-      maxHeight: '500px',
-      autoFocus: true,
-      data: {
-        title: 'Nhập dữ liệu thể loại',
-        errors: errors
-      },
-      panelClass: 'custom-dialog-container'
     })
     dialog.afterClosed().subscribe({
       next: (result) => {
-        if (result && result.fileUploaded) {
+        if (result && result.success) {
           const params = this.genreService.getGenreParams()
           params.pageIndex = 1
           this.genreService.setGenreParams(params)
           this.adminGenreParams = params
           this.getAllGenresForAdmin()
-        } else if (result && result.errors) {
-          this.openImportGenresDialog(result.errors)
         }
       }
     })
   }
 
-  openUpdateGenreDialog(genre: Genre) {
+  openUpdateGenreDialog(genre: Genre): void {
     const dialog = this.dialog.open(EditGenreFormComponent, {
       minWidth: '500px',
       data: {
@@ -127,26 +103,28 @@ export class AdminGenreComponent implements OnInit {
     dialog.afterClosed().subscribe({
       next: async result => {
         if (result) {
-          await firstValueFrom(this.genreService.updateGenre(result.genre))
-          const index = this.genreList.findIndex(g => g.id === result.genre.id)
-          if (index !== -1) {
-            this.genreList[index] = result.genre
+          if (result && result.success) {
+            const params = this.genreService.getGenreParams()
+            params.pageIndex = 1
+            this.genreService.setGenreParams(params)
+            this.adminGenreParams = params
+            this.getAllGenresForAdmin()
           }
         }
       }
     })
   }
 
-  async openDeleteGenreDialog(id: number, name: string) {
+  async openDeleteGenreDialog(genre: Genre): Promise<void> {
     const confirmed = await this.dialogService.confirmDialog(
       'XÁC NHẬN XÓA',
-      `Bạn chắc chắn muốn xóa thể loại "${name}"?`
+      `Bạn chắc chắn muốn xóa thể loại "${genre.name}"?`
     )
     if (confirmed) {
-      this.genreService.deleteGenre(id).subscribe({
-        next: () => {
-          this.genreList = this.genreList.filter(g => g.id !== id)
-          this.toastr.success(`Xóa thể loại "${name}" thành công`)
+      this.genreService.deleteGenre(genre.id).subscribe({
+        next: async () => {
+          this.genreList = this.genreList.filter(g => g.id !== genre.id)
+          this.toastr.success(`Xóa thể loại "${genre.name}" thành công`)
         },
         error: error => {
           console.log("Có lỗi xảy ra: ", error.errors, error.message)

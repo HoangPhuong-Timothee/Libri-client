@@ -10,12 +10,5 @@ import { BasketService } from 'src/app/core/services/basket.service';
 export class OrderTotalsComponent {
 
   constructor(public basketService: BasketService, public router: Router) { }
-  
-  applyCouponCode() {
 
-  }
-
-  removeCouponCode() {
-    
-  }
 }

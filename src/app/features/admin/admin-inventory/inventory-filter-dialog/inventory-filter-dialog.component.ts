@@ -6,11 +6,11 @@ import { BookstoreService } from 'src/app/core/services/bookstore.service';
 import { GenreService } from 'src/app/core/services/genre.service';
 
 @Component({
-  selector: 'app-filter-dialog',
-  templateUrl: './filter-dialog.component.html',
-  styleUrls: ['./filter-dialog.component.css']
+  selector: 'app-invnetory-filter-dialog',
+  templateUrl: './inventory-filter-dialog.component.html',
+  styleUrls: ['./inventory-filter-dialog.component.css']
 })
-export class FilterDialogComponent implements OnInit {
+export class InventoryFilterDialogComponent implements OnInit {
 
   genresList: Genre[] = []
   bookStoresList: BookStore[] = []
@@ -22,7 +22,7 @@ export class FilterDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     public genreService: GenreService,
     private bookStoreService: BookstoreService,
-    private filterDialogRef: MatDialogRef<FilterDialogComponent>
+    private filterDialogRef: MatDialogRef<InventoryFilterDialogComponent>
   ) { }
 
   ngOnInit(): void {
@@ -43,7 +43,6 @@ export class FilterDialogComponent implements OnInit {
       error: error => console.log(error)
     })
   }
-
   applyFilters() {
     this.filterDialogRef.close({
       selectedGenreId: this.selectedGenreId,

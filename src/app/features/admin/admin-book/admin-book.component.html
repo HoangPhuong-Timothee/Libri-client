@@ -4,29 +4,27 @@
   </h1>
   <div class="d-flex justify-content-around mt-3">
     <div>
-      <button class="me-2" (click)="openImportBooksDialog()">
-        <i class="fa fa-upload"></i>
-        Nhập sách từ file
+      <button class="match-input-height me-1" mat-stroked-button (click)="openFilterDialog()">
+        <mat-icon>filter_list</mat-icon>
+        Lọc dữ liệu
       </button>
-      <button class="me-2">
-        <i class="fa fa-download"></i>
-        Tải file mẫu
-      </button>
-    </div>
-    <div>
       <input
       (keyup.enter)="onSearch()"
       [(ngModel)]="searchTerm"
       type="text"
       class="tw-form-control me-2 py-1"
-      placeholder="Nhập từ khóa..."
+      placeholder="Nhập tên sách..."
       style="width: 300px;"
       >
-      <button class="match-input-height me-1" mat-stroked-button (click)="openFilterDialog()">
-        <mat-icon>filter_list</mat-icon>
-        Lọc dữ liệu
+      <button mat-stroked-button color="warn" (click)="onReset()">
+        <i class="fa-solid fa-rotate-left"></i>
       </button>
-      <button (click)="onReset()"><i class="fa-solid fa-rotate-left"></i></button>
+    </div>
+    <div>
+      <button mat-raised-button color="primary" class="me-2" (click)="openAddNewBooksDialog()">
+        <mat-icon>add</mat-icon>
+        Thêm sách
+      </button>
     </div>
   </div>
 </div>

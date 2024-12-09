@@ -1,15 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
-import { ToastrService } from 'ngx-toastr';
-import { firstValueFrom } from 'rxjs';
 import { PublisherParams } from 'src/app/core/models/params.model';
 import { Publisher } from 'src/app/core/models/publisher.model';
 import { DialogService } from 'src/app/core/services/dialog.service';
 import { PublisherService } from 'src/app/core/services/publisher.service';
 import { AddPublisherFormComponent } from './add-publisher-form/add-publisher-form.component';
 import { EditPublisherFormComponent } from './edit-publisher-form/edit-publisher-form.component';
-import { ImportPublishersFormComponent } from './import-publihsers-form/import-publishers-form.component';
 
 @Component({
   selector: 'app-admin-publisher',
@@ -23,8 +20,10 @@ export class AdminPublisherComponent implements OnInit {
   adminPublisherParams: PublisherParams
   totalPublishers = 0
   columns = [
-    { field: 'id', header: 'ID' },
+    { field: 'id', header: 'Mã NXB' },
     { field: 'name', header: 'Nhà xuất bản' },
+    { field: 'createInfo', header: 'Thông tin tạo' },
+    { field: 'updateInfo', header: 'Thông tin cập nhật' }
   ]
   actions = [
     {
@@ -40,7 +39,7 @@ export class AdminPublisherComponent implements OnInit {
       icon: 'delete',
       tooltip: 'Xóa NXB',
       action: (row: any) => {
-        this.openDeletePublisherDialog(row.id, row.name)
+        this.openDeletePublisherDialog(row)
       }
     }
   ]
@@ -48,8 +47,7 @@ export class AdminPublisherComponent implements OnInit {
   constructor(
     private publisherService: PublisherService,
     private dialog: MatDialog,
-    private dialogService: DialogService,
-    private toastr: ToastrService
+    private dialogService: DialogService
   )
   {
     this.searchTerm = ''
@@ -58,6 +56,7 @@ export class AdminPublisherComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllPublishersForAdmin()
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   getAllPublishersForAdmin() {
@@ -68,29 +67,6 @@ export class AdminPublisherComponent implements OnInit {
       },
       error: error => {
         console.log(error)
-      }
-    })
-  }
-
-  openImportPublishersDialog(errors?: any) {
-    const dialog = this.dialog.open(ImportPublishersFormComponent, {
-      minWidth: '500px',
-      maxHeight: '500px',
-      autoFocus: false,
-      data: {
-        title: 'Nhập dữ liệu nhà xuất bản',
-        errors: errors
-      },
-      panelClass: 'custom-dialog-container'
-    })
-    dialog.afterClosed().subscribe({
-      next: (result) => {
-        if (result && result.fileUploaded) {
-          this.adminPublisherParams.pageIndex = 1
-          this.getAllPublishersForAdmin()
-        } else if (result && result.errors) {
-          this.openImportPublishersDialog(result.errors)
-        }
       }
     })
   }
@@ -130,12 +106,13 @@ export class AdminPublisherComponent implements OnInit {
       }
     })
     dialog.afterClosed().subscribe({
-      next: async result => {
-        if (result) {
-          const response: any = await firstValueFrom(this.publisherService.addNewPublisher(result.publisher))
-          if (response && response.status === 400) {
-            this.toastr.error(response.message)
-          }
+      next: (result) => {
+        if (result && result.success) {
+          const params = this.publisherService.getPublisherParams()
+          params.pageIndex = 1
+          this.publisherService.setPublisherParams(params)
+          this.adminPublisherParams = params
+          this.getAllPublishersForAdmin()
         }
       }
     })
@@ -152,25 +129,27 @@ export class AdminPublisherComponent implements OnInit {
     dialog.afterClosed().subscribe({
       next: async result => {
         if (result) {
-          await firstValueFrom(this.publisherService.updatePublisher(result.publisher))
-          const index = this.publisherList.findIndex(p => p.id === result.publisher.id)
-          if (index !== -1) {
-            this.publisherList[index] = result.publisher
+          if (result && result.success) {
+            const params = this.publisherService.getPublisherParams()
+            params.pageIndex = 1
+            this.publisherService.setPublisherParams(params)
+            this.adminPublisherParams = params
+            this.getAllPublishersForAdmin()
           }
         }
       }
     })
   }
 
-  async openDeletePublisherDialog(id: number, name: string) {
+  async openDeletePublisherDialog(publisher: Publisher) {
     const confirmed = await this.dialogService.confirmDialog(
       'XÁC NHẬN XÓA',
-      `Bạn chắc chắn muốn xóa nhà xuất bản "${name}"?`
+      `Bạn chắc chắn muốn xóa nhà xuất bản "${publisher.name}"?`
     )
     if (confirmed) {
-      this.publisherService.deletePublisher(id).subscribe({
+      this.publisherService.deletePublisher(publisher.id).subscribe({
         next: () => {
-          this.publisherList = this.publisherList.filter(p => p.id !== id)
+          this.publisherList = this.publisherList.filter(p => p.id !== publisher.id)
         }
       })
     }

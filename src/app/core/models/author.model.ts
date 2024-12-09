@@ -1,6 +1,8 @@
 export interface Author {
-    id: number;
-    name: string;
+    id: number
+    name: string
+    createInfo?: string
+    updateInfo?: string
 }
 
 export interface AddAuthorRequest {

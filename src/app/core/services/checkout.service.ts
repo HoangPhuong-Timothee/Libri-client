@@ -24,8 +24,8 @@ export class CheckoutService {
     )
   }
 
-  createOrder(model: CreateOrderRequest) {
-    return this.http.post<Order>(`${environment.baseAPIUrl}/api/Orders`, model)
+  createOrder(request: CreateOrderRequest) {
+    return this.http.post(`${environment.baseAPIUrl}/api/Orders/${request.basketId}`, request)
   }
 
 }

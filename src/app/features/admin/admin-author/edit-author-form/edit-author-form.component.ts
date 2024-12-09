@@ -1,7 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Author } from 'src/app/core/models/author.model';
+import { ToastrService } from 'ngx-toastr';
+import { UpdateAuthorRequest } from 'src/app/core/models/author.model';
+import { AuthorService } from 'src/app/core/services/author.service';
 
 @Component({
   selector: 'app-edit-author-form',
@@ -10,31 +12,40 @@ import { Author } from 'src/app/core/models/author.model';
 })
 export class EditAuthorFormComponent implements OnInit {
 
-  updateAuthorForm!: FormGroup
-  data = inject(MAT_DIALOG_DATA)
-
   constructor(
-    private fb: FormBuilder, 
-    private updateDialogRef: MatDialogRef<EditAuthorFormComponent>, 
+    private fb: FormBuilder,
+    private authorService: AuthorService,
+    private toastr: ToastrService,
+    private dialogRef: MatDialogRef<EditAuthorFormComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
-    this.updateAuthorForm = this.fb.group({
-      id: [this.data.id, { disabled: true }],
-      name: ['', [Validators.required]]
-    })
-    if (this.data.publisher) {
+    if (this.data.author) {
       this.updateAuthorForm.reset(this.data.author)
     }
   }
 
+  updateAuthorForm = this.fb.group({
+    id: [this.data.id],
+    name: ['', [Validators.required]]
+  })
+
   updateAuthor(): void {
     if(this.updateAuthorForm.valid) {
-      let author: Author = this.updateAuthorForm.value
-      if (this.data.author) {
-        author.id === this.data.author.id
-      }
-      this.updateDialogRef.close({ author })
+      let updateAuthorRequest = this.updateAuthorForm.value as UpdateAuthorRequest
+      this.authorService.updateAuthor(updateAuthorRequest).subscribe({
+        next: (response) => {
+          if (response) {
+            this.toastr.success("Cập nhật tác giả thành công")
+            this.dialogRef.close({ success: true })
+          }
+        },
+        error: (error) => {
+            console.log("Có lỗi xảy ra: ", error)
+            this.toastr.error('Cập nhật tác giả thất bại!')
+          }
+      })
     }
   }
 

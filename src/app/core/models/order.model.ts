@@ -4,6 +4,7 @@ export interface CreateOrderRequest {
   basketId: string
   deliveryMethodId: string
   shippingAddress: Address
+  paymentIntentId: string
 }
 
 export interface OrderItem {

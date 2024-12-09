@@ -6,9 +6,9 @@ import { Book } from 'src/app/core/models/book.model';
 import { BookParams } from 'src/app/core/models/params.model';
 import { BookService } from 'src/app/core/services/book.service';
 import { DialogService } from 'src/app/core/services/dialog.service';
+import { AddBooksFormComponent } from './add-books-form/add-books-form.component';
 import { AdminBookDetailsComponent } from './admin-book-details/admin-book-details.component';
 import { BookFilterDialogComponent } from './book-filter-dialog/book-filter-dialog.component';
-import { ImportBooksFormComponent } from './import-books-form/import-books-form.component';
 
 @Component({
   selector: 'app-admin-book',
@@ -36,7 +36,6 @@ export class AdminBookComponent implements OnInit {
       icon: 'visibility',
       tooltip: 'Xem thông tin chi tiết sách',
       action: (row: any) => {
-        console.log(row.id)
         this.openBookDetailsDialog(row.id)
       },
     },
@@ -62,6 +61,7 @@ export class AdminBookComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllBooks()
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   getAllBooks() {
@@ -76,8 +76,8 @@ export class AdminBookComponent implements OnInit {
     })
   }
 
-  openImportBooksDialog(errors?: any) {
-    const dialog = this.dialog.open(ImportBooksFormComponent, {
+  openAddNewBooksDialog(errors?: any) {
+    const dialog = this.dialog.open(AddBooksFormComponent, {
       minWidth: '500px',
       maxHeight: '500px',
       autoFocus: true,
@@ -96,7 +96,7 @@ export class AdminBookComponent implements OnInit {
           this.bookParams = params
           this.getAllBooks()
         } else if (result && result.errors) {
-          this.openImportBooksDialog(result.errors)
+          this.openAddNewBooksDialog(result.errors)
         }
       }
     })
@@ -122,7 +122,6 @@ export class AdminBookComponent implements OnInit {
       }
     })
   }
-
   async openDeleteBookDialog(id: number, title: string) {
     const confirmed = await this.dialogService.confirmDialog(
       'XÁC NHẬN XÓA',
@@ -146,7 +145,8 @@ export class AdminBookComponent implements OnInit {
       minWidth: '500px',
       data: {
         selectedGenreId: this.bookParams.genreId,
-        selectedPublisherId: this.bookParams.publisherId
+        selectedPublisherId: this.bookParams.publisherId,
+        selectedAuthorId: this.bookParams.authorId
       }
     })
     dialog.afterClosed().subscribe({
@@ -155,6 +155,7 @@ export class AdminBookComponent implements OnInit {
           const params = this.bookService.getBookParams()
           params.genreId = result.selectedGenreId
           params.publisherId = result.selectedPublisherId
+          params.authorId = result.selectedAuthorId
           params.pageIndex = 1
           this.bookService.setBookParams(params)
           this.bookParams = params

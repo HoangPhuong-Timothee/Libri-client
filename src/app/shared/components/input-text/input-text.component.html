@@ -12,6 +12,10 @@
   <div *ngIf="control.errors?.['email']" class="invalid-feedback">* Email không hợp lệ</div>
   <div *ngIf="control.errors?.['pattern']" class="invalid-feedback">* Mật khẩu phải có ít nhất chữ thường, chữ hoa, số và ký tự đặc biệt</div>
   <div *ngIf="control.errors?.['emailExists']" class="invalid-feedback">* Email đã được sử dụng</div>
+  <div *ngIf="control.errors?.['bookStoreExists']" class="invalid-feedback">* Hiệu sách đã tồn tại</div>
+  <div *ngIf="control.errors?.['genreExists']" class="invalid-feedback">* Thể loại đã tồn tại</div>
+  <div *ngIf="control.errors?.['authorExists']" class="invalid-feedback">* Tác giả đã tồn tại</div>
+  <div *ngIf="control.errors?.['publisherExists']" class="invalid-feedback">* NXB đã tồn tại</div>
   <div *ngIf="control.errors?.['isMatching']" class="invalid-feedback">* Mật khẩu không trùng khớp</div>
   <div *ngIf="control.errors?.['min']" class="invalid-feedback">* {{label}} phải lớn hơn hoặc bằng 0</div>
 </div>

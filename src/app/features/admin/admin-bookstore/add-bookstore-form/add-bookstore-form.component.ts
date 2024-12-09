@@ -3,50 +3,51 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { AddPublisherRequest } from 'src/app/core/models/publisher.model';
-import { PublisherService } from 'src/app/core/services/publisher.service';
-import { validatePublisherExist } from 'src/app/shared/helpers/validates/validate-exist';
+import { AddBookStoreRequest } from 'src/app/core/models/book-store.model';
+import { BookstoreService } from 'src/app/core/services/bookstore.service';
+import { validateBookStoreExist } from 'src/app/shared/helpers/validates/validate-exist';
 
 @Component({
-  selector: 'app-add-publisher-form',
-  templateUrl: './add-publisher-form.component.html',
-  styleUrls: ['./add-publisher-form.component.css']
+  selector: 'app-add-bookstore-form',
+  templateUrl: './add-bookstore-form.component.html',
+  styleUrls: ['./add-bookstore-form.component.css']
 })
-export class AddPublisherFormComponent {
+export class AddBookstoreFormComponent {
 
   errorsList: any[] = []
   selectedFile: File | null = null
   columns = [
     { field: 'location', header: 'Vị trí' },
-    { field: 'message', header: 'Nội dung' }
+    { field: 'details', header: 'Nội dung' }
   ]
   importFileMode: boolean = true
 
   constructor(
     private fb: FormBuilder,
-    private publisherService: PublisherService,
     private toastr: ToastrService,
-    private dialogRef: MatDialogRef<AddPublisherFormComponent>,
+    private bookStoreService: BookstoreService,
+    private dialogRef: MatDialogRef<AddBookstoreFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
-  addPublisherForm = this.fb.group({
-    name: ['', [Validators.required], [validatePublisherExist(this.publisherService)]]
+  addBookStoreForm = this.fb.group({
+    storeName: ['', [Validators.required], [validateBookStoreExist(this.bookStoreService)]],
+    storeAddress: ['', [Validators.required]]
   })
 
-  addNewPublisher(): void {
-    if(this.addPublisherForm.valid) {
-      let addPublisherRequest = this.addPublisherForm.value as AddPublisherRequest
-      this.publisherService.addNewPublisher(addPublisherRequest).subscribe({
+  addNewBookStore() {
+    if(this.addBookStoreForm.valid) {
+      let addBookStoreRequest = this.addBookStoreForm.value as AddBookStoreRequest
+      this.bookStoreService.addNewBookStore(addBookStoreRequest).subscribe({
         next: (response) => {
           if (response) {
-            this.toastr.success("Thêm nhà xuất bản thành công")
+            this.toastr.success("Thêm hiệu sách thành công")
             this.dialogRef.close({ success: true })
           }
         },
         error: (error) => {
             console.log("Có lỗi xảy ra: ", error)
-            this.toastr.error('Thêm nhà xuất bản thất bại!')
+            this.toastr.error('Thêm hiệu sách mới thất bại!')
           }
       })
     }
@@ -61,14 +62,14 @@ export class AddPublisherFormComponent {
       this.toastr.warning('Chưa có file nào được tải lên')
       return
     }
-    this.publisherService.importPublishersFromFile(this.selectedFile).subscribe({
+    this.bookStoreService.importBookStoresFromFile(this.selectedFile).subscribe({
       next: (event) => {
         if (event.type === HttpEventType.Response) {
           if (event.status === 400) {
             this.toastr.error('Có lỗi xảy ra! File không đúng yêu cầu!')
             this.dialogRef.close({ errors: event.body })
           } else {
-            this.toastr.success("Thêm nhà xuất bản thành công")
+            this.toastr.success("Thêm hiệu sách thành công")
             this.dialogRef.close({ success: true })
           }
         }
