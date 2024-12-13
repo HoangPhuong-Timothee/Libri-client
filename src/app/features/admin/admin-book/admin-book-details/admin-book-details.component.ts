@@ -10,7 +10,6 @@ export class AdminBookDetailsComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any
-  )
-  { }
+  ) { }
 
 }

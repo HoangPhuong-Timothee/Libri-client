@@ -18,7 +18,7 @@ export class AddGenreFormComponent {
   selectedFile: File | null = null
   columns = [
     { field: 'location', header: 'Vị trí' },
-    { field: 'message', header: 'Nội dung' }
+    { field: 'details', header: 'Nội dung' }
   ]
   importFileMode: boolean = true
 

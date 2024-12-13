@@ -4,16 +4,10 @@
   </h1>
   <div class="d-flex justify-content-around mt-3">
     <div>
-      <button mat-raised-button color="primary" class="me-2" (click)="openImportInventoriesDialog()">
-        <i class="fa-solid fa-file-import"></i>
-        Nhập nho
+      <button class="match-input-height me-1" mat-stroked-button (click)="openFilterDialog()">
+        <mat-icon>filter_list</mat-icon>
+        Lọc dữ liệu
       </button>
-      <button mat-raised-button color="accent" class="me-2" (click)="openExportInventoriesDialog()">
-        <i class="fa-solid fa-file-export"></i>
-        Xuất kho
-      </button>
-    </div>
-    <div>
       <input
       (keyup.enter)="onSearch()"
       [(ngModel)]="searchTerm"
@@ -22,14 +16,23 @@
       placeholder="Nhập tên sách..."
       style="width: 300px;"
       >
-      <button class="match-input-height me-1" mat-stroked-button (click)="openFilterDialog()">
-        <mat-icon>filter_list</mat-icon>
-        Lọc dữ liệu
-      </button>
       <button mat-stroked-button color="warn" (click)="onReset()">
         <i class="fa-solid fa-rotate-left"></i>
       </button>
     </div>
+    <button mat-raised-button [matMenuTriggerFor]="menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="openImportInventoriesDialog()">
+        <i class="fa-solid fa-file-import"></i>
+        Nhập nho
+      </button>
+      <button mat-menu-item (click)="openExportInventoriesDialog()">
+        <i class="fa-solid fa-file-export"></i>
+        Xuất kho
+      </button>
+    </mat-menu>
   </div>
 </div>
 

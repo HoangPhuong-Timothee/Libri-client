@@ -1,0 +1,72 @@
+<ng-container *ngIf="orders.length <= 0" class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body cart">
+          <div class="col-sm-12 empty-cart-cls text-center">
+            <img
+              src="https://cdn.vectopus.com/getillustrations/illustrations/37D8FA32F214/47769965D797/icons-delivery-logistic-empty-order-box-package-lost-tracking-not-delivered-1024.png"
+              width="260"
+              height="260"
+              class="img-fluid mb-4 mr-3"
+            />
+            <h3><strong>Bạn chưa có đơn hàng nào</strong></h3>
+            <div class="d-flex justify-content-center">
+              <a
+              routerLink="/bookcase"
+              class="btn btn-warning cart-btn-transform m-3 fw-bold"
+              data-abc="true"
+            >
+              Xem tủ sách
+            </a>
+            <a
+              routerLink="/basket"
+              class="btn btn-dark text-warning cart-btn-transform m-3 fw-bold"
+              data-abc="true"
+            >
+              Xem giỏ sách
+            </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<div *ngIf="orders && orders.length > 0" class="container mt-5">
+  <h2 class="fw-bold text-uppercase mb-5 text-center">Danh sách đơn hàng</h2>
+  <div class="row">
+      <div class="col-12">
+          <table class="table table-hover" style="cursor: pointer;">
+              <thead class="thead-light">
+                  <tr>
+                      <th>Mã đơn hàng</th>
+                      <th>Ngày tạo đơn</th>
+                      <th>Tổng tiền</th>
+                      <th>Trạng thái đơn hàng</th>
+                  </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let order of orders" routerLink="/orders/{{ order.orderId }}">
+                  <th>#{{ order.orderId }}</th>
+                  <td>{{ order.orderDate }}</td>
+                  <td>{{ order.subtotal | customCurrency: 'VND' }}</td>
+                  <td>{{ order.status }}</td>
+                </tr>
+              </tbody>
+          </table>
+      </div>
+  </div>
+</div>
+<mat-paginator
+    *ngIf="orders && orders.length > 0"
+    [length]="totalOrders"
+    [pageSize]="orderParams.pageSize"
+    [pageIndex]="orderParams.pageIndex"
+    showFirstLastButtons
+    [pageSizeOptions]="[15, 20, 25, 30]"
+    (page)="onPageChange($event)"
+    class="mt-2"
+  >
+  </mat-paginator>
+

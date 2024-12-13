@@ -11,7 +11,10 @@ export class AppComponent implements OnInit {
 
   title = 'Libri';
 
-  constructor(private authService: AuthService, private basketService: BasketService) { }
+  constructor(
+    private authService: AuthService,
+    private basketService: BasketService
+  ) { }
 
   ngOnInit(): void {
     this.loadCurrentUser()

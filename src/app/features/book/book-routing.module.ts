@@ -6,8 +6,7 @@ import { BookcaseComponent } from './bookcase.component';
 const routes: Routes = [
   {
     path: '',
-    component: BookcaseComponent,
-    data: { breadcrumb: 'Tủ sách' }
+    component: BookcaseComponent
   },
   {
     path: ':id',
@@ -20,4 +19,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class BookRoutingModule { } 
+export class BookRoutingModule { }

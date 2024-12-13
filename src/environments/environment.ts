@@ -4,7 +4,7 @@
 
 export const environment = {
   baseAPIUrl: 'https://localhost:7247',
-  stripePublicKey: 'pk_test_51Q1s3iGU3ij3yRJRZvD2cumjpA6acM7tKxRuLCHUhTFAkfGpOtptM9TWZkvnMngryGB57GCnKKMbCAsm5xZmvmNz00ibnNSajk',
+  stripePublicKey: 'pk_test_51L9s4xDPbRRPrQsiIyu9U8zlOH5BoX30bQv2jdtvrXi5hV3pfEudfK1Be9r4FzC6oqKlVFMhcG1Q8Xx4poLNOgkc00qGBOcBbE',
   production: false
 };
 

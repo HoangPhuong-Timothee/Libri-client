@@ -12,6 +12,9 @@ export class NavbarComponent {
   isAdmin$ = this.authService.isAdmin$
   basketItemCount$? = this.basketService.basketItemCount$
 
-  constructor(public authService: AuthService, public basketService: BasketService) {}
-  
+  constructor(
+    public authService: AuthService,
+    public basketService: BasketService
+  ) { }
+
 }

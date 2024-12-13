@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { map, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { DeliveryMethod } from '../models/delivery-method.model';
-import { CreateOrderRequest, Order } from '../models/order.model';
+import { CreateOrderRequest } from '../models/order.model';
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +24,8 @@ export class CheckoutService {
     )
   }
 
-  createOrder(request: CreateOrderRequest) {
-    return this.http.post(`${environment.baseAPIUrl}/api/Orders/${request.basketId}`, request)
+  createOrder(request: CreateOrderRequest, basketId: string) {
+    return this.http.post(`${environment.baseAPIUrl}/api/Orders/${basketId}`, request)
   }
 
 }

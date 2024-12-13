@@ -14,7 +14,10 @@ export class CheckoutDeliveryComponent implements OnInit {
   @Input() checkoutForm?: FormGroup
   deliveryMethods: DeliveryMethod[] = []
 
-  constructor(private checkoutService: CheckoutService, private basketService: BasketService) { }
+  constructor(
+    private checkoutService: CheckoutService,
+    private basketService: BasketService
+  ) { }
 
   ngOnInit(): void {
     this.checkoutService.getAllDeliveryMethods().subscribe({

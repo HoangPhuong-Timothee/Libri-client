@@ -76,7 +76,7 @@ export class BookstoreService {
   }
 
   updateBookStore(request: UpdateBookStoreRequest) {
-    return this.http.put(`${environment.baseAPIUrl}/api/Genres/${request.id}`, request.storeName)
+    return this.http.put(`${environment.baseAPIUrl}/api/BookStores/${request.id}`, request)
   }
 
   deleteBookStore(id: number) {

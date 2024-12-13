@@ -21,7 +21,8 @@ const routes: Routes = [
   },
   {
     path: 'bookcase',
-    loadChildren: () => import('./features/book/book.module').then(m => m.BookModule)
+    loadChildren: () => import('./features/book/book.module').then(m => m.BookModule),
+    data: { breadcrumb: 'Tủ sách' }
   },
   {
     path: '',
@@ -29,7 +30,8 @@ const routes: Routes = [
   },
   {
     path: 'wishlist',
-    loadChildren: () => import('./features/wishlist/wishlist.module').then(m => m.WishlistModule)
+    loadChildren: () => import('./features/wishlist/wishlist.module').then(m => m.WishlistModule),
+    data: { breadcrumb: 'Sách yêu thích' }
   },
   {
     path: 'basket',
@@ -52,7 +54,7 @@ const routes: Routes = [
     path: 'order',
     canActivate: [AuthGuard],
     loadChildren: () => import('./features/order/order.module').then(m => m.OrderModule),
-    data: { breadcrumb: 'Danh sách đơn đặt' }
+    data: { breadcrumb: 'Đơn hàng' }
   },
   {
     path: 'introduction',

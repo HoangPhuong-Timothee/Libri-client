@@ -52,7 +52,6 @@ export class AdminInventoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllBookInventories()
-    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   getAllBookInventories() {

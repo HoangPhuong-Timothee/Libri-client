@@ -12,7 +12,7 @@ import { UserService } from 'src/app/core/services/user.service';
 export class AdminUserComponent implements OnInit {
 
   memberList: Member[] = []
-  adminMemberParams = new MemberParams()
+  adminMemberParams: MemberParams
   totalUsers = 0
   columns = [
     { field: 'id', header: 'ID' },
@@ -26,7 +26,7 @@ export class AdminUserComponent implements OnInit {
 
   constructor(
     private userService: UserService
-  ) { }
+  ) { this.adminMemberParams = this.userService.getMemberParams() }
 
   ngOnInit(): void {
     this.getUsersList()
@@ -34,7 +34,7 @@ export class AdminUserComponent implements OnInit {
   }
 
   getUsersList() {
-    this.userService.getUsersList(this.adminMemberParams).subscribe({
+    this.userService.getUsersList().subscribe({
       next: response => {
         if (response.data) {
           this.memberList = response.data
@@ -45,8 +45,11 @@ export class AdminUserComponent implements OnInit {
   }
 
   onPageChange(event: PageEvent) {
-    this.adminMemberParams.pageIndex = event.pageIndex + 1
-    this.adminMemberParams.pageSize = event.pageSize
+    const params = this.userService.getMemberParams()
+    params.pageIndex = event.pageIndex + 1
+    params.pageSize = event.pageSize
+    this.userService.setMemberParams(params)
+    this.adminMemberParams = params
     this.getUsersList()
   }
 

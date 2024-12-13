@@ -25,8 +25,8 @@ export class AdminBookstoreComponent implements OnInit {
     { field: 'storeName' , header: 'Hiệu sách' },
     { field: 'storeAddress', header: 'Địa chỉ' },
     { field: 'totalQuantity', header: 'Tổng số sách' },
-    { field: 'createInfo', header: 'Thông tin tạo' },
-    { field: 'updateInfo', header: 'Thông tin cập nhật' }
+    { field: 'createInfo', header: 'Tạo bởi' },
+    { field: 'updateInfo', header: 'Cập nhật bởi' }
   ]
   actions = [
     {
@@ -117,7 +117,7 @@ export class AdminBookstoreComponent implements OnInit {
   async openDeleteBookStoreDialog(bookStore: BookStore) {
     const confirmed = await this.dialogService.confirmDialog(
       'XÁC NHẬN XÓA',
-      `Bạn chắc chắn muốn xóa thể loại "${bookStore.storeName}"?`
+      `Bạn chắc chắn muốn xóa hiệu sách "${bookStore.storeName}"?`
     )
     if (confirmed) {
       this.bookStoreService.deleteBookStore(bookStore.id).subscribe({
@@ -126,7 +126,7 @@ export class AdminBookstoreComponent implements OnInit {
           this.toastr.success(`Xóa hiệu sách "${bookStore.storeName}" thành công`)
         },
         error: error => {
-          console.log("Có lỗi xảy ra: ", error.errors, error.message)
+          console.log("Có lỗi xảy ra: ", error)
         }
       })
     }

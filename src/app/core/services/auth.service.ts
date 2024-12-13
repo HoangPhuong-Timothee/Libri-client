@@ -21,6 +21,7 @@ export class AuthService {
     return this.http.post<User>(`${environment.baseAPIUrl}/api/Auth/login`, request).pipe(
       map((user) => {
         if (user) {
+          this.currentUserSource.next(user)
           localStorage.setItem('access_token', user.token)
         }
       })

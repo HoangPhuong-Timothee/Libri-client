@@ -1,0 +1,89 @@
+<mat-card *ngIf="order" class="bg-white py-8 shadow-md max-w-screen-lg mx-auto">
+  <div class="px-4 w-full">
+      <div class="flex justify-between items-center align-middle">
+          <h2 class="text-2xl text-center font-semibold">Đơn hàng #{{ order.orderId }}</h2>
+          <button (click)="backToOrders()" mat-stroked-button>Tất cả đơn hàng</button>
+      </div>
+      <div class="mt-8 py-3 border-t border-gray-200 flex gap-16">
+          <div class="space-y-2">
+              <h4 class="text-lg font-semibold">Địa chỉ và thanh toán</h4>
+              <dl>
+                  <dt class="font-medium">Địa chỉ giao hàng</dt>
+                  <dd class="mt-1 font-light">{{ order.shippingAddress }}</dd>
+              </dl>
+              <dl>
+                  <dt class="font-medium">Thông tin thanh toán</dt>
+                  <dd class="mt-1 font-light">78*****07, HO HOANG PHUONG, ACB, exp: 08/2024</dd>
+              </dl>
+          </div>
+          <div class="space-y-2">
+              <h4 class="text-lg font-semibold">Đơn hàng</h4>
+              <dl>
+                  <dt class="font-medium">Email người dùng</dt>
+                  <dd class="mt-1 font-light">{{ order.userEmail }}</dd>
+              </dl>
+              <dl>
+                  <dt class="font-medium">Trạng thái đơn hàng</dt>
+                  <dd class="mt-1 font-light">{{ order.status }}</dd>
+              </dl>
+              <dl>
+                  <dt class="font-medium">Ngày tạo đơn</dt>
+                  <dd class="mt-1 font-light">{{ order.orderDate }}</dd>
+              </dl>
+          </div>
+      </div>
+
+      <div class="mt-4">
+          <div class="border-y border-gray-200">
+              <table class="w-full text-center">
+                  <tbody *ngFor="let item of order.orderItems" class="divide-y divide-gray-200">
+                    <tr>
+                      <td class="py-4">
+                          <div class="flex items-center gap-4">
+                              <img src="{{ item.bookImageUrl }}" alt="{{ item.bookTitle }}"
+                                  class="w-10 h-10">
+                              <span>{{ item.bookTitle }}</span>
+                          </div>
+                      </td>
+                      <td class="p-4">x{{ item.quantity }}</td>
+                      <td class="p-4 text-right">{{ item.price | customCurrency: 'VND' }}</td>
+                  </tr>
+                  </tbody>
+              </table>
+          </div>
+      </div>
+
+      <div class="space-y-4 rounded-lg border-y border-gray-200 p-4 bg-white">
+          <p class="text-xl font-semibold">Chi tiết thành tiền</p>
+          <div class="space-y-4">
+              <div class="space-y-2">
+                  <dl class="flex items-center justify-between gap-4">
+                      <dt class="font-medium text-gray-500">Tồng tiền sách</dt>
+                      <dd class="font-medium text-gray-900">
+                          {{ order.subtotal | customCurrency: 'VND' }}
+                      </dd>
+                  </dl>
+                  <dl *ngIf="order.discount" class="flex items-center justify-between gap-4">
+                      <dt class="font-medium text-gray-500">Giảm giá</dt>
+                      <dd class="font-medium text-green-500">
+                          -{{ order.discount | customCurrency: 'VND' }}
+                      </dd>
+                  </dl>
+                  <dl class="flex items-center justify-between gap-4">
+                      <dt class="font-medium text-gray-500">Phí giao hàng</dt>
+                      <dd class="font-medium text-gray-900">
+                          {{ order.shippingPrice | customCurrency: 'VND' }}
+                      </dd>
+                  </dl>
+              </div>
+
+              <dl class="flex items-center justify-between gap-4 border-t border-gray-200 pt-2">
+                  <dt class="font-medium text-gray-500">Thành tiền</dt>
+                  <dd class="font-medium text-gray-900">
+                      {{ order.total | customCurrency: 'VND' }}
+                  </dd>
+              </dl>
+          </div>
+      </div>
+  </div>
+</mat-card>

@@ -26,6 +26,8 @@ import { EditPublisherFormComponent } from './admin-publisher/edit-publisher-for
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminUserComponent } from './admin-user/admin-user.component';
 import { AdminComponent } from './admin.component';
+import { OrderFilterDialogComponent } from './admin-order/order-filter-dialog/order-filter-dialog.component';
+import { OrderDetailsDialogComponent } from './admin-order/order-details-dialog/order-details-dialog.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +54,9 @@ import { AdminComponent } from './admin.component';
     InventoryTransactionDialogComponent,
     AdminBookstoreComponent,
     AddBookstoreFormComponent,
-    EditBookstoreFormComponent
+    EditBookstoreFormComponent,
+    OrderFilterDialogComponent,
+    OrderDetailsDialogComponent
   ],
   imports: [
     CommonModule,

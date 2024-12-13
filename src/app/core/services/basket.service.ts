@@ -18,13 +18,31 @@ export class BasketService {
   basket$ = this.basketSource.asObservable()
   private basketTotalSource = new BehaviorSubject<BasketTotals | null>(null)
   basketTotal$ = this.basketTotalSource.asObservable()
-  delivery = 0
 
-  constructor(private http: HttpClient, private toastr: ToastrService) { }
+  constructor(
+    private http: HttpClient,
+    private toastr: ToastrService
+  ) { }
+
+  createOrUpdatePaymentIntent() {
+    const basket = this.getCurrentBasketValue()
+    if (!basket) {
+      throw new Error('Có lỗi giỏ sách')
+    }
+    return this.http.post<Basket>(`${environment.baseAPIUrl}/api/Payments/stripe/${basket.id}`, {}).pipe(
+      map((basket) => {
+        this.setBasket(basket)
+      })
+    )
+  }
 
   setDeliveryPrice(deliveryMethod: DeliveryMethod) {
-    this.delivery = deliveryMethod.price
-    this.calculateTotal()
+    const basket = this.getCurrentBasketValue()
+    if (basket) {
+      basket.deliveryPrice = deliveryMethod.price
+      basket.deliveryMethodId = deliveryMethod.id
+      this.setBasket(basket)
+    }
   }
 
   get basketItemCount$() {
@@ -130,10 +148,12 @@ export class BasketService {
 
   private calculateTotal() {
     const basket = this.getCurrentBasketValue()
-    if (!basket) return
+    if (!basket) {
+      return
+    }
     const discount = 0
     const subtotal = basket.basketItems.reduce((a, b) => a + (b.price * b.quantity), 0)
-    const total = subtotal + this.delivery - discount
-    this.basketTotalSource.next({ delivery: this.delivery, total, subtotal, discount })
+    const total = subtotal + basket.deliveryPrice - discount
+    this.basketTotalSource.next({ delivery: basket.deliveryPrice, total, subtotal, discount })
   }
 }

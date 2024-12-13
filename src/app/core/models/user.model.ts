@@ -1,4 +1,3 @@
-import { Address } from "./address.model";
 
 export interface User {
   id: number
@@ -13,11 +12,16 @@ export interface User {
 }
 
 export interface ModifyProfileRequest {
-  email: string
   userName: string
-  imageUrl: string
+  dateOfBirth: Date | string
+  gender: string
   phoneNumber: string
-  address: Address
+  fullName: string
+  street: string
+  ward: string
+  district: string
+  city: string
+  postalCode: string
 }
 
 export interface Member {

@@ -20,7 +20,7 @@ export class AdminBookComponent implements OnInit {
   book?: Book
   searchTerm: string = ''
   bookList: Book[] = []
-  bookParams: BookParams
+  adminBookParams: BookParams
   totalBooks = 0
   columns = [
     { field: 'id', header: 'Mã sách' },
@@ -56,22 +56,21 @@ export class AdminBookComponent implements OnInit {
     private toastr: ToastrService
   )
   {
-    this.bookParams = bookService.getBookParams()
+    this.adminBookParams = bookService.getAdminBookParams()
   }
 
   ngOnInit(): void {
-    this.getAllBooks()
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    this.getAllBooksForAdmin()
   }
 
-  getAllBooks() {
-    this.bookService.getAllBooks().subscribe({
+  getAllBooksForAdmin() {
+    this.bookService.getAllBooksForAdmin().subscribe({
       next: response => {
         this.bookList = response.data
         this.totalBooks = response.count
       },
       error: error => {
-        console.log(error)
+        console.log("Có lỗi: ", error)
       }
     })
   }
@@ -90,11 +89,11 @@ export class AdminBookComponent implements OnInit {
     dialog.afterClosed().subscribe({
       next: async (result) => {
         if (result && result.fileUploaded) {
-          const params = this.bookService.getBookParams()
+          const params = this.bookService.getAdminBookParams()
           params.pageIndex = 1
-          this.bookService.setBookParams(params)
-          this.bookParams = params
-          this.getAllBooks()
+          this.bookService.setAdminBookParams(params)
+          this.adminBookParams = params
+          this.getAllBooksForAdmin()
         } else if (result && result.errors) {
           this.openAddNewBooksDialog(result.errors)
         }
@@ -144,52 +143,52 @@ export class AdminBookComponent implements OnInit {
     let dialog = this.dialog.open(BookFilterDialogComponent, {
       minWidth: '500px',
       data: {
-        selectedGenreId: this.bookParams.genreId,
-        selectedPublisherId: this.bookParams.publisherId,
-        selectedAuthorId: this.bookParams.authorId
+        selectedGenreId: this.adminBookParams.genreId,
+        selectedPublisherId: this.adminBookParams.publisherId,
+        selectedAuthorId: this.adminBookParams.authorId
       }
     })
     dialog.afterClosed().subscribe({
       next: result => {
         if (result) {
-          const params = this.bookService.getBookParams()
+          const params = this.bookService.getAdminBookParams()
           params.genreId = result.selectedGenreId
           params.publisherId = result.selectedPublisherId
           params.authorId = result.selectedAuthorId
           params.pageIndex = 1
-          this.bookService.setBookParams(params)
-          this.bookParams = params
-          this.getAllBooks()
+          this.bookService.setAdminBookParams(params)
+          this.adminBookParams = params
+          this.getAllBooksForAdmin()
         }
       }
     })
   }
 
   onPageChange(event: PageEvent) {
-    const params = this.bookService.getBookParams()
+    const params = this.bookService.getAdminBookParams()
     params.pageIndex = event.pageIndex + 1
     params.pageSize = event.pageSize
-    this.bookService.setBookParams(params)
-    this.bookParams = params
-    this.getAllBooks()
+    this.bookService.setAdminBookParams(params)
+    this.adminBookParams = params
+    this.getAllBooksForAdmin()
   }
 
   onSearch() {
-    const params = this.bookService.getBookParams()
+    const params = this.bookService.getAdminBookParams()
     params.search = this.searchTerm
     params.pageIndex = 1
-    this.bookService.setBookParams(params)
-    this.bookParams = params
-    this.getAllBooks()
+    this.bookService.setAdminBookParams(params)
+    this.adminBookParams = params
+    this.getAllBooksForAdmin()
   }
 
   onReset() {
     if (this.searchTerm) {
       this.searchTerm = ''
     }
-    this.bookParams = new BookParams()
-    this.bookService.setBookParams(this.bookParams)
-    this.getAllBooks()
+    this.adminBookParams = new BookParams()
+    this.bookService.setAdminBookParams(this.adminBookParams)
+    this.getAllBooksForAdmin()
   }
 
 }

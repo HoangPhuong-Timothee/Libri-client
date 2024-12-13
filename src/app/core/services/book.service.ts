@@ -12,13 +12,46 @@ import { BookParams } from '../models/params.model';
 export class BookService {
 
   books: Book[] = []
+  booksList: Book[] = []
   latestBooks: Book[] = []
   similarBooks: Book[] = []
   bookPagination?: Pagination<Book[]>
+  adminBookPagination?: Pagination<Book[]>
   bookParams = new BookParams()
+  adminBookParams = new BookParams()
   bookCache = new Map<string, Pagination<Book[]>>()
+  adminBookCache = new Map<string, Pagination<Book[]>>()
 
   constructor(private http: HttpClient) { }
+
+  getAllBooksForAdmin(useCache = true): Observable<Pagination<Book[]>> {
+    if (!useCache) {
+      this.adminBookCache = new Map()
+    }
+    if (this.adminBookCache.size > 0 && useCache) {
+      if (this.adminBookCache.has(Object.values(this.adminBookParams).join('-'))) {
+        this.adminBookPagination = this.adminBookCache.get(Object.values(this.adminBookParams).join('-'))
+
+        if(this.adminBookPagination) {
+          return of(this.adminBookPagination)
+        }
+      }
+    }
+    let params = new HttpParams()
+    if (this.adminBookParams.genreId) params = params.append('genreId', this.adminBookParams.genreId)
+    if (this.adminBookParams.authorId) params = params.append('authorId', this.adminBookParams.authorId)
+    if (this.adminBookParams.publisherId) params = params.append('publisherId', this.adminBookParams.publisherId)
+    if (this.adminBookParams.search) params = params.append('search', this.adminBookParams.search)
+    params = params.append('pageIndex', this.adminBookParams.pageIndex)
+    params = params.append('pageSize', this.adminBookParams.pageSize)
+    return this.http.get<Pagination<Book[]>>(`${environment.baseAPIUrl}/api/Books`, { params }).pipe(
+      map(response => {
+        this.booksList = [...this.booksList, ...response.data]
+        this.bookPagination = response
+        return response
+      })
+    )
+  }
 
   getAllBooks(useCache = true): Observable<Pagination<Book[]>> {
     if (!useCache) {
@@ -35,7 +68,6 @@ export class BookService {
     }
     let params = new HttpParams()
     if (this.bookParams.genreId) params = params.append('genreId', this.bookParams.genreId)
-    if (this.bookParams.authorId) params = params.append('authorId', this.bookParams.authorId)
     if (this.bookParams.publisherId) params = params.append('publisherId', this.bookParams.publisherId)
     if (this.bookParams.search) params = params.append('search', this.bookParams.search)
     params = params.append('sort', this.bookParams.sort)
@@ -56,6 +88,14 @@ export class BookService {
 
   getBookParams() {
     return this.bookParams
+  }
+
+  setAdminBookParams(params: BookParams) {
+    this.adminBookParams = params
+  }
+
+  getAdminBookParams() {
+    return this.adminBookParams
   }
 
   getSingleBook(id: number): Observable<Book> {

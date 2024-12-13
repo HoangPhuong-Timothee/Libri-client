@@ -1,6 +1,6 @@
 <div class="mt-4" *ngIf="checkoutForm" [formGroup]="checkoutForm">
     <div class="d-flex justify-content-between align-items-center">
-        <h4 class="Thông tin khách hàng"></h4>
+        <h4>Thông tin khách hàng</h4>
         <button
             class="btn btn-secondary mb-3"
             (click)="saveUserInfo()"
@@ -42,7 +42,7 @@
         Quay lại giỏ sách
         <i class="fa fa-angle-left"></i>
     </button>
-    <button class="btn btn-warning" cdkStepperNext>
+    <button [disabled]="this.checkoutForm?.get('userInfoForm')?.invalid" class="btn btn-warning" cdkStepperNext>
         <i class="fa fa-angle-right"></i>
         Chọn dịch vụ
     </button>

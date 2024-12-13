@@ -50,3 +50,15 @@ export class InventoryTransactionParams {
   startDate?: Date
   endDate?: Date
 }
+
+export class AdminOrderParams {
+  orderStatus?: string
+  pageIndex = 1
+  pageSize = 20
+}
+
+export class OrderParams {
+  sort = 'newest'
+  pageIndex = 1
+  pageSize = 20
+}

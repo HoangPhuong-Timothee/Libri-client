@@ -57,7 +57,6 @@ export class AdminGenreComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllGenresForAdmin()
-    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   getAllGenresForAdmin(): void {
@@ -92,7 +91,7 @@ export class AdminGenreComponent implements OnInit {
     })
   }
 
-  openUpdateGenreDialog(genre: Genre): void {
+  openUpdateGenreDialog(genre: Genre) {
     const dialog = this.dialog.open(EditGenreFormComponent, {
       minWidth: '500px',
       data: {
