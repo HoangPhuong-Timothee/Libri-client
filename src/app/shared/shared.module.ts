@@ -42,7 +42,6 @@ import { OrderTotalsComponent } from './components/order-totals/order-totals.com
 import { PagingFooterComponent } from './components/paging-footer/paging-footer.component';
 import { PagingHeaderComponent } from './components/paging-header/paging-header.component';
 import { SectionHeaderComponent } from './components/section-header/section-header.component';
-import { SelectInputComponent } from './components/select-input/select-input.component';
 import { ServerErrorComponent } from './components/server-error/server-error.component';
 import { StepperComponent } from './components/stepper/stepper.component';
 import { TextAreaComponent } from './components/text-area/text-area.component';
@@ -66,9 +65,8 @@ import { TruncateTitlePipe } from './pipes/truncate-title.pipe';
     CustomTableComponent,
     StepperComponent,
     ConfirmationDialogComponent,
-    TextAreaComponent,
     DateInputComponent,
-    SelectInputComponent
+    TextAreaComponent
   ],
   imports: [
     CommonModule,
@@ -138,20 +136,19 @@ import { TruncateTitlePipe } from './pipes/truncate-title.pipe';
     MatDialogModule,
     MatSelectModule,
     ConfirmationDialogComponent,
-    TextAreaComponent,
     MatProgressBarModule,
     NgxMatSelectSearchModule,
     DateInputComponent,
     BsDatepickerModule,
     MatOptionModule,
-    SelectInputComponent,
     MatListModule,
     MatDivider,
     ScrollingModule,
     MatTableModule,
     MatCardModule,
     MatAutocompleteModule,
-    MatMenuModule
+    MatMenuModule,
+    TextAreaComponent
   ]
 })
 export class SharedModule { }

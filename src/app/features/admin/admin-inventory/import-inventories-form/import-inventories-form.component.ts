@@ -5,9 +5,11 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { BookStore } from 'src/app/core/models/book-store.model';
 import { ImportInventoriesRequest } from 'src/app/core/models/inventory.model';
+import { UnitOfMeasure } from 'src/app/core/models/unit-of-measure.model';
 import { BookService } from 'src/app/core/services/book.service';
 import { BookstoreService } from 'src/app/core/services/bookstore.service';
 import { InventoryService } from 'src/app/core/services/inventory.service';
+import { UnitOfMeasureService } from 'src/app/core/services/unit-of-measure.service';
 import { validateBookExist } from 'src/app/shared/helpers/validates/validate-exist';
 import { validatePastDate } from 'src/app/shared/helpers/validates/validate-inventory-inputs';
 
@@ -26,13 +28,15 @@ export class ImportInventoriesFormComponent implements OnInit {
     { field: 'location', header: 'Vị trí' },
     { field: 'details', header: 'Nội dung' }
   ]
-  headerColumns: string[] = ['Tên sách', 'Hiệu sách', 'Số lượng', 'Ngày nhập', 'Ghi chú nhập kho', '']
+  headerColumns: string[] = ['Tên sách', 'Hiệu sách', 'Số lượng', 'Đơn vị tính', 'Ngày nhập', 'Ghi chú nhập kho', '']
   bookStoresList: BookStore[] = []
+  measureUnitsList: UnitOfMeasure[] = []
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private bookStoreService: BookstoreService,
     private bookService: BookService,
+    private measureUnitService: UnitOfMeasureService,
     private inventoryService: InventoryService,
     private fb: FormBuilder,
     private toastr: ToastrService,
@@ -41,6 +45,7 @@ export class ImportInventoriesFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadAllBookStores()
+    this.loadAllMeasureUnits()
     this.initializeForm()
   }
 
@@ -58,6 +63,13 @@ export class ImportInventoriesFormComponent implements OnInit {
     })
   }
 
+  loadAllMeasureUnits() {
+    this.measureUnitService.getAllUnitOfMeasures().subscribe({
+      next: response => this.measureUnitsList = response,
+      error: error => console.log("Có lỗi xảy ra: ", error)
+    })
+  }
+
   changeMode() {
     return this.importFileMode = !this.importFileMode
   }
@@ -65,6 +77,7 @@ export class ImportInventoriesFormComponent implements OnInit {
   createFormGroup(): FormGroup {
     return this.fb.group({
       bookTitle: ['', [Validators.required], [validateBookExist(this.bookService)]],
+      unitOfMeasureId: ['', [Validators.required]],
       quantity: [0, [Validators.required, Validators.min(0)]],
       bookStoreId: ['', [Validators.required]],
       importDate: ['', [Validators.required, validatePastDate()]],

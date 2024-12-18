@@ -56,7 +56,6 @@ export class AdminBookstoreComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllBookStoresForAdmin()
-    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   getAllBookStoresForAdmin() {

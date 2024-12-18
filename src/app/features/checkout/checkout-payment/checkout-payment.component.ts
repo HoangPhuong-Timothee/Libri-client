@@ -32,6 +32,9 @@ export class CheckoutPaymentComponent implements OnInit {
   cardNumber?: StripeCardNumberElement
   cardExpiry?: StripeCardExpiryElement
   cardCVC?: StripeCardCvcElement
+  cardNumberComplete: boolean = false
+  cardExpiryComplete: boolean = false
+  cardCVCComplete: boolean = false
   cardErrors: any
   loading = false
 
@@ -50,6 +53,7 @@ export class CheckoutPaymentComponent implements OnInit {
         this.cardNumber = stripeElements.create('cardNumber')
         this.cardNumber.mount(this.cardNumberElement?.nativeElement)
         this.cardNumber.on('change', event => {
+          this.cardNumberComplete = event.complete
           if (event.error) {
             this.cardErrors = event.error.message
           } else {
@@ -60,6 +64,7 @@ export class CheckoutPaymentComponent implements OnInit {
         this.cardExpiry = stripeElements.create('cardExpiry')
         this.cardExpiry.mount(this.cardExpiryElement?.nativeElement)
         this.cardExpiry.on('change', event => {
+          this.cardExpiryComplete = event.complete
           if (event.error) {
             this.cardErrors = event.error.message
           } else {
@@ -70,6 +75,7 @@ export class CheckoutPaymentComponent implements OnInit {
         this.cardCVC = stripeElements.create('cardCvc')
         this.cardCVC.mount(this.cardCVCElement?.nativeElement)
         this.cardCVC.on('change', event => {
+          this.cardCVCComplete = event.complete
           if (event.error) {
             this.cardErrors = event.error.message
           } else {
@@ -79,6 +85,14 @@ export class CheckoutPaymentComponent implements OnInit {
       }
     })
   }
+
+  get paymentFormComplete() {
+    return this.checkoutForm?.get('paymentForm')?.valid
+      && this.cardNumberComplete
+      && this.cardExpiryComplete
+      && this.cardCVCComplete
+  }
+
 
   async submitOrder() {
     this.loading = true

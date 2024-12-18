@@ -100,7 +100,7 @@ export class AdminGenreComponent implements OnInit {
       }
     })
     dialog.afterClosed().subscribe({
-      next: async result => {
+      next: result => {
         if (result) {
           if (result && result.success) {
             const params = this.genreService.getGenreParams()

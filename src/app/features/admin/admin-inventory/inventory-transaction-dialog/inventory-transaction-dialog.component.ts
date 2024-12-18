@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { InventoryTransaction } from 'src/app/core/models/inventory-transaction.model';
+import { InventoryTransaction } from 'src/app/core/models/inventory.model';
 import { InventoryTransactionParams } from 'src/app/core/models/params.model';
 import { InventoryService } from 'src/app/core/services/inventory.service';
 
@@ -46,7 +46,7 @@ export class InventoryTransactionDialogComponent implements OnInit {
 
   toggleShowDetails(transaction: InventoryTransaction) {
     transaction.showDetails = !transaction.showDetails
-    const index = this.transactions.findIndex(t => t.id === transaction.id)
+    const index = this.transactions.findIndex(t => t.transactionId === transaction.transactionId)
     if (index !== -1) {
       this.transactions[index] = { ...transaction }
     }

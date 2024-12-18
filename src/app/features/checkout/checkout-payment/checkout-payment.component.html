@@ -32,7 +32,7 @@
         Quay lại
         <i class="fa fa-angle-left"></i>
     </button>
-    <button (click)="submitOrder()" class="btn btn-warning" cdkStepperNext>
+    <button [disabled]="loading || !paymentFormComplete" (click)="submitOrder()" class="btn btn-warning" cdkStepperNext>
         <i class="fa fa-angle-right"></i>
         <i *ngIf="loading" class="fa fa-spinner fa-spin"></i>
         Đặt hàng

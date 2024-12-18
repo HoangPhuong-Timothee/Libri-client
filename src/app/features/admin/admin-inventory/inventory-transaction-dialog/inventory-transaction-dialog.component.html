@@ -43,7 +43,7 @@
         >
           <div class="card">
             <div class="card-header">
-              Mã : {{ transaction.id }} -
+              Mã : {{ transaction.transactionId }} -
               <span *ngIf="!transaction.showDetails"><strong>{{ transaction.transactionType }}</strong> - </span>
               {{ transaction.transactionDate }} bởi
               <span class="fst-italic">{{ transaction.performedBy }}</span>
@@ -66,7 +66,7 @@
         >
           <div class="card">
             <div class="card-header">
-              Mã : {{ transaction.id }} -
+              Mã : {{ transaction.transactionId }} -
               <span *ngIf="!transaction.showDetails"><strong>{{ transaction.transactionType }}</strong> - </span>
               {{ transaction.transactionDate }} bởi
               <span class="fst-italic">{{ transaction.performedBy }}</span>

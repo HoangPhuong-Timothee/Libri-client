@@ -17,7 +17,7 @@ export class EditGenreFormComponent implements OnInit {
     private genreService: GenreService,
     private toastr: ToastrService,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private dialogRef: MatDialogRef<EditGenreFormComponent>,
+    private dialogRef: MatDialogRef<EditGenreFormComponent>
   ) { }
 
   ngOnInit(): void {

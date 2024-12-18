@@ -1,0 +1,23 @@
+<h2 class="text-center text-uppercase fw-bold" mat-dialog-title>{{ data.title }}</h2>
+<mat-dialog-content class="p-3">
+  <form [formGroup]="updateUnitOfMeasureForm" class="p-4 w-100" (ngSubmit)="updateUnitOfMeasure()">
+    <span class="mb-2">Mã đơn vị: <strong>{{ data.unitOfMeasure.id }}</strong></span>
+    <app-input-text
+      [formControl]="updateUnitOfMeasureForm.controls['name']"
+      [label]="'Tên đơn vị đo'"
+    >
+    </app-input-text>
+    <app-text-area
+      [formControl]="updateUnitOfMeasureForm.controls['description']"
+      [label]="'Mô tả'"
+      [maxLength]="255"
+    >
+    </app-text-area>
+    <div class="tw-flex tw-justify-end tw-gap-3">
+      <button mat-button color="warn" type="button" mat-dialog-close>Hủy</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="updateUnitOfMeasureForm.invalid">
+        Cập nhật
+      </button>
+    </div>
+  </form>
+</mat-dialog-content>

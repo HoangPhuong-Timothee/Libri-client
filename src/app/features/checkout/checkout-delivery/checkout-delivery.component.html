@@ -23,7 +23,7 @@
       Quay lại
       <i class="fa fa-angle-left"></i>
     </button>
-    <button class="btn btn-warning" cdkStepperNext>
+    <button [disabled]="this.checkoutForm?.get('deliveryForm')?.invalid" class="btn btn-warning" cdkStepperNext>
         <i class="fa fa-angle-right"></i>
         Kiểm tra giỏ sách
     </button>

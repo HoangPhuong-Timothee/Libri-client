@@ -70,6 +70,21 @@
               </div>
             </td>
             <td>
+              <select
+                formControlName="unitOfMeasureId"
+                class="form-control"
+                [ngClass]="(row.get('unitOfMeasureId')?.touched) ? row.get('unitOfMeasureId')?.invalid ? 'is-invalid' : 'is-valid' : null"
+              >
+                <option value=""><span class="text-danger">* Chọn đơn vị tính</span></option>
+                <option *ngFor="let unit of measureUnitsList" [value]="unit.id">{{ unit.name }}</option>
+              </select>
+              <div class="text-danger mt-1" *ngIf="rows.get('unitOfMeasureId')?.touched">
+                <span *ngIf="row.get('unitOfMeasureId')?.errors?.['required']">
+                  * Vui lòng chọn đơn vị tính
+                </span>
+              </div>
+            </td>
+            <td>
               <input
                 type="date"
                 class="form-control"

@@ -6,6 +6,7 @@ import { BookService } from "src/app/core/services/book.service"
 import { BookstoreService } from "src/app/core/services/bookstore.service"
 import { GenreService } from "src/app/core/services/genre.service"
 import { PublisherService } from "src/app/core/services/publisher.service"
+import { UnitOfMeasureService } from "src/app/core/services/unit-of-measure.service"
 
 export function validateEmailExist(authService: AuthService): AsyncValidatorFn {
 
@@ -107,6 +108,21 @@ export function validateBookStoreExist(bookStoreService: BookstoreService): Asyn
         return bookStoreService.checkBookStoreExistByStoreName(storeName).pipe(
           map((result) => (result ? { bookStoreExists: true } : null)),
           catchError(() => of(null)),
+          finalize(() => control.markAllAsTouched())
+        )
+      })
+    )
+  }
+}
+
+export function validateUnitOfMeasureExist(uomService: UnitOfMeasureService): AsyncValidatorFn {
+  return (control: AbstractControl) => {
+    return control.valueChanges.pipe(
+      debounceTime(1000),
+      take(1),
+      switchMap(() => {
+        return uomService.checkUnitOfMeasureExist(control.value).pipe(
+        map((result) => (result ? { uomExists: true } : null)),
           finalize(() => control.markAllAsTouched())
         )
       })

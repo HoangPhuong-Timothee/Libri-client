@@ -6,9 +6,11 @@ import { ToastrService } from 'ngx-toastr';
 import { BehaviorSubject } from 'rxjs';
 import { BookStore } from 'src/app/core/models/book-store.model';
 import { ExportInventoriesRequest } from 'src/app/core/models/inventory.model';
+import { UnitOfMeasure } from 'src/app/core/models/unit-of-measure.model';
 import { BookService } from 'src/app/core/services/book.service';
 import { BookstoreService } from 'src/app/core/services/bookstore.service';
 import { InventoryService } from 'src/app/core/services/inventory.service';
+import { UnitOfMeasureService } from 'src/app/core/services/unit-of-measure.service';
 import { validateBookExist, validateBookInStore } from 'src/app/shared/helpers/validates/validate-exist';
 import { validatePastDate, validateQuantityInStore } from 'src/app/shared/helpers/validates/validate-inventory-inputs';
 
@@ -26,8 +28,9 @@ export class ExportInventoriesFormComponent implements OnInit {
     { field: 'location', header: 'Vị trí' },
     { field: 'details', header: 'Nội dung' }
   ]
-  headerColumns: string[] = ['Tên sách', 'Hiệu sách', 'Số lượng', 'Ngày xuất kho', 'Ghi chú', '']
+  headerColumns: string[] = ['Tên sách', 'Hiệu sách', 'Số lượng', 'Đơn vị tính', 'Ngày xuất kho', 'Ghi chú', '']
   bookStoresList: BookStore[] = []
+  measureUnitsList: UnitOfMeasure[] = []
   availableQuantity$ = new BehaviorSubject<number>(0)
   importFileMode: boolean = true
 
@@ -35,6 +38,7 @@ export class ExportInventoriesFormComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private bookStoreService: BookstoreService,
     private bookService: BookService,
+    private measureUnitService: UnitOfMeasureService,
     private inventoryService: InventoryService,
     private fb: FormBuilder,
     private toastr: ToastrService,
@@ -43,6 +47,7 @@ export class ExportInventoriesFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadAllBookStores()
+    this.loadAllMeasureUnits()
     this.initializeForm()
   }
 
@@ -56,6 +61,13 @@ export class ExportInventoriesFormComponent implements OnInit {
   loadAllBookStores() {
     this.bookStoreService.getAllBookStores().subscribe({
       next: response => this.bookStoresList = response,
+      error: error => console.log("Có lỗi xảy ra: ", error)
+    })
+  }
+
+  loadAllMeasureUnits() {
+    this.measureUnitService.getAllUnitOfMeasures().subscribe({
+      next: response => this.measureUnitsList = response,
       error: error => console.log("Có lỗi xảy ra: ", error)
     })
   }

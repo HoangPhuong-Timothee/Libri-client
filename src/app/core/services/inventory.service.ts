@@ -2,8 +2,7 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map, Observable, of } from "rxjs";
 import { environment } from "src/environments/environment";
-import { InventoryTransaction } from "../models/inventory-transaction.model";
-import { ExportInventoriesRequest, ImportInventoriesRequest, Inventory } from "../models/inventory.model";
+import { ExportInventoriesRequest, ImportInventoriesRequest, Inventory, InventoryTransaction } from "../models/inventory.model";
 import { Pagination } from "../models/pagination.model";
 import { InventoryParams, InventoryTransactionParams } from "../models/params.model";
 

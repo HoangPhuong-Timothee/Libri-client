@@ -1,0 +1,73 @@
+<h2 class="text-center text-uppercase fw-bold pt-3" mat-dialog-title>{{ data.title }}</h2>
+<mat-divider class="my-1"></mat-divider>
+<mat-dialog-content class="tw-p-3">
+  <div class="mb-1 col-12 text-end">
+    <button mat-button color="primary" (click)="changeMode()">
+      {{ importFileMode ? 'Nhập thủ công' : 'Tải file lên' }}
+    </button>
+  </div>
+  <form
+    *ngIf="!importFileMode"
+    [formGroup]="addUnitOfMeasureForm"
+    class="tw-p-4 tw-w-full"
+    (ngSubmit)="addNewUnitOfMeasure()"
+  >
+    <app-input-text
+      [formControl]="addUnitOfMeasureForm.controls['name']"
+      [label]="'Tên đơn vị'"
+    >
+    </app-input-text>
+    <app-text-area
+      [formControl]="addUnitOfMeasureForm.controls['description']"
+      [label]="'Mô tả'"
+      [maxLength]="255"
+    >
+    </app-text-area>
+    <app-input-text
+      [formControl]="addUnitOfMeasureForm.controls['conversionRate']"
+      [label]="'Quy đổi số lượng'"
+      type="number"
+    >
+    </app-input-text>
+    <select
+      formControlName="unitMappingId"
+      class="form-control"
+      [ngClass]="addUnitOfMeasureForm.get('unitMappingId')?.touched ? addUnitOfMeasureForm.get('unitMappingId')?.invalid ? 'is-invalid' : 'is-valid' : null"
+    >
+      <option value=""><span class="text-danger">* Chọn đơn vị quy đổi</span></option>
+      <option *ngFor="let unit of measureUnitsList" [value]="unit.id">{{ unit.name }}</option>
+    </select>
+    <div class="text-danger mt-1" *ngIf="addUnitOfMeasureForm.get('unitMappingId')?.touched">
+      <span *ngIf="addUnitOfMeasureForm.get('unitMappingId')?.errors?.['required']">
+        * Vui lòng chọn đơn vị quy đổi trong hệ thống
+      </span>
+    </div>
+    <div class="tw-flex tw-justify-end tw-gap-3">
+      <button mat-button color="warn" type="button" mat-dialog-close>Hủy</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="addUnitOfMeasureForm.invalid">
+        Thêm
+      </button>
+    </div>
+  </form>
+  <form *ngIf="importFileMode" (ngSubmit)="submitFile()">
+    <mat-dialog-content class="tw-p-3">
+      <input type="file" (change)="onFileSelected($event)">
+      <div class="tw-flex tw-justify-end tw-gap-3 mt-2">
+        <button class="me-2" mat-button color="warn" type="button" mat-dialog-close>Hủy</button>
+        <button mat-raised-button color="primary" type="submit">Thêm</button>
+      </div>
+      <div *ngIf="errorsList.length > 0" class="mt-3">
+        <hr />
+        <h2 mat-dialog-title class="text-danger text-uppercase fst-italic">* Thông tin lỗi:</h2>
+        <cdk-virtual-scroll-viewport itemSize="50" class="table-viewport">
+          <app-custom-table
+            [columns]="columns"
+            [dataSource]="errorsList"
+            [isErrorData]="true"
+          >
+          </app-custom-table>
+        </cdk-virtual-scroll-viewport>
+      </div>
+    </mat-dialog-content>
+  </form>
+</mat-dialog-content>

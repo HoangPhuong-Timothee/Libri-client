@@ -16,7 +16,7 @@
                     <app-checkout-review [appStepper]="appStepper"></app-checkout-review>
                 </cdk-step>
 
-                <cdk-step [label]="'Thanh toán'">
+                <cdk-step [label]="'Thanh toán'" [completed]="checkoutForm.get('paymentForm')?.valid">
                     <app-checkout-payment [checkoutForm]="checkoutForm"></app-checkout-payment>
                 </cdk-step>
 

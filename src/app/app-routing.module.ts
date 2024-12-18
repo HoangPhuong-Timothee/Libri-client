@@ -29,11 +29,6 @@ const routes: Routes = [
     loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule)
   },
   {
-    path: 'wishlist',
-    loadChildren: () => import('./features/wishlist/wishlist.module').then(m => m.WishlistModule),
-    data: { breadcrumb: 'Sách yêu thích' }
-  },
-  {
     path: 'basket',
     loadChildren: () => import('./features/basket/basket.module').then(m => m.BasketModule),
     data: { breadcrumb: 'Giỏ sách' }

@@ -53,7 +53,7 @@ export class ProfileComponent implements OnInit {
           postalCode: response.postalCode
         })
        } else {
-        this.toastr.warning("Bạn chưa cập nhật thông tin địa chỉ")
+        this.toastr.warning("Chưa cập nhật thông tin địa chỉ")
        }
       }
     })

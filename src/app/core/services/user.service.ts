@@ -59,4 +59,5 @@ export class UserService {
   modifyUserAddress(request: ModifyAddressRequest) {
     return this.http.put<Address>(`${environment.baseAPIUrl}/api/Users/address`, request)
   }
+
 }

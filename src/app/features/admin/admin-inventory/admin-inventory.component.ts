@@ -26,10 +26,11 @@ export class AdminInventoryComponent implements OnInit {
     { field: 'bookId', header: 'Mã sách' },
     { field: 'bookTitle' , header: 'Sách' },
     { field: 'quantity', header: 'Số lượng' },
+    { field: 'unitOfMeasure', header: 'Đơn vị' },
     { field: 'bookStatus', header: 'Tình trạng' },
     { field: 'storeName', header: 'Hiệu sách' },
-    { field: 'createInfo', header: 'Thông tin tạo' },
-    { field: 'updateInfo', header: 'Thông tin cập nhật' }
+    { field: 'createInfo', header: 'Tạo bởi' },
+    { field: 'updateInfo', header: 'Cập nhật bởi' }
   ]
   actions = [
     {

@@ -28,6 +28,9 @@ import { AdminUserComponent } from './admin-user/admin-user.component';
 import { AdminComponent } from './admin.component';
 import { OrderFilterDialogComponent } from './admin-order/order-filter-dialog/order-filter-dialog.component';
 import { OrderDetailsDialogComponent } from './admin-order/order-details-dialog/order-details-dialog.component';
+import { AdminUnitOfMeasureComponent } from './admin-unit-of-measure/admin-unit-of-measure.component';
+import { AddUnitOfMeasureFormComponent } from './admin-unit-of-measure/add-unit-of-measure-form/add-unit-of-measure-form.component';
+import { EditUnitOfMeasureFormComponent } from './admin-unit-of-measure/edit-unit-of-measure-form/edit-unit-of-measure-form.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +59,10 @@ import { OrderDetailsDialogComponent } from './admin-order/order-details-dialog/
     AddBookstoreFormComponent,
     EditBookstoreFormComponent,
     OrderFilterDialogComponent,
-    OrderDetailsDialogComponent
+    OrderDetailsDialogComponent,
+    AdminUnitOfMeasureComponent,
+    AddUnitOfMeasureFormComponent,
+    EditUnitOfMeasureFormComponent
   ],
   imports: [
     CommonModule,

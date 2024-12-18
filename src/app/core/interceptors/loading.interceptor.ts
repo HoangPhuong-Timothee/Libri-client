@@ -23,6 +23,7 @@ export class LoadingInterceptor implements HttpInterceptor {
         request.url.includes('author-exists') ||
         request.url.includes('publisher-exists') ||
         request.url.includes('bookstore-in-bookstore') ||
+        request.url.includes('unit-of-measure-exist') ||
         request.method === 'DELETE' ||
         request.method === 'POST' && request.url.includes('Orders')
       )
