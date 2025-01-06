@@ -1,9 +1,9 @@
 export interface UnitOfMeasure {
   id: number
   name: string
-  description: string
-  createInfo: string
-  updateInfo: string
+  description?: string
+  createInfo?: string
+  updateInfo?: string
 }
 
 export interface AddUnitOfMeasureRequest {

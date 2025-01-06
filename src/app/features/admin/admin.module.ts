@@ -31,6 +31,13 @@ import { OrderDetailsDialogComponent } from './admin-order/order-details-dialog/
 import { AdminUnitOfMeasureComponent } from './admin-unit-of-measure/admin-unit-of-measure.component';
 import { AddUnitOfMeasureFormComponent } from './admin-unit-of-measure/add-unit-of-measure-form/add-unit-of-measure-form.component';
 import { EditUnitOfMeasureFormComponent } from './admin-unit-of-measure/edit-unit-of-measure-form/edit-unit-of-measure-form.component';
+import { ImportGenreFormComponent } from './admin-genre/import-genre-form/import-genre-form.component';
+import { ImportAuthorFormComponent } from './admin-author/import-author-form/import-author-form.component';
+import { ImportPublisherFormComponent } from './admin-publisher/import-publisher-form/import-publisher-form.component';
+import { ImportMeasureUnitFormComponent } from './admin-unit-of-measure/import-measure-unit-form/import-measure-unit-form.component';
+import { ImportBookstoreFormComponent } from './admin-bookstore/import-bookstore-form/import-bookstore-form.component';
+import { ImportInventoriesManualFormComponent } from './admin-inventory/import-inventories-manual-form/import-inventories-manual-form.component';
+import { ExportInventoriesManualFormComponent } from './admin-inventory/export-inventories-manual-form/export-inventories-manual-form.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +69,14 @@ import { EditUnitOfMeasureFormComponent } from './admin-unit-of-measure/edit-uni
     OrderDetailsDialogComponent,
     AdminUnitOfMeasureComponent,
     AddUnitOfMeasureFormComponent,
-    EditUnitOfMeasureFormComponent
+    EditUnitOfMeasureFormComponent,
+    ImportGenreFormComponent,
+    ImportAuthorFormComponent,
+    ImportPublisherFormComponent,
+    ImportMeasureUnitFormComponent,
+    ImportBookstoreFormComponent,
+    ImportInventoriesManualFormComponent,
+    ExportInventoriesManualFormComponent
   ],
   imports: [
     CommonModule,

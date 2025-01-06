@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, of } from "rxjs";
+import { map, Observable, of, tap } from "rxjs";
 import { environment } from 'src/environments/environment';
 import { AddAuthorRequest, Author, UpdateAuthorRequest } from '../models/author.model';
 import { Pagination } from '../models/pagination.model';
@@ -19,11 +19,13 @@ export class AuthorService {
 
   constructor(private http: HttpClient) { }
 
-  getAllAuthors() {
+  getAllAuthors(searchTerm: string): Observable<Author[]> {
     if (this.authors.length > 0) {
       return of(this.authors);
     }
-    return this.http.get<Author[]>(`${environment.baseAPIUrl}/api/Authors`);
+    let params = new HttpParams()
+    if (searchTerm) params = params.append('searchTerm', searchTerm)
+    return this.http.get<Author[]>(`${environment.baseAPIUrl}/api/Authors`, { params })
   }
 
   getAuthorsForAdmin(useCache = true) {
@@ -59,21 +61,30 @@ export class AuthorService {
     return this.authorParams
   }
 
-  addNewAuthor(request: AddAuthorRequest) {
-    return this.http.post(`${environment.baseAPIUrl}/api/Authors`, request);
+  addNewAuthor(request: AddAuthorRequest): Observable<any> {
+    return this.http.post(`${environment.baseAPIUrl}/api/Authors`, request).pipe(
+      tap(() => {
+        this.authorCache = new Map()
+      })
+    )
   }
 
-  importAuthorsFromFile(file: File) {
+  importAuthorsFromFile(file: File): Observable<any> {
     const formData = new FormData()
     formData.append('file', file, file.name)
-    return this.http.post(`${environment.baseAPIUrl}/api/Authors/import-from-file`, formData, {
-      reportProgress: true,
-      observe: 'events'
-    })
+    return this.http.post(`${environment.baseAPIUrl}/api/Authors/import-from-file`, formData).pipe(
+      tap(() => {
+        this.authorCache = new Map()
+      })
+    )
   }
 
-  updateAuthor(request: UpdateAuthorRequest) {
-    return this.http.put(`${environment.baseAPIUrl}/api/Authors/${request.id}`, request.name)
+  updateAuthor(request: UpdateAuthorRequest): Observable<any> {
+    return this.http.put(`${environment.baseAPIUrl}/api/Authors/${request.id}`, request).pipe(
+      tap(() => {
+        this.authorCache = new Map()
+      })
+    )
   }
 
   deleteAuthor(id: number) {

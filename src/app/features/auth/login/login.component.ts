@@ -36,8 +36,7 @@ export class LoginComponent {
         this.router.navigateByUrl(this.returnUrl)
       },
       error: (error) => {
-        console.error(error)
-        this.toastr.error('Email hoặc tài khoảng không đúng!')
+        console.log(error)
       }
     })
   }

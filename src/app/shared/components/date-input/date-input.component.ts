@@ -10,7 +10,7 @@ import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 export class DateInputComponent implements ControlValueAccessor {
   @Input() label = ''
   @Input() maxDate: Date | undefined
-  bsConfig: Partial<BsDatepickerConfig> = {}
+  bsConfig: Partial<BsDatepickerConfig> = { }
   @Input() dateMode: 'date' | 'year' = 'date'
   isYearOnly = false
 

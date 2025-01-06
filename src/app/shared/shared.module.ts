@@ -35,6 +35,7 @@ import { BookItemComponent } from './components/book-item/book-item.component';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { CustomTableComponent } from './components/custom-table/custom-table.component';
 import { DateInputComponent } from './components/date-input/date-input.component';
+import { FileInputComponent } from './components/file-input/file-input.component';
 import { InputTextComponent } from './components/input-text/input-text.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
@@ -66,7 +67,8 @@ import { TruncateTitlePipe } from './pipes/truncate-title.pipe';
     StepperComponent,
     ConfirmationDialogComponent,
     DateInputComponent,
-    TextAreaComponent
+    TextAreaComponent,
+    FileInputComponent
   ],
   imports: [
     CommonModule,
@@ -148,7 +150,8 @@ import { TruncateTitlePipe } from './pipes/truncate-title.pipe';
     MatCardModule,
     MatAutocompleteModule,
     MatMenuModule,
-    TextAreaComponent
+    TextAreaComponent,
+    FileInputComponent
   ]
 })
 export class SharedModule { }

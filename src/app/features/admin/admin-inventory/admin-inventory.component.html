@@ -20,22 +20,40 @@
         <i class="fa-solid fa-rotate-left"></i>
       </button>
     </div>
-    <button mat-raised-button [matMenuTriggerFor]="menu">
-      <i class="fa-solid fa-bars"></i>
-    </button>
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item (click)="openImportInventoriesDialog()">
-        <i class="fa-solid fa-file-import"></i>
-        Nhập nho
+    <div class="d-flex gap-2">
+      <button mat-raised-button color="accent" [matMenuTriggerFor]="menu1">
+        <mat-icon>upload_file</mat-icon>
+        Nhập phiếu kho
       </button>
-      <button mat-menu-item (click)="openExportInventoriesDialog()">
-        <i class="fa-solid fa-file-export"></i>
-        Xuất kho
+      <mat-menu #menu1="matMenu">
+        <button mat-menu-item (click)="openImportInventoriesDialog()">
+          <i class="fa-solid fa-file-import"></i>
+          Nhập kho
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="openExportInventoriesDialog()">
+          <i class="fa-solid fa-file-export"></i>
+          Xuất kho
+        </button>
+      </mat-menu>
+      <button mat-raised-button color="primary" [matMenuTriggerFor]="menu2">
+        <mat-icon>add</mat-icon>
+        Tạo phiếu kho
       </button>
-    </mat-menu>
+      <mat-menu #menu2="matMenu">
+        <button mat-menu-item (click)="openImportInventoriesManualDialog()">
+          <i class="fa-solid fa-file-import"></i>
+          Nhập kho
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="openExportInventoriesManualDialog()">
+          <i class="fa-solid fa-file-export"></i>
+          Xuất kho
+        </button>
+      </mat-menu>
+    </div>
   </div>
 </div>
-
 <app-custom-table
     [columns]="columns"
     [actions]="actions"

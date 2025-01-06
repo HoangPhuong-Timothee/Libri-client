@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, of } from "rxjs";
+import { map, Observable, of, tap } from "rxjs";
 import { environment } from 'src/environments/environment';
 import { AddGenreRequest, Genre, UpdateGenreRequest } from '../models/genre.model';
 import { Pagination } from '../models/pagination.model';
@@ -28,7 +28,7 @@ export class GenreService {
 
   getGenresForAdmin(useCache = true): Observable<Pagination<Genre[]>> {
     if (!useCache) {
-      this.genreCache = new Map()
+      this.genreCache.clear()
     }
     if (this.genreCache.size > 0 && useCache) {
       if (this.genreCache.has(Object.values(this.genreParams).join('-'))) {
@@ -59,21 +59,30 @@ export class GenreService {
     return this.genreParams
   }
 
-  addNewGenre(request: AddGenreRequest) {
-    return this.http.post(`${environment.baseAPIUrl}/api/Genres`, request)
+  addNewGenre(request: AddGenreRequest): Observable<any> {
+    return this.http.post(`${environment.baseAPIUrl}/api/Genres`, request).pipe(
+      tap(() => {
+        this.genreCache = new Map()
+      })
+    )
   }
 
-  importGenresFromFile(file: File) {
+  importGenresFromFile(file: File): Observable<any> {
     const formData = new FormData()
     formData.append('file', file, file.name)
-    return this.http.post(`${environment.baseAPIUrl}/api/Genres/import-from-file`, formData, {
-      reportProgress: true,
-      observe: 'events'
-    })
+    return this.http.post(`${environment.baseAPIUrl}/api/Genres/import-from-file`, formData).pipe(
+      tap(() => {
+        this.genreCache = new Map()
+      })
+    )
   }
 
   updateGenre(request: UpdateGenreRequest) {
-    return this.http.put(`${environment.baseAPIUrl}/api/Genres/${request.id}`, request.name)
+    return this.http.put(`${environment.baseAPIUrl}/api/Genres/${request.id}`, request).pipe(
+      tap(() => {
+        this.genreCache = new Map()
+      })
+    )
   }
 
   deleteGenre(id: number) {

@@ -1,3 +1,5 @@
+import { BookImage } from "./book-image.model"
+
 export interface Book {
     id: number
     title: string
@@ -12,4 +14,6 @@ export interface Book {
     createInfo?: string
     updateInfo?: string
     isAvailable: boolean
+    isbn?: string
+    bookImages?: BookImage[]
 }

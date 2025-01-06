@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, of } from "rxjs";
+import { map, Observable, of, tap } from "rxjs";
 import { environment } from 'src/environments/environment';
 import { AddBookStoreRequest, BookStore, UpdateBookStoreRequest } from '../models/book-store.model';
 import { Pagination } from '../models/pagination.model';
@@ -12,7 +12,7 @@ import { BookStoreParams } from '../models/params.model';
 export class BookstoreService {
 
   bookStores: BookStore[] = []
-  bookStoresList: BookStore[] = []
+  bookStoreList: BookStore[] = []
   bookStorePagination?: Pagination<BookStore[]>
   bookStoreParams = new BookStoreParams()
   bookStoreCache = new Map<string, Pagination<BookStore[]>>()
@@ -38,7 +38,7 @@ export class BookstoreService {
     params = params.append('pageSize', this.bookStoreParams.pageSize)
     return this.http.get<Pagination<BookStore[]>>(`${environment.baseAPIUrl}/api/BookStores/admin/bookstores-list`, { params }).pipe(
       map(response => {
-        this.bookStoresList = [...this.bookStoresList, ...response.data]
+        this.bookStoreList = [...this.bookStoreList, ...response.data]
         this.bookStorePagination = response
         return response
       })
@@ -62,21 +62,30 @@ export class BookstoreService {
     )
   }
 
-  addNewBookStore(request: AddBookStoreRequest) {
-    return this.http.post(`${environment.baseAPIUrl}/api/BookStores`, request)
+  addNewBookStore(request: AddBookStoreRequest): Observable<any> {
+    return this.http.post(`${environment.baseAPIUrl}/api/BookStores`, request).pipe(
+      tap(() => {
+        this.bookStoreCache = new Map()
+      })
+    )
   }
 
-  importBookStoresFromFile(file: File) {
+  importBookStoresFromFile(file: File): Observable<any> {
     const formData = new FormData()
     formData.append('file', file, file.name)
-    return this.http.post(`${environment.baseAPIUrl}/api/BookStores/import-from-file`, formData, {
-      reportProgress: true,
-      observe: 'events'
-    })
+    return this.http.post(`${environment.baseAPIUrl}/api/BookStores/import-from-file`, formData).pipe(
+      tap(() => {
+        this.bookStoreCache = new Map()
+      })
+    )
   }
 
-  updateBookStore(request: UpdateBookStoreRequest) {
-    return this.http.put(`${environment.baseAPIUrl}/api/BookStores/${request.id}`, request)
+  updateBookStore(request: UpdateBookStoreRequest): Observable<any> {
+    return this.http.put(`${environment.baseAPIUrl}/api/BookStores/${request.id}`, request).pipe(
+      tap(() => {
+        this.bookStoreCache = new Map()
+      })
+    )
   }
 
   deleteBookStore(id: number) {

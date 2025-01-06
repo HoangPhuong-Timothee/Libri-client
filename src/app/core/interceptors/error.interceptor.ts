@@ -14,20 +14,15 @@ import { catchError, Observable, throwError } from 'rxjs';
 export class ErrorInterceptor implements HttpInterceptor {
   constructor(private router: Router, private toastr: ToastrService) {}
 
-  intercept(
-    request: HttpRequest<unknown>,
-    next: HttpHandler
-  ): Observable<HttpEvent<unknown>> {
+  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error) {
           if (error.status === 400) {
             if (error.error.errors) {
-              const detailErrors = error.error.errors.map((err: any) => ({
-                location: err.location,
-                details: err.details
-              }))
-              throw { status: 400, errors: detailErrors }
+              throw error.error
+            } else {
+              this.toastr.error(error.error.message, error.error.status.toString())
             }
           }
           if (error.status === 401) {
@@ -37,6 +32,7 @@ export class ErrorInterceptor implements HttpInterceptor {
             this.toastr.error(error.error.message, error.status.toString())
           }
           if (error.status === 404) {
+            this.toastr.error(error.error.message, error.error.statusCode.toString())
             this.router.navigateByUrl('/not-found');
           }
           if (error.status === 500) {

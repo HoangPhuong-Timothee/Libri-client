@@ -28,7 +28,7 @@ export class EditAuthorFormComponent implements OnInit {
 
   updateAuthorForm = this.fb.group({
     id: [this.data.id],
-    name: ['', [Validators.required]]
+    name: ['', [Validators.required, Validators.maxLength(50)]]
   })
 
   updateAuthor(): void {
@@ -36,14 +36,12 @@ export class EditAuthorFormComponent implements OnInit {
       let updateAuthorRequest = this.updateAuthorForm.value as UpdateAuthorRequest
       this.authorService.updateAuthor(updateAuthorRequest).subscribe({
         next: (response) => {
-          if (response) {
-            this.toastr.success("Cập nhật tác giả thành công")
-            this.dialogRef.close({ success: true })
-          }
+          this.toastr.success(response.message)
+          this.dialogRef.close({ success: true })
         },
         error: (error) => {
             console.log("Có lỗi xảy ra: ", error)
-            this.toastr.error('Cập nhật tác giả thất bại!')
+            this.toastr.error(error.message)
           }
       })
     }

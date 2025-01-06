@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { UpdateUnitOfMeasureRequest } from 'src/app/core/models/unit-of-measure.model';
+import { UnitOfMeasure, UpdateUnitOfMeasureRequest } from 'src/app/core/models/unit-of-measure.model';
 import { UnitOfMeasureService } from 'src/app/core/services/unit-of-measure.service';
 
 @Component({
@@ -11,6 +11,8 @@ import { UnitOfMeasureService } from 'src/app/core/services/unit-of-measure.serv
   styleUrls: ['./edit-unit-of-measure-form.component.css']
 })
 export class EditUnitOfMeasureFormComponent implements OnInit {
+
+   measureUnitsList: UnitOfMeasure[] = []
 
   constructor(
      private fb: FormBuilder,
@@ -23,31 +25,39 @@ export class EditUnitOfMeasureFormComponent implements OnInit {
   ngOnInit(): void {
     if (this.data.unitOfMeasure) {
       this.updateUnitOfMeasureForm.reset(this.data.unitOfMeasure)
+      this.updateUnitOfMeasureForm.controls['mappingUnitId'].setValue(0)
     }
+    this.loadAllMeasureUnits()
   }
 
   updateUnitOfMeasureForm = this.fb.group({
     id: [this.data.unitOfMeasure.id],
     name: ['', [Validators.required]],
-    description: ['', [Validators.maxLength(255)]]
+    description: ['', [Validators.maxLength(255)]],
+    conversionRate: [0, Validators.required],
+    mappingUnitId: [0, [Validators.min(1)]]
   })
 
-  updateUnitOfMeasure() {
-      if(this.updateUnitOfMeasureForm.valid) {
-        let updateUnitOfMeasureRequest = this.updateUnitOfMeasureForm.value as UpdateUnitOfMeasureRequest
-        this.uomService.updateUnitOfMeasure(updateUnitOfMeasureRequest).subscribe({
-          next: (response) => {
-            if (response) {
-              this.toastr.success("Cập nhật đơn vị đo thành công")
-              this.dialogRef.close({ success: true })
-            }
-          },
-          error: (error) => {
-              console.log("Có lỗi xảy ra: ", error)
-              this.toastr.error('Cập nhật đơn vị đo thất bại!')
-            }
-        })
-      }
-    }
+  loadAllMeasureUnits() {
+    this.uomService.getAllUnitOfMeasures().subscribe({
+      next: response => this.measureUnitsList = response,
+      error: error => console.log("Có lỗi xảy ra: ", error)
+    })
+  }
 
+  updateUnitOfMeasure() {
+    if(this.updateUnitOfMeasureForm.valid) {
+      let updateUnitOfMeasureRequest = this.updateUnitOfMeasureForm.value as UpdateUnitOfMeasureRequest
+      this.uomService.updateUnitOfMeasure(updateUnitOfMeasureRequest).subscribe({
+        next: (response) => {
+          this.toastr.success(response.message)
+          this.dialogRef.close({ success: true })
+        },
+        error: (error) => {
+            console.log("Có lỗi xảy ra: ", error)
+            this.toastr.error(error.message)
+          }
+      })
+    }
+  }
 }

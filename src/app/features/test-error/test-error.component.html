@@ -1,11 +1,11 @@
 <div class="container mt-5">
-    <button (click)="getServerError()" class="btn btn-outline-primary me-3">Test Internal Server error</button>
-    <button (click)="getNotFoundError()" class="btn btn-outline-primary me-3">Test Not found error</button>
-    <button (click)="getBadRequestError()" class="btn btn-outline-primary me-3">Test Bad Request error</button>
-    <button (click)="getValidationError()" class="btn btn-outline-primary me-3">Test validation error</button>
-    <div class="row mt-5" *ngIf="validationErrors.length > 0">
+    <button (click)="getServerError()" class="btn btn-outline-primary me-3">Thử lỗi Internal Server error</button>
+    <button (click)="getNotFoundError()" class="btn btn-outline-primary me-3">Thử lỗi không tìm thấy tài nguyên</button>
+    <button (click)="getBadRequestError()" class="btn btn-outline-primary me-3">Thử lỗi yêu cầu tồi</button>
+    <button (click)="getValidationError()" class="btn btn-outline-primary me-3">Thử lỗi dữ liệu không hợp lệ</button>
+    <div class="row mt-5" *ngIf="validateErrors.length > 0">
         <ul class="text-danger">
-            <li *ngFor="let error of validationErrors">{{ error }}</li>
+            <li *ngFor="let validateError of validateErrors">{{ validateError }}</li>
         </ul>
     </div>
 </div>

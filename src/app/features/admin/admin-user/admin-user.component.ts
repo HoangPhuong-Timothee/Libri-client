@@ -11,6 +11,7 @@ import { UserService } from 'src/app/core/services/user.service';
 })
 export class AdminUserComponent implements OnInit {
 
+  searchTerm: string = ''
   memberList: Member[] = []
   adminMemberParams: MemberParams
   totalUsers = 0
@@ -29,8 +30,8 @@ export class AdminUserComponent implements OnInit {
   ) { this.adminMemberParams = this.userService.getMemberParams() }
 
   ngOnInit(): void {
+    this.adminMemberParams.search = ''
     this.getUsersList()
-    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   getUsersList() {
@@ -53,4 +54,21 @@ export class AdminUserComponent implements OnInit {
     this.getUsersList()
   }
 
+  onSearch() {
+    const params = this.userService.getMemberParams()
+    params.search = this.searchTerm
+    params.pageIndex = 1
+    this.userService.setMemberParams(params)
+    this.adminMemberParams = params
+    this.getUsersList()
+  }
+
+  onReset() {
+    if (this.searchTerm) {
+      this.searchTerm = ''
+    }
+    this.adminMemberParams = new MemberParams()
+    this.userService.setMemberParams(this.adminMemberParams)
+    this.getUsersList()
+  }
 }

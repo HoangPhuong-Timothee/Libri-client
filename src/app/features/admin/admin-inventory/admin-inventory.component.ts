@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
-import { InventoryTransaction } from 'src/app/core/models/inventory-transaction.model';
-import { Inventory } from 'src/app/core/models/inventory.model';
+import { Inventory, InventoryTransaction } from 'src/app/core/models/inventory.model';
 import { InventoryParams } from 'src/app/core/models/params.model';
 import { InventoryService } from 'src/app/core/services/inventory.service';
 import { ExportInventoriesFormComponent } from './export-inventories-form/export-inventories-form.component';
+import { ExportInventoriesManualFormComponent } from './export-inventories-manual-form/export-inventories-manual-form.component';
 import { ImportInventoriesFormComponent } from './import-inventories-form/import-inventories-form.component';
+import { ImportInventoriesManualFormComponent } from './import-inventories-manual-form/import-inventories-manual-form.component';
 import { InventoryFilterDialogComponent } from './inventory-filter-dialog/inventory-filter-dialog.component';
 import { InventoryTransactionDialogComponent } from './inventory-transaction-dialog/inventory-transaction-dialog.component';
 
@@ -24,13 +25,34 @@ export class AdminInventoryComponent implements OnInit {
   totalInventories: number = 0
   columns = [
     { field: 'bookId', header: 'Mã sách' },
-    { field: 'bookTitle' , header: 'Sách' },
+    { field: 'bookTitle', header: 'Sách' },
     { field: 'quantity', header: 'Số lượng' },
     { field: 'unitOfMeasure', header: 'Đơn vị' },
-    { field: 'bookStatus', header: 'Tình trạng' },
+    {
+      field: 'inventoryStatus',
+      header: 'Tình trạng kho',
+      class: (row: Inventory) => {
+        if (row.quantity >= 1 && row.quantity <= 20) return 'rounded text-white p-2 bg-warning fw-bold border border-warning'
+        if (row.quantity > 20) return 'rounded text-white p-2 bg-success fw-bold border border-success'
+        if (row.quantity < 1) return 'rounded text-white p-2 bg-danger fw-bold border border-danger'
+        return ''
+      }
+    },
     { field: 'storeName', header: 'Hiệu sách' },
-    { field: 'createInfo', header: 'Tạo bởi' },
-    { field: 'updateInfo', header: 'Cập nhật bởi' }
+    {
+      field: 'createInfo',
+      header: 'Tạo bởi',
+      class: () => {
+        return 'fst-italic'
+      }
+    },
+    {
+      field: 'updateInfo',
+      header: 'Cập nhật bởi',
+      class: () => {
+        return 'fst-italic'
+      }
+  }
   ]
   actions = [
     {
@@ -38,7 +60,7 @@ export class AdminInventoryComponent implements OnInit {
       icon: 'visibility',
       tooltip: 'Xem lịch sử xuất/nhập kho của sách',
       action: (row: any) => {
-        this.openBookInventoryTransactionsDialog(row.bookId, row.bookTitle, row.storeName)
+        this.openBookInventoryTransactionsDialog(row)
       }
     }
   ]
@@ -52,6 +74,7 @@ export class AdminInventoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.inventoryParams.search = ''
     this.getAllBookInventories()
   }
 
@@ -62,18 +85,17 @@ export class AdminInventoryComponent implements OnInit {
         this.totalInventories = response.count
       },
       error: error => {
-        console.log(error)
+        console.log("Có lỗi: ", error)
       }
     })
   }
 
   openImportInventoriesDialog() {
     const dialog = this.dialog.open(ImportInventoriesFormComponent, {
-      minWidth: '500px',
+      minWidth: '200px',
       data: {
-        title: 'Nhập kho'
-      },
-      panelClass: 'dynamic-dialog'
+        title: 'Nhập phiếu nhập kho'
+      }
     });
     dialog.afterClosed().subscribe({
       next: (result) => {
@@ -90,11 +112,50 @@ export class AdminInventoryComponent implements OnInit {
 
   openExportInventoriesDialog() {
     const dialog = this.dialog.open(ExportInventoriesFormComponent, {
-      minWidth: '400px',
+      minWidth: '200px',
       data: {
-        title: 'Xuất kho'
-      },
-      panelClass: 'dynamic-dialog'
+        title: 'Nhập phiếu xuất kho'
+      }
+    });
+    dialog.afterClosed().subscribe({
+      next: (result) => {
+        if (result && result.exportSuccess) {
+          const params = this.inventoryService.getInventoryParams()
+          params.pageIndex = 1
+          this.inventoryService.setInventoryParams(params)
+          this.inventoryParams = params
+          this.getAllBookInventories()
+        }
+      }
+    })
+  }
+
+  openImportInventoriesManualDialog() {
+    const dialog = this.dialog.open(ImportInventoriesManualFormComponent, {
+      minWidth: '1500px',
+      data: {
+        title: 'Tạo phiếu nhập kho'
+      }
+    });
+    dialog.afterClosed().subscribe({
+      next: (result) => {
+        if (result && result.importSucess) {
+          const params = this.inventoryService.getInventoryParams()
+          params.pageIndex = 1
+          this.inventoryService.setInventoryParams(params)
+          this.inventoryParams = params
+          this.getAllBookInventories()
+        }
+      }
+    })
+  }
+
+  openExportInventoriesManualDialog() {
+    const dialog = this.dialog.open(ExportInventoriesManualFormComponent, {
+      minWidth: '1500px',
+      data: {
+        title: 'Tạo phiếu xuất kho'
+      }
     });
     dialog.afterClosed().subscribe({
       next: (result) => {
@@ -112,10 +173,10 @@ export class AdminInventoryComponent implements OnInit {
   openFilterDialog() {
     const dialog = this.dialog.open(InventoryFilterDialogComponent, {
       minWidth: '500px',
-      autoFocus: false,
       data: {
         selectedGenreId: this.inventoryParams.genreId,
-        selectedBookStoreId: this.inventoryParams.bookStoreId
+        selectedBookStoreId: this.inventoryParams.bookStoreId,
+        selectedInventoryStatus: this.inventoryParams.inventoryStatus
       }
     })
     dialog.afterClosed().subscribe({
@@ -124,6 +185,7 @@ export class AdminInventoryComponent implements OnInit {
           const params = this.inventoryService.getInventoryParams()
           params.genreId = result.selectedGenreId
           params.bookStoreId = result.selectedBookStoreId
+          params.inventoryStatus = result.selectedInventoryStatus
           params.pageIndex = 1
           this.inventoryService.setInventoryParams(params)
           this.inventoryParams = params
@@ -133,14 +195,13 @@ export class AdminInventoryComponent implements OnInit {
     })
   }
 
-  openBookInventoryTransactionsDialog(bookId: number, bookTitle: string, storeName: string) {
+  openBookInventoryTransactionsDialog(inventory: Inventory) {
     this.dialog.open(InventoryTransactionDialogComponent, {
       minWidth: '1200px',
       maxHeight: '500px',
       data: {
-        title: `Lịch sử xuất/nhập kho của sách '${bookTitle}'`,
-        bookId,
-        storeName
+        title: `Lịch sử xuất/nhập kho của sách '${inventory.bookTitle}'`,
+        inventory
       }
     })
   }

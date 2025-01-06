@@ -8,6 +8,7 @@ import { DialogService } from 'src/app/core/services/dialog.service';
 import { UnitOfMeasureService } from 'src/app/core/services/unit-of-measure.service';
 import { AddUnitOfMeasureFormComponent } from './add-unit-of-measure-form/add-unit-of-measure-form.component';
 import { EditUnitOfMeasureFormComponent } from './edit-unit-of-measure-form/edit-unit-of-measure-form.component';
+import { ImportMeasureUnitFormComponent } from './import-measure-unit-form/import-measure-unit-form.component';
 
 @Component({
   selector: 'app-admin-unit-of-measure',
@@ -41,7 +42,7 @@ export class AdminUnitOfMeasureComponent implements OnInit {
       icon: 'delete',
       tooltip: 'Xóa đơn vị đo',
       action: (row: any) => {
-        this.openDeleteUnitOfMeasureDialog(row.id)
+        this.openDeleteUnitOfMeasureDialog(row)
       }
     }
   ]
@@ -54,6 +55,7 @@ export class AdminUnitOfMeasureComponent implements OnInit {
   ) { this.adminUnitOfMeasureParams = uomService.getUnitOfMeasureParams() }
 
   ngOnInit(): void {
+    this.adminUnitOfMeasureParams.search = ''
     this.getAllUnitOfMeasuresForAdmin()
   }
 
@@ -64,7 +66,7 @@ export class AdminUnitOfMeasureComponent implements OnInit {
         this.totalUnitOfMeasures = response.count
       },
       error: error => {
-        console.log(error)
+        console.log("Có lỗi: ", error)
       }
     })
   }
@@ -73,7 +75,7 @@ export class AdminUnitOfMeasureComponent implements OnInit {
     const dialog = this.dialog.open(AddUnitOfMeasureFormComponent, {
         minWidth: '500px',
         data: {
-            title: 'Thêm đơn vị đo'
+            title: 'Thêm đơn vị'
         }
     })
     dialog.afterClosed().subscribe({
@@ -89,11 +91,31 @@ export class AdminUnitOfMeasureComponent implements OnInit {
     })
   }
 
+  openImportUnitOfMeasureDialog() {
+    const dialog = this.dialog.open(ImportMeasureUnitFormComponent, {
+        minWidth: '200px',
+        data: {
+            title: 'Nhập dữ liệu đơn vị'
+        }
+    })
+    dialog.afterClosed().subscribe({
+      next: (result) => {
+        if (result && result.importSuccess) {
+          const params = this.uomService.getUnitOfMeasureParams()
+          params.pageIndex = 1
+          this.uomService.setUnitOfMeasureParams(params)
+          this.adminUnitOfMeasureParams = params
+          this.getAllUnitOfMeasuresForAdmin()
+        }
+      }
+    })
+  }
+
   openUpdateUnitOfMeasureDialog(unitOfMeasure: UnitOfMeasure) {
     const dialog = this.dialog.open(EditUnitOfMeasureFormComponent, {
       minWidth: '500px',
       data: {
-        title: 'Chỉnh sửa đơn vị đo',
+        title: `Chỉnh sửa đơn vị '${unitOfMeasure.name}'`,
         unitOfMeasure
       }
     })
@@ -118,13 +140,13 @@ export class AdminUnitOfMeasureComponent implements OnInit {
       `Bạn chắc chắn muốn xóa đơn vị "${unitOfMeasure.name}"?`
     )
     if (confirmed) {
-      this.uomService.deleteunitOfMeasure(unitOfMeasure.id).subscribe({
-        next: async () => {
+      this.uomService.deleteUnitOfMeasure(unitOfMeasure.id).subscribe({
+        next: () => {
           this.unitOfMeasuresList = this.unitOfMeasuresList.filter(uom => uom.id !== unitOfMeasure.id)
           this.toastr.success(`Xóa thể đơn vị "${unitOfMeasure.name}" thành công`)
         },
         error: error => {
-          console.log("Có lỗi xảy ra: ", error.errors, error.message)
+          console.log("Có lỗi xảy ra: ", error)
         }
       })
     }

@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, of } from 'rxjs';
+import { map, Observable, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Pagination } from '../models/pagination.model';
 import { UnitOfMeasureParams } from '../models/params.model';
@@ -19,20 +19,14 @@ export class UnitOfMeasureService {
 
   constructor(private http: HttpClient) { }
 
-  getAllUnitOfMeasures() {
-    if (this.unitOfMeasures.length > 0) {
-      return of(this.unitOfMeasures)
-    }
-    return this.http.get<UnitOfMeasure[]>(`${environment.baseAPIUrl}/api/UnitOfMeasures`)
-  }
-
   getUnitOfMeasuresForAdmin(useCache = true): Observable<Pagination<UnitOfMeasure[]>> {
     if (!useCache) {
-      this.unitOfMeasureCache = new Map()
+      this.unitOfMeasureCache.clear()
     }
     if (this.unitOfMeasureCache.size > 0 && useCache) {
       if (this.unitOfMeasureCache.has(Object.values(this.unitOfMeasureParams).join('-'))) {
         this.unitOfMeasurePagination = this.unitOfMeasureCache.get(Object.values(this.unitOfMeasureParams).join('-'))
+
         if(this.unitOfMeasurePagination) {
           return of(this.unitOfMeasurePagination)
         }
@@ -59,25 +53,41 @@ export class UnitOfMeasureService {
     return this.unitOfMeasureParams
   }
 
-  addNewUnitOfMeasure(request: AddUnitOfMeasureRequest) {
-    return this.http.post(`${environment.baseAPIUrl}/api/UnitOfMeasures`, request)
+  getAllUnitOfMeasures() {
+    if (this.unitOfMeasures.length > 0) {
+      return of(this.unitOfMeasures)
+    }
+    return this.http.get<UnitOfMeasure[]>(`${environment.baseAPIUrl}/api/UnitOfMeasures`)
   }
 
-  importUnitOfMeasuresFromFile(file: File) {
+  addNewUnitOfMeasure(request: AddUnitOfMeasureRequest): Observable<any> {
+    return this.http.post(`${environment.baseAPIUrl}/api/UnitOfMeasures`, request).pipe(
+      tap(() => {
+        this.unitOfMeasureCache = new Map()
+      })
+    )
+  }
+
+  importUnitOfMeasuresFromFile(file: File): Observable<any> {
     const formData = new FormData()
     formData.append('file', file, file.name)
-    return this.http.post(`${environment.baseAPIUrl}/api/UnitOfMeasures/import-from-file`, formData, {
-      reportProgress: true,
-      observe: 'events'
-    })
+    return this.http.post(`${environment.baseAPIUrl}/api/UnitOfMeasures/import-from-file`, formData).pipe(
+      tap(() => {
+        this.unitOfMeasureCache = new Map()
+      })
+    )
   }
 
-  updateUnitOfMeasure(request: UpdateUnitOfMeasureRequest) {
-    return this.http.put(`${environment.baseAPIUrl}/api/unitOfMeasures/${request.id}`, request)
+  updateUnitOfMeasure(request: UpdateUnitOfMeasureRequest): Observable<any> {
+    return this.http.put(`${environment.baseAPIUrl}/api/UnitOfMeasures/${request.id}`, request).pipe(
+      tap(() => {
+        this.unitOfMeasureCache = new Map()
+      })
+    )
   }
 
-  deleteunitOfMeasure(id: number) {
-    return this.http.delete(`${environment.baseAPIUrl}/api/unitOfMeasures/soft-delete/${id}`)
+  deleteUnitOfMeasure(id: number) {
+    return this.http.delete(`${environment.baseAPIUrl}/api/UnitOfMeasures/soft-delete/${id}`)
   }
 
   checkUnitOfMeasureExist(name: string) {

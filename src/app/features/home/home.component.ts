@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Book } from 'src/app/core/models/book.model';
 import { BookService } from 'src/app/core/services/book.service';

@@ -2,12 +2,32 @@
 <mat-divider class="my-1"></mat-divider>
 <div class="d-flex">
 
-  <div class="filters">
+  <div *ngIf="transactionTypes.length > 0 && measureUnitsList.length > 0" class="filters">
     <label for="transactionType">Loại:</label>
-    <select class="py-2" id="transactionType" [(ngModel)]="selectedType">
-      <option value="">Tất cả</option>
-      <option value="import">Nhập kho</option>
-      <option value="export">Xuất kho</option>
+    <select
+      class="py-2"
+      id="transactionType"
+      [(ngModel)]="selectedTransactionType"
+    >
+      <option
+        *ngFor="let type of transactionTypes"
+        [value]="type.value"
+      >
+      {{ type.name }}
+    </option>
+    </select>
+    <label for="transactionMeasureUnit">Đơn vị:</label>
+    <select
+      [(ngModel)]="selectedMeasureUnitId"
+      class="py-2"
+      id="transactionMeasureUnit"
+    >
+      <option
+        *ngFor="let unit of measureUnitsList"
+        [value]="+unit.id"
+      >
+      {{ unit.name }}
+      </option>
     </select>
 
     <label for="startDate">Từ ngày:</label>
@@ -17,6 +37,7 @@
     <input type="date" id="endDate" [(ngModel)]="endDate">
 
     <div class="d-flex mt-2">
+      <button mat-button color="warn" mat-dialog-close="">Đóng</button>
       <button mat-raised-button color="primary" (click)="applyFilters()">Áp dụng</button>
       <button mat-button color="warn" (click)="onReset()"><i class="fa-solid fa-rotate-left"></i></button>
     </div>
@@ -43,18 +64,17 @@
         >
           <div class="card">
             <div class="card-header">
-              Mã : {{ transaction.transactionId }} -
+              Mã phiếu: {{ transaction.transactionId }} -
               <span *ngIf="!transaction.showDetails"><strong>{{ transaction.transactionType }}</strong> - </span>
               {{ transaction.transactionDate }} bởi
               <span class="fst-italic">{{ transaction.performedBy }}</span>
             </div>
             <div class="card-body" *ngIf="transaction.showDetails">
-              <h5 class="card-title">{{transaction.transactionType}} - Số lượng: {{ transaction.quantity }}</h5>
-              <p class="card-text"><strong>Hiệu sách:</strong> {{ transaction.storeName }}</p>
-              <p class="card-text"><strong>Tại:</strong> {{ transaction.storeAddress }}</p>
+              <h5 class="card-title">{{transaction.transactionType}} theo {{ transaction.measureUnit }} - Số lượng: {{ transaction.quantity }}</h5>
+              <p class="card-text"><strong>{{ transaction.storeName }}</strong> - {{ transaction.storeAddress }}</p>
             </div>
             <div class="card-footer text-danger fst-italic" *ngIf="transaction.showDetails">
-              {{ transaction.notes }}
+              {{ transaction.transactionNotes }}
             </div>
           </div>
         </div>
@@ -66,18 +86,17 @@
         >
           <div class="card">
             <div class="card-header">
-              Mã : {{ transaction.transactionId }} -
+              Mã phiếu: {{ transaction.transactionId }} -
               <span *ngIf="!transaction.showDetails"><strong>{{ transaction.transactionType }}</strong> - </span>
               {{ transaction.transactionDate }} bởi
               <span class="fst-italic">{{ transaction.performedBy }}</span>
             </div>
             <div class="card-body" *ngIf="transaction.showDetails">
-              <h5 class="card-title">{{transaction.transactionType}} - Số lượng: {{ transaction.quantity }}</h5>
-              <p class="card-text"><strong>Hiệu sách:</strong> {{ transaction.storeName }}</p>
-              <p class="card-text"><strong>Tại:</strong> {{ transaction.storeAddress }}</p>
+              <h5 class="card-title">{{ transaction.transactionType }} theo {{ transaction.measureUnit }} - Số lượng: {{ transaction.quantity }}</h5>
+              <p class="card-text"><strong>{{ transaction.storeName }}</strong> - {{ transaction.storeAddress }}</p>
             </div>
-            <div class="card-footer text-danger fst-italic" *ngIf="transaction.notes && transaction.showDetails">
-              {{ transaction.notes }}
+            <div class="card-footer text-danger fst-italic" *ngIf="transaction.transactionNotes && transaction.showDetails">
+              {{ transaction.transactionNotes }}
             </div>
           </div>
         </div>
@@ -86,4 +105,3 @@
   </div>
 </div>
 <mat-divider class="my-1"></mat-divider>
-<button mat-button color="warn" mat-dialog-close="">Đóng</button>

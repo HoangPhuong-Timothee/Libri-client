@@ -1,4 +1,5 @@
 export class MemberParams {
+  search = ''
   pageIndex = 1
   pageSize = 20
 }
@@ -43,9 +44,11 @@ export class InventoryParams {
   pageIndex = 1
   pageSize = 20
   search = ''
+  inventoryStatus = ''
 }
 
 export class InventoryTransactionParams {
+  measureUnitId?: number
   transactionType?: string
   startDate?: Date
   endDate?: Date
@@ -67,4 +70,12 @@ export class UnitOfMeasureParams {
   pageIndex = 1
   pageSize = 20
   search = ''
+}
+
+export class ValidateBookQuantityInBookStoreParams {
+  bookStoreId = 0
+  unitOfMeasureId = 0
+  inputQuantity = 0
+  bookTitle = ''
+  isbn = ''
 }

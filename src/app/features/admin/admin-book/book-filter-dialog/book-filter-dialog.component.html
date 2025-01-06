@@ -27,7 +27,8 @@
           </mat-radio-button>
         </mat-radio-group>
       </div>
-      <div class="col-12">
+      <mat-divider></mat-divider>
+      <div class="col-12 mt-2">
         <h4 class="font-semibold text-xl text-primary">Tác giả: </h4>
         <mat-form-field appearance="fill">
           <mat-label>Tìm kiếm tác giả</mat-label>
@@ -45,7 +46,8 @@
       </div>
     </div>
   </div>
-  <div class="p-4">
-    <button class="btn btn-danger d-flex justify-content-center" type="submit">Áp dụng bộ lọc</button>
+  <div class="p-4 d-flex justify-content-center">
+    <button mat-button color="warn" mat-dialog-close="">Đóng</button>
+    <button mat-raised-button color="primary" class="ms-2" type="submit">Áp dụng bộ lọc</button>
   </div>
 </form>

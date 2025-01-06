@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, of } from "rxjs";
+import { map, Observable, of, tap } from "rxjs";
 import { environment } from 'src/environments/environment';
 import { Pagination } from '../models/pagination.model';
 import { PublisherParams } from '../models/params.model';
@@ -12,7 +12,7 @@ import { AddPublisherRequest, Publisher, UpdatePublisherRequest } from '../model
 export class PublisherService {
 
   publishers: Publisher[] = []
-  publishersList: Publisher[] = []
+  publisherList: Publisher[] = []
   publisherPagination?: Pagination<Publisher[]>
   publisherParams = new PublisherParams()
   publisherCache = new Map<string, Pagination<Publisher[]>>()
@@ -28,7 +28,7 @@ export class PublisherService {
 
   getPublishersForAdmin(useCache = true): Observable<Pagination<Publisher[]>> {
     if (!useCache) {
-      this.publisherCache = new Map()
+      this.publisherCache.clear()
     }
     if (this.publisherCache.size > 0 && useCache) {
       if (this.publisherCache.has(Object.values(this.publisherParams).join('-'))) {
@@ -44,7 +44,7 @@ export class PublisherService {
     params = params.append('pageSize', this.publisherParams.pageSize)
     return this.http.get<Pagination<Publisher[]>>(`${environment.baseAPIUrl}/api/Publishers/admin/publishers-list`, { params }).pipe(
       map(response => {
-        this.publishersList = [...this.publishersList, ...response.data]
+        this.publisherList = [...this.publisherList, ...response.data]
         this.publisherPagination = response
         return response
       })
@@ -59,21 +59,30 @@ export class PublisherService {
     return this.publisherParams
   }
 
-  addNewPublisher(request: AddPublisherRequest) {
-    return this.http.post(`${environment.baseAPIUrl}/api/Publishers`, request)
+  addNewPublisher(request: AddPublisherRequest): Observable<any> {
+    return this.http.post(`${environment.baseAPIUrl}/api/Publishers`, request).pipe(
+      tap(() => {
+        this.publisherCache = new Map()
+      })
+    )
   }
 
-  importPublishersFromFile(file: File) {
+  importPublishersFromFile(file: File): Observable<any> {
     const formData = new FormData()
     formData.append('file', file, file.name)
-    return this.http.post(`${environment.baseAPIUrl}/api/Publishers/import-from-file`, formData, {
-      reportProgress: true,
-      observe: 'events'
-    })
+    return this.http.post(`${environment.baseAPIUrl}/api/Publishers/import-from-file`, formData).pipe(
+      tap(() => {
+        this.publisherCache = new Map()
+      })
+    )
   }
 
-  updatePublisher(request: UpdatePublisherRequest) {
-    return this.http.put(`${environment.baseAPIUrl}/api/Publishers/${request.id}`, request.name)
+  updatePublisher(request: UpdatePublisherRequest): Observable<any> {
+    return this.http.put(`${environment.baseAPIUrl}/api/Publishers/${request.id}`, request).pipe(
+      tap(() => {
+        this.publisherCache = new Map()
+      })
+    )
   }
 
   deletePublisher(id: number) {

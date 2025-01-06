@@ -1,5 +1,4 @@
-import { HttpEventType } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { BookService } from 'src/app/core/services/book.service';
@@ -9,36 +8,26 @@ import { BookService } from 'src/app/core/services/book.service';
   templateUrl: './add-books-form.component.html',
   styleUrls: ['./add-books-form.component.css'],
 })
-export class AddBooksFormComponent implements OnInit {
+export class AddBooksFormComponent {
 
-  errorsList: any
+  fileName: string = 'Chọn file tải lên.'
+  errorsList: any[] = []
   selectedFile: File | null = null
-  uploadedPercent: number = 0
   columns = [
     { field: 'location', header: 'Vị trí' },
-    { field: 'message', header: 'Nội dung' }
+    { field: 'details', header: 'Nội dung' }
   ]
 
   constructor(
     private bookService: BookService,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private uploadFileDialogRef: MatDialogRef<AddBooksFormComponent>,
+    private dialogRef: MatDialogRef<AddBooksFormComponent>,
     private toastr: ToastrService
-  ) {}
-
-  ngOnInit(): void {
-    if (this.data && this.data.errors) {
-      this.errorsList = this.data.errors
-    }
-  }
+  ) { }
 
   onFileSelected(event: any) {
-    const file = event.target.files[0]
-    if (!file) {
-      this.toastr.warning('Vui lòng chọn file để tải lên.')
-      return
-    }
-    this.selectedFile = file
+    this.selectedFile = event.target.files[0]
+    this.fileName = this.selectedFile ? this.selectedFile.name : 'Chọn file tải lên.'
   }
 
   onSubmit() {
@@ -47,22 +36,17 @@ export class AddBooksFormComponent implements OnInit {
       return
     }
     this.bookService.importBooksFromFile(this.selectedFile).subscribe({
-      next: (event) => {
-        if (event.type === HttpEventType.Response) {
-          if (event.status === 400) {
-            this.toastr.error('Có lỗi xảy ra! File không đúng yêu cầu!')
-            this.uploadFileDialogRef.close({ errors: event.body })
-          } else {
-            this.toastr.success("Thêm dữ liệu từ file thành công")
-            this.uploadFileDialogRef.close({ fileUploaded: true })
-          }
-        }
+      next: (response) => {
+        this.toastr.success(response.message)
+        this.dialogRef.close({ success: true })
       },
       error: (error) => {
-        console.log(error)
-        if (error.status === 400 && error.errors) {
-          this.toastr.error('Có lỗi xảy ra! File không đúng yêu cầu!')
-          this.uploadFileDialogRef.close({ errors: error.errors })
+        if (error.statusCode === 400) {
+          this.toastr.error(error.message)
+          this.errorsList = error.errors
+        } else {
+          this.toastr.error('Lỗi không xác định! Vui lòng thử lại.')
+          this.dialogRef.close()
         }
       }
     })

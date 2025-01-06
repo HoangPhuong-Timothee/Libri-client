@@ -8,9 +8,23 @@ import { PageEvent } from '@angular/material/paginator';
 })
 export class CustomTableComponent {
 
-  @Input() columns: { field: string | string[], header: string, haveImage?: boolean, imageUrl?: string, pipe?: string, pipeArgs?: any }[] = []
+  @Input() columns: {
+    field: string | string[],
+    header: string,
+    haveImage?: boolean,
+    imageUrl?: string,
+    pipe?: string,
+    pipeArgs?: any,
+    class?: (row: any) => string
+  }[] = []
   @Input() dataSource: any[] = []
-  @Input() actions: { label: string, icon: string, tooltip: string, action: (row: any) => void, disabled?: (row: any) => boolean }[] = []
+  @Input() actions: {
+    label: string,
+    icon: string,
+    tooltip: string,
+    action: (row: any) => void,
+    disabled?: (row: any) => boolean
+  }[] = []
   @Input() totalItems: number = 0
   @Input() pageSize: number = 20
   @Input() pageIndex: number = 0
@@ -27,6 +41,10 @@ export class CustomTableComponent {
 
   onAction(action: (row: any) => void, row: any) {
     action(row)
+  }
+
+  getCellClass(row: any, column: any): string {
+    return column.class ? column.class(row) : ''
   }
 
   getCellValue(row: any, column: any) {

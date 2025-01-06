@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { UpdateAuthorRequest } from 'src/app/core/models/author.model';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -9,9 +11,12 @@ import { environment } from 'src/environments/environment';
 })
 export class TestErrorComponent {
 
-  validationErrors: string[] = []
+  validateErrors: string[] = []
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private toastr: ToastrService
+  ) { }
 
   getNotFoundError() {
     this.http.get(`${environment.baseAPIUrl}/api/Bugs/not-found`).subscribe({
@@ -29,17 +34,21 @@ export class TestErrorComponent {
 
   getBadRequestError() {
     this.http.get(`${environment.baseAPIUrl}/api/Bugs/bad-request`).subscribe({
-      next: response => console.log(response),
-      error: error => console.log(error)
+      next: (response) => console.log(response),
+      error: (error) => console.log(error)
     })
   }
 
   getValidationError() {
-    this.http.get(`${environment.baseAPIUrl}/api/Books/one`).subscribe({
+    const request: UpdateAuthorRequest = {
+      id: 1,
+      name: 'fdsjflkdsflkdsfjlskdfjlksdfjlksfjklsjlfkdsjlkfjdslkfjldskfjlkdsfjdsfkldsjflkdsfjlkdsfjlkdsfjlkdsjflkdsflkds'
+    }
+    this.http.put(`${environment.baseAPIUrl}/api/Genres/${request.id}`, request).subscribe({
       next: response => console.log(response),
       error: error => {
-        console.log(error);
-        this.validationErrors = error.errors;
+        this.toastr.error(error.message, error.statusCode)
+        this.validateErrors = error.errors
       }
     })
   }

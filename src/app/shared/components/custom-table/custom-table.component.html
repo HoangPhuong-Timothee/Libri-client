@@ -11,12 +11,12 @@
       </thead>
       <tbody>
         <tr *ngFor="let row of dataSource" class="border-bottom">
-          <td *ngFor="let column of columns" class="py-2" style="max-width: 350px;">
+          <td *ngFor="let column of columns" class="py-2" style="max-width: 340px;">
             <div *ngIf="column.haveImage" class="d-flex align-items-center">
-              <img src="{{ row[column.field[1]] }}" alt="book image" style="width: 70px; height: auto;">
+              <img [src]="row[column.field[1]]" alt="book image" style="width: 70px; height: auto;">
               <span class="ms-2">{{ row[column.field[0]] }}</span>
             </div>
-            {{ getCellValue(row, column) }}
+            <span [ngClass]="getCellClass(row, column)">{{ getCellValue(row, column) }}</span>
           </td>
           <td class="py-2 px-4 bg-secondary text-white" *ngIf="actions.length">
             <button mat-icon-button [matMenuTriggerFor]="menu">

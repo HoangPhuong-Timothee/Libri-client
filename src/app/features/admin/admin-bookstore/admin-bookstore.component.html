@@ -16,7 +16,11 @@
         <i class="fa-solid fa-rotate-left"></i>
       </button>
     </div>
-    <div>
+    <div class="d-flex gap-2">
+      <button mat-raised-button color="success" (click)="openImportBookStoreDialog()">
+        <mat-icon>upload_file</mat-icon>
+        Nhập dữ liệu
+      </button>
       <button mat-raised-button color="primary" (click)="openAddNewBookStoreDialog()">
         <mat-icon>add</mat-icon>
         Thêm hiệu sách

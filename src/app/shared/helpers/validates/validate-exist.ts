@@ -99,6 +99,21 @@ export function validateBookInStore(bookService: BookService): AsyncValidatorFn 
     }
 }
 
+export function validateBookISBN(bookService: BookService): AsyncValidatorFn {
+  return (control: AbstractControl) => {
+    const bookTitle = control.parent?.get('bookTitle')?.value
+    const isbn = control.value
+    if (bookTitle && isbn) {
+      return bookService.checkBookISBN(isbn, bookTitle).pipe(
+        map((result) => result ? null : { isbnMatch: true }),
+        catchError(() => of(null))
+      )
+    } else {
+      return of(null)
+    }
+  }
+}
+
 export function validateBookStoreExist(bookStoreService: BookstoreService): AsyncValidatorFn {
   return (control: AbstractControl) => {
     return control.valueChanges.pipe(

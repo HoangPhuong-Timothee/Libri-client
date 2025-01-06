@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, of } from "rxjs";
+import { map, Observable, of, tap } from "rxjs";
 import { environment } from 'src/environments/environment';
 import { Book } from '../models/book.model';
 import { Pagination } from '../models/pagination.model';
@@ -12,7 +12,7 @@ import { BookParams } from '../models/params.model';
 export class BookService {
 
   books: Book[] = []
-  booksList: Book[] = []
+  bookList: Book[] = []
   latestBooks: Book[] = []
   similarBooks: Book[] = []
   bookPagination?: Pagination<Book[]>
@@ -46,7 +46,7 @@ export class BookService {
     params = params.append('pageSize', this.adminBookParams.pageSize)
     return this.http.get<Pagination<Book[]>>(`${environment.baseAPIUrl}/api/Books`, { params }).pipe(
       map(response => {
-        this.booksList = [...this.booksList, ...response.data]
+        this.bookList = [...this.bookList, ...response.data]
         this.bookPagination = response
         return response
       })
@@ -129,25 +129,38 @@ export class BookService {
     )
   }
 
-  importBooksFromFile(file: File) {
+  importBooksFromFile(file: File): Observable<any> {
     const formData = new FormData()
     formData.append('file', file, file.name)
-    return this.http.post(`${environment.baseAPIUrl}/api/Books/import-from-file`, formData, {
-      reportProgress: true,
-      observe: 'events'
-    })
+    return this.http.post(`${environment.baseAPIUrl}/api/Books/import-from-file`, formData).pipe(
+      tap(() => {
+        this.adminBookCache = new Map()
+      })
+    )
   }
 
   deleteBook(id: number) {
     return this.http.delete(`${environment.baseAPIUrl}/api/Books/${id}`)
   }
 
-  checkBookExistByTitle(title: string) {
+  checkBookExistByTitle(title: string): Observable<boolean> {
     return this.http.get<boolean>(`${environment.baseAPIUrl}/api/Books/book-exists?bookTitle=${title}`)
   }
 
-  checkBookExistInBookStore(title: string, bookStoreId: number) {
+  checkBookExistInBookStore(title: string, bookStoreId: number): Observable<boolean> {
     return this.http.get<boolean>(`${environment.baseAPIUrl}/api/Books/exists-in-bookstore?bookTitle=${title}&bookStoreId=${bookStoreId}`)
+  }
+
+  checkBookISBN(isbn: string, title: string): Observable<boolean> {
+    return this.http.get<boolean>(`${environment.baseAPIUrl}/api/Books/check-isbn?isbn=${isbn}&bookTitle=${title}`)
+  }
+
+  uploadBookImages(bookId: number, files: File[]): Observable<any> {
+    const formData = new FormData()
+    for (let file of files) {
+      formData.append('files', file, file.name)
+    }
+    return this.http.post(`${environment.baseAPIUrl}/api/Books/${bookId}/upload-images`, formData)
   }
 
 }

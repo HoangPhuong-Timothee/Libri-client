@@ -9,7 +9,6 @@ import { BasketService } from 'src/app/core/services/basket.service';
 })
 export class NavbarComponent {
 
-  isAdmin$ = this.authService.isAdmin$
   basketItemCount$? = this.basketService.basketItemCount$
 
   constructor(

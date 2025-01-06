@@ -14,9 +14,15 @@ export class InventoryFilterDialogComponent implements OnInit {
 
   genresList: Genre[] = []
   bookStoresList: BookStore[] = []
-
   selectedGenreId: number = this.data.selectedGenreId
   selectedBookStoreId: number = this.data.selectedBookStoresId
+  selectedInventoryStatus: string = this.data.selectedInventoryStatus
+  inventoryStatusOptions = [
+    { name: 'Tất cả', value: '' },
+    { name: 'Bình thường', value: 'normal' },
+    { name: 'Sắp hết hàng', value: 'soon' },
+    { name: 'Hết hàng', value: 'out' }
+  ]
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -43,10 +49,12 @@ export class InventoryFilterDialogComponent implements OnInit {
       error: error => console.log(error)
     })
   }
+
   applyFilters() {
     this.filterDialogRef.close({
       selectedGenreId: this.selectedGenreId,
-      selectedBookStoreId: this.selectedBookStoreId
+      selectedBookStoreId: this.selectedBookStoreId,
+      selectedInventoryStatus: this.selectedInventoryStatus
     })
   }
 

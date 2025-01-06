@@ -24,6 +24,7 @@ export class AdminBookComponent implements OnInit {
   totalBooks = 0
   columns = [
     { field: 'id', header: 'Mã sách' },
+    { field: 'isbn', header: 'ISBN' },
     { field: ['title', 'imageUrl'], header: 'Sách', haveImage: true },
     { field: 'author', header: 'Tác giả' },
     { field: 'genre', header: 'Thể loại' },
@@ -44,9 +45,9 @@ export class AdminBookComponent implements OnInit {
       icon: 'delete',
       tooltip: 'Xóa sách khỏi kho',
       action: (row: any) => {
-        this.openDeleteBookDialog(row.id, row.title)
+        this.openDeleteBookDialog(row)
       },
-    },
+    }
   ]
 
   constructor(
@@ -60,6 +61,7 @@ export class AdminBookComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.adminBookParams.search = ''
     this.getAllBooksForAdmin()
   }
 
@@ -75,27 +77,23 @@ export class AdminBookComponent implements OnInit {
     })
   }
 
-  openAddNewBooksDialog(errors?: any) {
+  openAddNewBooksDialog() {
     const dialog = this.dialog.open(AddBooksFormComponent, {
       minWidth: '500px',
       maxHeight: '500px',
       autoFocus: true,
       data: {
-        title: 'Nhập dữ liệu sách',
-        errors: errors
-      },
-      panelClass: 'custom-dialog-container'
+        title: 'Thêm sách'
+      }
     })
     dialog.afterClosed().subscribe({
-      next: async (result) => {
+      next: (result) => {
         if (result && result.fileUploaded) {
           const params = this.bookService.getAdminBookParams()
           params.pageIndex = 1
           this.bookService.setAdminBookParams(params)
           this.adminBookParams = params
           this.getAllBooksForAdmin()
-        } else if (result && result.errors) {
-          this.openAddNewBooksDialog(result.errors)
         }
       }
     })
@@ -121,19 +119,19 @@ export class AdminBookComponent implements OnInit {
       }
     })
   }
-  async openDeleteBookDialog(id: number, title: string) {
+  async openDeleteBookDialog(book: Book) {
     const confirmed = await this.dialogService.confirmDialog(
       'XÁC NHẬN XÓA',
-      `Bạn chắc chắn muốn xóa sách "${title}"?`
+      `Bạn chắc chắn muốn xóa sách "${book.title}"?`
     )
     if (confirmed) {
-      this.bookService.deleteBook(id).subscribe({
+      this.bookService.deleteBook(book.id).subscribe({
         next: () => {
-          this.bookList = this.bookList.filter(b => b.id !== id)
-          this.toastr.success(`Xóa sách "${title}" thành công`)
+          this.bookList = this.bookList.filter(b => b.id !== book.id)
+          this.toastr.success(`Xóa sách "${book.title}" thành công`)
         },
         error: error => {
-          console.log("Có lỗi xảy ra: ", error.errors, error.message)
+          console.log("Có lỗi xảy ra: ", error)
         }
       })
     }

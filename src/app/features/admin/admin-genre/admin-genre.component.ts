@@ -8,6 +8,7 @@ import { DialogService } from 'src/app/core/services/dialog.service';
 import { GenreService } from 'src/app/core/services/genre.service';
 import { AddGenreFormComponent } from './add-genre-form/add-genre-form.component';
 import { EditGenreFormComponent } from './edit-genre-form/edit-genre-form.component';
+import { ImportGenreFormComponent } from './import-genre-form/import-genre-form.component';
 
 @Component({
   selector: 'app-admin-genre',
@@ -23,8 +24,20 @@ export class AdminGenreComponent implements OnInit {
   columns = [
     { field: 'id', header: 'Mã thể loại' },
     { field: 'name', header: 'Thể loại' },
-    { field: 'createInfo', header: 'Thông tin tạo' },
-    { field: 'updateInfo', header: 'Thông tin cập nhật' }
+    {
+      field: 'createInfo',
+      header: 'Tạo bởi',
+      class: () => {
+        return 'fst-italic'
+      }
+    },
+    {
+      field: 'updateInfo',
+      header: 'Cập nhật bởi',
+      class: () => {
+        return 'fst-italic'
+      }
+    }
   ]
   actions = [
     {
@@ -56,6 +69,7 @@ export class AdminGenreComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.adminGenreParams.search = ''
     this.getAllGenresForAdmin()
   }
 
@@ -75,7 +89,7 @@ export class AdminGenreComponent implements OnInit {
     const dialog = this.dialog.open(AddGenreFormComponent, {
         minWidth: '500px',
         data: {
-            title: 'Thêm thể loại'
+            title: 'Thêm thể loại mới'
         }
     })
     dialog.afterClosed().subscribe({
@@ -91,11 +105,31 @@ export class AdminGenreComponent implements OnInit {
     })
   }
 
+  openImportGenreDialog(): void {
+    const dialog = this.dialog.open(ImportGenreFormComponent, {
+        minWidth: '200px',
+        data: {
+            title: 'Nhập dữ liệu thể loại'
+        }
+    })
+    dialog.afterClosed().subscribe({
+      next: (result) => {
+        if (result && result.importSuccess) {
+          const params = this.genreService.getGenreParams()
+          params.pageIndex = 1
+          this.genreService.setGenreParams(params)
+          this.adminGenreParams = params
+          this.getAllGenresForAdmin()
+        }
+      }
+    })
+  }
+
   openUpdateGenreDialog(genre: Genre) {
     const dialog = this.dialog.open(EditGenreFormComponent, {
       minWidth: '500px',
       data: {
-        title: 'Chỉnh sửa tên thể loại',
+        title: 'Chỉnh sửa thể loại',
         genre
       }
     })
@@ -126,7 +160,7 @@ export class AdminGenreComponent implements OnInit {
           this.toastr.success(`Xóa thể loại "${genre.name}" thành công`)
         },
         error: error => {
-          console.log("Có lỗi xảy ra: ", error.errors, error.message)
+          console.log("Có lỗi xảy ra: ", error)
         }
       })
     }

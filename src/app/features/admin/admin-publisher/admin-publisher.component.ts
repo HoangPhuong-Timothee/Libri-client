@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { ToastrService } from 'ngx-toastr';
 import { PublisherParams } from 'src/app/core/models/params.model';
 import { Publisher } from 'src/app/core/models/publisher.model';
 import { DialogService } from 'src/app/core/services/dialog.service';
 import { PublisherService } from 'src/app/core/services/publisher.service';
 import { AddPublisherFormComponent } from './add-publisher-form/add-publisher-form.component';
 import { EditPublisherFormComponent } from './edit-publisher-form/edit-publisher-form.component';
+import { ImportPublisherFormComponent } from './import-publisher-form/import-publisher-form.component';
 
 @Component({
   selector: 'app-admin-publisher',
@@ -15,15 +17,28 @@ import { EditPublisherFormComponent } from './edit-publisher-form/edit-publisher
 })
 export class AdminPublisherComponent implements OnInit {
 
-  searchTerm: string
+  searchTerm: string = ''
   publisherList: Publisher[] = []
   adminPublisherParams: PublisherParams
   totalPublishers = 0
   columns = [
     { field: 'id', header: 'Mã NXB' },
     { field: 'name', header: 'Nhà xuất bản' },
-    { field: 'createInfo', header: 'Thông tin tạo' },
-    { field: 'updateInfo', header: 'Thông tin cập nhật' }
+    { field: 'address', header: 'Địa chỉ' },
+    {
+      field: 'createInfo',
+      header: 'Tạo bởi',
+      class: () => {
+        return 'fst-italic'
+      }
+    },
+    {
+      field: 'updateInfo',
+      header: 'Cập nhật bởi',
+      class: () => {
+        return 'fst-italic'
+      }
+    }
   ]
   actions = [
     {
@@ -47,16 +62,16 @@ export class AdminPublisherComponent implements OnInit {
   constructor(
     private publisherService: PublisherService,
     private dialog: MatDialog,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private toastr: ToastrService
   )
   {
-    this.searchTerm = ''
     this.adminPublisherParams = publisherService.getPublisherParams()
   }
 
   ngOnInit(): void {
+    this.adminPublisherParams.search = ''
     this.getAllPublishersForAdmin()
-    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   getAllPublishersForAdmin() {
@@ -118,16 +133,36 @@ export class AdminPublisherComponent implements OnInit {
     })
   }
 
+  openImportPublisherDialog() {
+    const dialog = this.dialog.open(ImportPublisherFormComponent, {
+      minWidth: '200px',
+      data: {
+        title: 'Nhập dữ liệu nhà xuất bản'
+      }
+    })
+    dialog.afterClosed().subscribe({
+      next: (result) => {
+        if (result && result.importSuccess) {
+          const params = this.publisherService.getPublisherParams()
+          params.pageIndex = 1
+          this.publisherService.setPublisherParams(params)
+          this.adminPublisherParams = params
+          this.getAllPublishersForAdmin()
+        }
+      }
+    })
+  }
+
   openUpdatePublisherDialog(publisher: Publisher) {
     const dialog = this.dialog.open(EditPublisherFormComponent, {
       minWidth: '500px',
       data: {
-        title: 'Chỉnh sửa tên nhà xuất bản',
+        title: 'Chỉnh nhà xuất bản',
         publisher
       }
     })
     dialog.afterClosed().subscribe({
-      next: async result => {
+      next: result => {
         if (result) {
           if (result && result.success) {
             const params = this.publisherService.getPublisherParams()
@@ -150,6 +185,7 @@ export class AdminPublisherComponent implements OnInit {
       this.publisherService.deletePublisher(publisher.id).subscribe({
         next: () => {
           this.publisherList = this.publisherList.filter(p => p.id !== publisher.id)
+          this.toastr.success(`Xóa nhà xuất bản "${publisher.name}" thành công`)
         }
       })
     }

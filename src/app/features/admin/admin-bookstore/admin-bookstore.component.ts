@@ -8,6 +8,7 @@ import { BookstoreService } from 'src/app/core/services/bookstore.service';
 import { DialogService } from 'src/app/core/services/dialog.service';
 import { AddBookstoreFormComponent } from './add-bookstore-form/add-bookstore-form.component';
 import { EditBookstoreFormComponent } from './edit-bookstore-form/edit-bookstore-form.component';
+import { ImportBookstoreFormComponent } from './import-bookstore-form/import-bookstore-form.component';
 
 @Component({
   selector: 'app-admin-bookstore',
@@ -25,8 +26,20 @@ export class AdminBookstoreComponent implements OnInit {
     { field: 'storeName' , header: 'Hiệu sách' },
     { field: 'storeAddress', header: 'Địa chỉ' },
     { field: 'totalQuantity', header: 'Tổng số sách' },
-    { field: 'createInfo', header: 'Tạo bởi' },
-    { field: 'updateInfo', header: 'Cập nhật bởi' }
+    {
+      field: 'createInfo',
+      header: 'Tạo bởi',
+      class: () => {
+        return 'fst-italic'
+      }
+    },
+    {
+      field: 'updateInfo',
+      header: 'Cập nhật bởi',
+      class: () => {
+        return 'fst-italic'
+      }
+    }
   ]
   actions = [
     {
@@ -90,6 +103,26 @@ export class AdminBookstoreComponent implements OnInit {
     })
   }
 
+  openImportBookStoreDialog() {
+    const dialog = this.dialog.open(ImportBookstoreFormComponent, {
+      minWidth: '200px',
+      data: {
+          title: 'Nhập dữ liệu hiệu sách'
+      }
+    })
+    dialog.afterClosed().subscribe({
+      next: (result) => {
+        if (result && result.importSuccess) {
+          const params = this.bookStoreService.getBookStoreParams()
+          params.pageIndex = 1
+          this.bookStoreService.setBookStoreParams(params)
+          this.adminBookStoreParams = params
+          this.getAllBookStoresForAdmin()
+        }
+      }
+    })
+  }
+
   openUpdateBookStoreDialog(bookStore: BookStore) {
     const dialog = this.dialog.open(EditBookstoreFormComponent, {
       minWidth: '500px',
@@ -99,7 +132,7 @@ export class AdminBookstoreComponent implements OnInit {
       }
     })
     dialog.afterClosed().subscribe({
-      next: async result => {
+      next: (result) => {
         if (result) {
           if (result && result.success) {
             const params = this.bookStoreService.getBookStoreParams()

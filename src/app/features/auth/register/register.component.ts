@@ -14,9 +14,7 @@ import { validateEmailExist } from 'src/app/shared/helpers/validates/validate-ex
 })
 export class RegisterComponent {
 
-  errors: string[] | null = null
   // maxDate!: Date
-
   passwordVisible = false
   confirmPasswordVisible = false
 
@@ -49,13 +47,11 @@ export class RegisterComponent {
     var registerRequest = this.registerForm.value as RegisterRequest
     this.authService.register(registerRequest).subscribe({
       next: () => {
-        console.log(this.registerForm.value)
         this.toastr.success('Đăng ký tài khoản thành công.');
         this.router.navigateByUrl('/login');
       },
       error: (error) => {
-        this.errors = error.errors
-        this.toastr.error('Có lỗi xảy ra trong quá trình đăng ký!');
+        console.log(error)
       }
     })
   }

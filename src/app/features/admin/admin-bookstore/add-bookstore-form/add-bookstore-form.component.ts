@@ -1,4 +1,3 @@
-import { HttpEventType } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -13,14 +12,6 @@ import { validateBookStoreExist } from 'src/app/shared/helpers/validates/validat
   styleUrls: ['./add-bookstore-form.component.css']
 })
 export class AddBookstoreFormComponent {
-
-  errorsList: any[] = []
-  selectedFile: File | null = null
-  columns = [
-    { field: 'location', header: 'Vị trí' },
-    { field: 'details', header: 'Nội dung' }
-  ]
-  importFileMode: boolean = true
 
   constructor(
     private fb: FormBuilder,
@@ -40,54 +31,14 @@ export class AddBookstoreFormComponent {
       let addBookStoreRequest = this.addBookStoreForm.value as AddBookStoreRequest
       this.bookStoreService.addNewBookStore(addBookStoreRequest).subscribe({
         next: (response) => {
-          if (response) {
-            this.toastr.success("Thêm hiệu sách thành công")
-            this.dialogRef.close({ success: true })
-          }
+          this.toastr.success(response.message)
+          this.dialogRef.close({ success: true })
         },
         error: (error) => {
-            console.log("Có lỗi xảy ra: ", error)
-            this.toastr.error('Thêm hiệu sách mới thất bại!')
-          }
+          console.log("Có lỗi xảy ra: ", error)
+          this.toastr.error(error.message)
+        }
       })
     }
   }
-
-  onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0]
-  }
-
-  submitFile() {
-    if (!this.selectedFile) {
-      this.toastr.warning('Chưa có file nào được tải lên')
-      return
-    }
-    this.bookStoreService.importBookStoresFromFile(this.selectedFile).subscribe({
-      next: (event) => {
-        if (event.type === HttpEventType.Response) {
-          if (event.status === 400) {
-            this.toastr.error('Có lỗi xảy ra! File không đúng yêu cầu!')
-            this.dialogRef.close({ errors: event.body })
-          } else {
-            this.toastr.success("Thêm hiệu sách thành công")
-            this.dialogRef.close({ success: true })
-          }
-        }
-      },
-      error: (error) => {
-        if (error.status === 400 && error.errors) {
-          this.toastr.error('Có lỗi xảy ra! File không đúng yêu cầu!')
-          this.errorsList = error.errors
-        } else {
-          this.toastr.error('Lỗi không xác định! Vui lòng thử lại.')
-          this.dialogRef.close()
-        }
-      }
-    })
-  }
-
-  changeMode() {
-    this.importFileMode =!this.importFileMode
-  }
-
 }

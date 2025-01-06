@@ -1,4 +1,3 @@
-import { HttpEventType } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -14,14 +13,6 @@ import { validatePublisherExist } from 'src/app/shared/helpers/validates/validat
 })
 export class AddPublisherFormComponent {
 
-  errorsList: any[] = []
-  selectedFile: File | null = null
-  columns = [
-    { field: 'location', header: 'Vị trí' },
-    { field: 'message', header: 'Nội dung' }
-  ]
-  importFileMode: boolean = true
-
   constructor(
     private fb: FormBuilder,
     private publisherService: PublisherService,
@@ -31,7 +22,8 @@ export class AddPublisherFormComponent {
   ) { }
 
   addPublisherForm = this.fb.group({
-    name: ['', [Validators.required], [validatePublisherExist(this.publisherService)]]
+    name: ['', [Validators.required], [validatePublisherExist(this.publisherService)]],
+    address: ['', [Validators.required, Validators.maxLength(255)]]
   })
 
   addNewPublisher(): void {
@@ -39,54 +31,14 @@ export class AddPublisherFormComponent {
       let addPublisherRequest = this.addPublisherForm.value as AddPublisherRequest
       this.publisherService.addNewPublisher(addPublisherRequest).subscribe({
         next: (response) => {
-          if (response) {
-            this.toastr.success("Thêm nhà xuất bản thành công")
-            this.dialogRef.close({ success: true })
-          }
+          this.toastr.success(response.message)
+          this.dialogRef.close({ success: true })
         },
         error: (error) => {
             console.log("Có lỗi xảy ra: ", error)
-            this.toastr.error('Thêm nhà xuất bản thất bại!')
+            this.toastr.error(error.message)
           }
       })
     }
   }
-
-  onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0]
-  }
-
-  submitFile() {
-    if (!this.selectedFile) {
-      this.toastr.warning('Chưa có file nào được tải lên')
-      return
-    }
-    this.publisherService.importPublishersFromFile(this.selectedFile).subscribe({
-      next: (event) => {
-        if (event.type === HttpEventType.Response) {
-          if (event.status === 400) {
-            this.toastr.error('Có lỗi xảy ra! File không đúng yêu cầu!')
-            this.dialogRef.close({ errors: event.body })
-          } else {
-            this.toastr.success("Thêm nhà xuất bản thành công")
-            this.dialogRef.close({ success: true })
-          }
-        }
-      },
-      error: (error) => {
-        if (error.status === 400 && error.errors) {
-          this.toastr.error('Có lỗi xảy ra! File không đúng yêu cầu!')
-          this.errorsList = error.errors
-        } else {
-          this.toastr.error('Lỗi không xác định! Vui lòng thử lại.')
-          this.dialogRef.close()
-        }
-      }
-    })
-  }
-
-  changeMode() {
-    this.importFileMode =!this.importFileMode
-  }
-
 }

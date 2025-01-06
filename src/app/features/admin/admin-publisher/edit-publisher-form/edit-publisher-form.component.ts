@@ -28,7 +28,8 @@ export class EditPublisherFormComponent implements OnInit {
 
   updatePublisherForm = this.fb.group({
     id: [this.data.id],
-    name: ['', [Validators.required]]
+    name: ['', [Validators.required]],
+    address: ['', [Validators.required, Validators.maxLength(255)]]
   })
 
   updatePublisher(): void {
@@ -37,13 +38,13 @@ export class EditPublisherFormComponent implements OnInit {
       this.publisherService.updatePublisher(updatePublisherRequest).subscribe({
         next: (response) => {
           if (response) {
-            this.toastr.success("Cập nhật nhà xuất bản thành công")
+            this.toastr.success(response.message)
             this.dialogRef.close({ success: true })
           }
         },
         error: (error) => {
             console.log("Có lỗi xảy ra: ", error)
-            this.toastr.error('Cập nhật nhà xuất bản thất bại!')
+            this.toastr.error(error.message)
           }
       })
     }

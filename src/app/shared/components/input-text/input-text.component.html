@@ -18,5 +18,6 @@
   <div *ngIf="control.errors?.['publisherExists']" class="invalid-feedback">* NXB đã tồn tại</div>
   <div *ngIf="control.errors?.['uomExists']" class="invalid-feedback">* Đơn vị đo đã tồn tại</div>
   <div *ngIf="control.errors?.['isMatching']" class="invalid-feedback">* Mật khẩu không trùng khớp</div>
-  <div *ngIf="control.errors?.['min']" class="invalid-feedback">* {{label}} phải lớn hơn hoặc bằng 0</div>
+  <div *ngIf="control.errors?.['minlength']" class="invalid-feedback">* {{label}} phải lớn hơn hoặc bằng 0</div>
+  <div *ngIf="control.errors?.['maxlength']" class="invalid-feedback">* {{label}} không được vượt quá {{control.errors?.['maxlength']?.requiredLength || null}} ký tự</div>
 </div>

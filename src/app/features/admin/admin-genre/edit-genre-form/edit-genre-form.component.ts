@@ -28,7 +28,7 @@ export class EditGenreFormComponent implements OnInit {
 
   updateGenreForm = this.fb.group({
     id: [this.data.genre.id],
-    name: ['', [Validators.required]]
+    name: ['', [Validators.required, Validators.maxLength(20)]]
   })
 
   updateGenre() {

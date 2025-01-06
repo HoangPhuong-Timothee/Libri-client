@@ -15,9 +15,17 @@ export class InputTextComponent implements ControlValueAccessor {
     this.ngControl.valueAccessor = this
   }
 
-  writeValue(obj: any): void { }
-  registerOnChange(fn: any): void { }
-  registerOnTouched(fn: any): void { }
+  writeValue(obj: any): void {
+
+  }
+
+  registerOnChange(fn: any): void {
+
+  }
+
+  registerOnTouched(fn: any): void {
+
+  }
 
   get control(): FormControl {
     return this.ngControl.control as FormControl

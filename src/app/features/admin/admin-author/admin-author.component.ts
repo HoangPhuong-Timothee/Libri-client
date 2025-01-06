@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { ToastrService } from 'ngx-toastr';
 import { Author } from 'src/app/core/models/author.model';
 import { AuthorParams } from 'src/app/core/models/params.model';
 import { AuthorService } from 'src/app/core/services/author.service';
 import { DialogService } from 'src/app/core/services/dialog.service';
 import { AddAuthorFormComponent } from './add-author-form/add-author-form.component';
 import { EditAuthorFormComponent } from './edit-author-form/edit-author-form.component';
+import { ImportAuthorFormComponent } from './import-author-form/import-author-form.component';
 
 @Component({
   selector: 'app-admin-author',
@@ -22,8 +24,20 @@ export class AdminAuthorComponent implements OnInit {
   columns = [
     { field: 'id', header: 'Mã tác giả' },
     { field: 'name', header: 'Tác giả' },
-    { field: 'createInfo', header: 'Thông tin tạo' },
-    { field: 'updateInfo', header: 'Thông tin cập nhật' }
+    {
+      field: 'createInfo',
+      header: 'Tạo bởi',
+      class: () => {
+        return 'fst-italic'
+      }
+    },
+    {
+      field: 'updateInfo',
+      header: 'Cập nhật bởi',
+      class: () => {
+        return 'fst-italic'
+      }
+    }
   ]
   actions = [
     {
@@ -48,15 +62,15 @@ export class AdminAuthorComponent implements OnInit {
   constructor(
     private authorService: AuthorService,
     private dialog: MatDialog,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private toastr: ToastrService
   )
   {
-    this.searchTerm = ''
     this.adminAuthorParams = authorService.getAuthorParams()
   }
 
   ngOnInit(): void {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    this.adminAuthorParams.search = ''
     this.getAllAuthorsForAdmin()
   }
 
@@ -67,7 +81,7 @@ export class AdminAuthorComponent implements OnInit {
         this.totalAuthors = reponse.count
       },
       error: error => {
-        console.log(error)
+        console.log("Có lỗi xảy ra: ", error)
       }
     })
   }
@@ -113,7 +127,27 @@ export class AdminAuthorComponent implements OnInit {
           params.pageIndex = 1
           this.authorService.setAuthorParams(params)
           this.adminAuthorParams = params
-          this.getAllAuthorsForAdmin()
+          this.getAllAuthorsForAdmin
+        }
+      }
+    })
+  }
+
+  openImportAuthorDialog() {
+    const dialog = this.dialog.open(ImportAuthorFormComponent, {
+      minWidth: '500px',
+      data: {
+        title: 'Nhập dữ liệu tác giả'
+      }
+    })
+    dialog.afterClosed().subscribe({
+      next: (result) => {
+        if (result && result.importSuccess) {
+          const params = this.authorService.getAuthorParams()
+          params.pageIndex = 1
+          this.authorService.setAuthorParams(params)
+          this.adminAuthorParams = params
+          this.getAllAuthorsForAdmin
         }
       }
     })
@@ -128,7 +162,7 @@ export class AdminAuthorComponent implements OnInit {
       }
     })
     dialog.afterClosed().subscribe({
-      next: async result => {
+      next: result => {
         if (result) {
           if (result && result.success) {
             const params = this.authorService.getAuthorParams()
@@ -151,6 +185,10 @@ export class AdminAuthorComponent implements OnInit {
       this.authorService.deleteAuthor(author.id).subscribe({
         next: () => {
           this.authorList = this.authorList.filter(a => a.id !== author.id)
+          this.toastr.success(`Xóa tác giả "${author.name}" thành công`)
+        },
+        error: error => {
+          console.log("Có lỗi xảy ra: ", error)
         }
       })
     }

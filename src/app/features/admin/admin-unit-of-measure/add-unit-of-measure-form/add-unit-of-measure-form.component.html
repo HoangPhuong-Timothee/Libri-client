@@ -1,6 +1,6 @@
 <h2 class="text-center text-uppercase fw-bold pt-3" mat-dialog-title>{{ data.title }}</h2>
 <mat-divider class="my-1"></mat-divider>
-<mat-dialog-content class="tw-p-3">
+<mat-dialog-content>
   <div class="mb-1 col-12 text-end">
     <button mat-button color="primary" (click)="changeMode()">
       {{ importFileMode ? 'Nhập thủ công' : 'Tải file lên' }}
@@ -9,7 +9,7 @@
   <form
     *ngIf="!importFileMode"
     [formGroup]="addUnitOfMeasureForm"
-    class="tw-p-4 tw-w-full"
+    class="p-4 w-100"
     (ngSubmit)="addNewUnitOfMeasure()"
   >
     <app-input-text
@@ -25,24 +25,24 @@
     </app-text-area>
     <app-input-text
       [formControl]="addUnitOfMeasureForm.controls['conversionRate']"
-      [label]="'Quy đổi số lượng'"
+      [label]="'Tỷ lệ quy đổi'"
       type="number"
     >
     </app-input-text>
     <select
-      formControlName="unitMappingId"
-      class="form-control"
-      [ngClass]="addUnitOfMeasureForm.get('unitMappingId')?.touched ? addUnitOfMeasureForm.get('unitMappingId')?.invalid ? 'is-invalid' : 'is-valid' : null"
+      [formControl]="addUnitOfMeasureForm.controls['mappingUnitId']"
+      class="form-control select-custom"
+      [ngClass]="addUnitOfMeasureForm.get('mappingUnitId')?.touched ? addUnitOfMeasureForm.get('mappingUnitId')?.invalid ? 'is-invalid' : 'is-valid' : null"
     >
-      <option value=""><span class="text-danger">* Chọn đơn vị quy đổi</span></option>
+      <option value="0" disabled selected hidden>* Chọn đơn vị quy đổi</option>
       <option *ngFor="let unit of measureUnitsList" [value]="unit.id">{{ unit.name }}</option>
     </select>
-    <div class="text-danger mt-1" *ngIf="addUnitOfMeasureForm.get('unitMappingId')?.touched">
-      <span *ngIf="addUnitOfMeasureForm.get('unitMappingId')?.errors?.['required']">
+    <div class="text-danger mt-1" *ngIf="addUnitOfMeasureForm.get('mappingUnitId')?.touched">
+      <span *ngIf="addUnitOfMeasureForm.get('mappingUnitId')?.errors?.['min']">
         * Vui lòng chọn đơn vị quy đổi trong hệ thống
       </span>
     </div>
-    <div class="tw-flex tw-justify-end tw-gap-3">
+    <div class="d-flex justify-content-end gap-1 mt-2">
       <button mat-button color="warn" type="button" mat-dialog-close>Hủy</button>
       <button mat-raised-button color="primary" type="submit" [disabled]="addUnitOfMeasureForm.invalid">
         Thêm
@@ -50,9 +50,11 @@
     </div>
   </form>
   <form *ngIf="importFileMode" (ngSubmit)="submitFile()">
-    <mat-dialog-content class="tw-p-3">
-      <input type="file" (change)="onFileSelected($event)">
-      <div class="tw-flex tw-justify-end tw-gap-3 mt-2">
+    <mat-dialog-content class="p-3">
+      <label class="custom-file-label" for="fileInput">Chọn</label>
+      <span class="fst-italic custom-file-text">{{ fileName }}</span>
+      <input id="fileInput" class="my-2 custom-file-input" type="file" (change)="onFileSelected($event)">
+      <div class="d-flex justify-content-end gap-1 mt-2">
         <button class="me-2" mat-button color="warn" type="button" mat-dialog-close>Hủy</button>
         <button mat-raised-button color="primary" type="submit">Thêm</button>
       </div>

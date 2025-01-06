@@ -50,14 +50,22 @@ export class UserService {
       })
     )
   }
-  modifyUserInfo(request: ModifyProfileRequest) {
+
+  modifyUserInfo(request: ModifyProfileRequest): Observable<any> {
     return this.http.put(`${environment.baseAPIUrl}/api/Users/profile`, request)
   }
+
   getUserAddress() {
     return this.http.get<Address>(`${environment.baseAPIUrl}/api/Users/address`)
   }
+
   modifyUserAddress(request: ModifyAddressRequest) {
     return this.http.put<Address>(`${environment.baseAPIUrl}/api/Users/address`, request)
   }
 
+  uploadUserImage(file: File): Observable<any> {
+    const formData = new FormData()
+    formData.append('file', file, file.name)
+    return this.http.post(`${environment.baseAPIUrl}/api/Users/upload-avatar`, formData)
+  }
 }
