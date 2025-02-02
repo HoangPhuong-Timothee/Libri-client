@@ -45,13 +45,15 @@ export class RegisterComponent {
 
   onRegister() {
     var registerRequest = this.registerForm.value as RegisterRequest
+    console.log(registerRequest)
     this.authService.register(registerRequest).subscribe({
-      next: () => {
-        this.toastr.success('Đăng ký tài khoản thành công.');
+      next: (response) => {
+        this.toastr.success(response.message)
         this.router.navigateByUrl('/login');
       },
       error: (error) => {
-        console.log(error)
+        console.log("Có lỗi xảy ra: ", error)
+        this.toastr.error(error.message)
       }
     })
   }

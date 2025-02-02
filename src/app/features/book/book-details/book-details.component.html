@@ -4,12 +4,11 @@
     </div>
     <div class="col-6 mt-5">
         <h2 style="font-weight: bold; text-align: left;">{{ book.title }}</h2>
-        <p class="my-4 text-muted" style="font-size: 2em; font-style: italic;">{{ book.price | customCurrency: 'VND' }}</p>
-        <div *ngIf="book.quantityInStock > 0" class="d-flex my-3">
-            <p>Tình trạng:<span class="ms-2 text-success" style="font-weight: bold;">Có sẵn</span></p>
-            <p class="ms-5">Còn<span class="ms-1 text-secondary" style="font-weight: bold;">{{ book.quantityInStock }}</span> sách trong tủ</p>
+        <div class="d-flex gap-3 mt-4">
+          <span class="text-muted fst-italic" style="font-size: 2em">{{ book.price | customCurrency: 'VND' }}</span>
+          <div style="font-size: 1.8em;"> - Tình trạng:<span class="mt-2 ms-2 text-success fw-bold">{{ bookStatus }}</span></div>
         </div>
-        <div *ngIf="book.isAvailable; else noStock" class="my-5 d-flex justify-content-start align-items-center">
+        <div *ngIf="book.quantityInStock > 0" class="my-5 d-flex justify-content-start gap-3 align-items-center">
             <i (click)="decreaseQuantity()" class="fa fa-minus-circle text-danger me-2" style="cursor: pointer; font-size: 2em;"></i>
             <span style="font-size: 1.5em; font-weight: bold;">{{ quantity }}</span>
             <i (click)="increaseQuantity()" class="fa fa-plus-circle text-success ms-2" style="cursor: pointer; font-size: 2em;"></i>
@@ -17,75 +16,38 @@
                 <i class="fa-solid fa-basket-shopping"></i>
                 <span class="ms-2 text-white" style="font-weight: bold;">{{ buttonText }}</span>
             </button>
-            <button class="btn btn-danger ms-4 px-5 py-3">
-                <i class="fa-regular fa-heart"></i>
-                Thêm vào yêu thích
-            </button>
         </div>
-        <div class="container">
-            <ng-template #noStock>
-                <span class="text-danger my-3" style="font-weight: bold; font-style: italic;">Hết sách</span>
-            </ng-template>
+        <div class="me-2 my-2">
+          <h2 class="text-center text-uppercase">Thông tin sách: </h2>
+          <table class="table table-bordered">
+            <thead class="table-light">
+              <tr class="text-center">
+                <th>Tác giả</th>
+                <th>Thể loại</th>
+                <th>Nhà xuất bản</th>
+                <th>Năm xuất bản</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="text-center">
+                <td>{{ book.author }}</td>
+                <td>{{ book.genre }}</td>
+                <td>{{ book.publisher }}</td>
+                <td>{{ book.publishYear }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-
-        <div class="row mt-4 me-4">
+        <div class="row mt-1 me-1">
             <div class="accordion" id="accordionExample">
-              <div class="accordion-item">
-                <h2 class="accordion-header" id="headingOne">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    <strong>Tác giả</strong>
-                  </button>
-                </h2>
-                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                  <div class="accordion-body" style="font-style: italic;">
-                    {{ book.author }}
-                  </div>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header" id="headingTwo">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                      <strong>Thể loại</strong>
-                  </button>
-                </h2>
-                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                  <div class="accordion-body" style="font-style: italic;">
-                    {{ book.genre }}
-                  </div>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header" id="headingThree">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                      <strong>Nhà xuất bản</strong>
-                  </button>
-                </h2>
-                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                  <div class="accordion-body" style="font-style: italic;">
-                    {{ book.publisher }}
-                  </div>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header" id="heading3">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
-                      <strong>Năm xuất bản</strong>
-                  </button>
-                </h2>
-                <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading3" data-bs-parent="#accordionExample">
-                  <div class="accordion-body" style="font-style: italic;">
-                    {{ book.publishYear }}
-                  </div>
-                </div>
-              </div>
               <div class="accordion-item">
                   <h2 class="accordion-header" id="heading4">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
-                        <strong>Mô tả</strong>
+                        <strong class="text-uppercase">Mô tả</strong>
                     </button>
                   </h2>
                   <div id="collapse4" class="accordion-collapse collapse show" aria-labelledby="heading4" data-bs-parent="#accordionExample">
-                    <div class="accordion-body" style="font-style: italic;">
+                    <div class="accordion-body" style="font-style: italic">
                       {{ book.description }}
                     </div>
                   </div>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Order } from 'src/app/core/models/order.model';
+import { OrderWithDetails } from 'src/app/core/models/order.model';
 import { OrderService } from 'src/app/core/services/order.service';
 import { BreadcrumbService } from 'xng-breadcrumb';
 
@@ -11,7 +11,8 @@ import { BreadcrumbService } from 'xng-breadcrumb';
 })
 export class OrderDetailsComponent implements OnInit {
 
-  order?: Order
+  id?: number
+  orderDetails?: OrderWithDetails
 
   constructor(
     private route: ActivatedRoute,
@@ -21,24 +22,33 @@ export class OrderDetailsComponent implements OnInit {
   ) { this.bcService.set('@orderDetails', ' ') }
 
   ngOnInit(): void {
-    this.getOrderDetails()
-  }
-
-  getOrderDetails() {
     this.route.paramMap.subscribe(params => {
       let id = params.get('id')
       if (id) {
-        this.orderService.getOrderDetails(+id).subscribe({
-          next: (response) => {
-            this.order = response
-            this.bcService.set('@orderDetails', 'Đơn hàng #' + this.order.orderId.toString())
-          },
-          error: (error) => {
-            console.error(error);
-          }
-        })
+        this.getOrderDetails(+id)
       }
     })
+  }
+
+  getOrderDetails(id: number) {
+    this.orderService.getOrderDetails(id).subscribe({
+      next: (response) => {
+        this.orderDetails = response
+        this.bcService.set('@orderDetails', `#${this.orderDetails.orderId.toString()}-${this.orderDetails.userEmail}`)
+      },
+      error: (error) => {
+        console.error(error)
+      }
+    })
+  }
+
+  get userInfo() {
+    return this.orderDetails?.fullName + ", "
+      + this.orderDetails?.street + ", "
+      + this.orderDetails?.ward + ", "
+      + this.orderDetails?.district + ", "
+      + this.orderDetails?.city + ", "
+      + this.orderDetails?.postalCode
   }
 
   backToOrders() {

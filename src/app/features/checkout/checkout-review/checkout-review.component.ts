@@ -19,12 +19,8 @@ export class CheckoutReviewComponent {
 
   createPaymentIntent() {
     this.basketService.createOrUpdatePaymentIntent().subscribe({
-      next: () => {
-        this.toastr.success('Cập nhật phương thức thánh toán thành công')
-        this.appStepper?.next()
-      },
+      next: () => this.appStepper?.next(),
       error: error => this.toastr.error(error.message)
     })
   }
-
 }

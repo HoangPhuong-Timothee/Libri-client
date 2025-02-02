@@ -102,4 +102,10 @@ export class BookDetailsComponent implements OnInit {
     return this.quantityInBasket === 0 ? "Thêm vào giỏ" : "Cập nhật giỏ"
   }
 
+  get bookStatus() {
+    if (this.book) {
+      return this.book.quantityInStock > 0 ? "Có sẵn" : "Hết sách"
+    }
+    return ""
+  }
 }

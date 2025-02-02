@@ -22,7 +22,7 @@ export class ErrorInterceptor implements HttpInterceptor {
             if (error.error.errors) {
               throw error.error
             } else {
-              this.toastr.error(error.error.message, error.error.status.toString())
+              this.toastr.error(error.error.message, error.error.statusCode.toString())
             }
           }
           if (error.status === 401) {

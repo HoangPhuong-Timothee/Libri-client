@@ -1,29 +1,15 @@
-<div class="mt-3">
-  <h1 class="tw-fs-2 tw-fw-semibold tw-mt-4 text-uppercase">
-    Quản lý đơn hàng
-  </h1>
-  <div class="d-flex justify-content-around mt-3">
-    <div>
-      <button class="match-input-height me-1" mat-stroked-button (click)="openFilterDialog()">
-        <mat-icon>filter_list</mat-icon>
-        Lọc dữ liệu
-      </button>
-      <button mat-stroked-button color="warn" (click)="onReset()">
-        <i class="fa-solid fa-rotate-left"></i>
-      </button>
-    </div>
-    <div>
-    </div>
-  </div>
-</div>
-
-<app-custom-table
-  [columns]="columns"
-  [dataSource]="ordersList"
-  [actions]="actions"
-  [totalItems]="totalOrders"
-  [pageSize]="adminOrderParams.pageSize"
-  [pageSize]="adminOrderParams.pageSize"
-  (pageChange)="onPageChange($event)"
+<mat-tab-group
+  [(selectedIndex)]="innerSelectedTabIndex"
+  (selectedTabChange)="onInnerTabChange($event)"
 >
-</app-custom-table>
+  <mat-tab label="Danh sách đơn hàng">
+    <ng-container *ngIf="innerSelectedTabIndex === 0">
+      <app-order-list></app-order-list>
+    </ng-container>
+  </mat-tab>
+  <mat-tab label="Phương thức giao hàng">
+    <ng-container *ngIf="innerSelectedTabIndex === 1">
+      <app-delivery-method-list></app-delivery-method-list>
+    </ng-container>
+  </mat-tab>
+</mat-tab-group>

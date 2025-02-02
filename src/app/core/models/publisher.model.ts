@@ -1,7 +1,7 @@
 export interface Publisher {
     id: number
     name: string
-    address: string
+    address?: string
     createInfo?: string
     updateInfo?: string
 }

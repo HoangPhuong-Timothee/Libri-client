@@ -29,7 +29,7 @@ export class CheckoutComponent implements OnInit {
       deliveryMethod: ['', Validators.required]
     }),
     paymentForm: this.fb.group({
-      nameOnCard: ['', Validators.required]
+      paymentMethod: ['COD', Validators.required]
     })
   })
 
@@ -52,5 +52,4 @@ export class CheckoutComponent implements OnInit {
       this.checkoutForm.get('deliveryForm')?.get('deliveryMethod')?.patchValue(basket.deliveryMethodId.toString())
     }
   }
-
 }

@@ -32,11 +32,12 @@ export class LoginComponent {
     let loginRequest = this.loginForm.value as LoginRequest
     this.authService.login(loginRequest).subscribe({
       next: () => {
+        this.toastr.success("Đăng nhập thành công")
         this.loginForm.reset()
         this.router.navigateByUrl(this.returnUrl)
       },
       error: (error) => {
-        console.log(error)
+        console.log("Có lỗi xảy ra:", error)
       }
     })
   }

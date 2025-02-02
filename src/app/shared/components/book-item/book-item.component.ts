@@ -21,5 +21,4 @@ export class BookItemComponent {
     this.book && this.basketService.addItemToBasket(this.book)
     this.toastr.success('Đã thêm sách vào giỏ')
   }
-
 }

@@ -11,7 +11,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let row of dataSource" class="border-bottom">
-          <td *ngFor="let column of columns" class="py-2" style="max-width: 340px;">
+          <td *ngFor="let column of columns" class="py-2" [ngClass]="getColClass(column)" style="max-width: 340px;">
             <div *ngIf="column.haveImage" class="d-flex align-items-center">
               <img [src]="row[column.field[1]]" alt="book image" style="width: 70px; height: auto;">
               <span class="ms-2">{{ row[column.field[0]] }}</span>
@@ -24,7 +24,7 @@
             </button>
             <mat-menu #menu="matMenu">
               <ng-container *ngFor="let action of actions">
-                <button mat-menu-item (click)="onAction(action.action, row)">
+                <button mat-menu-item (click)="onAction(action.action, row)" [disabled]="action.disabled ? action.disabled(row) : false">
                   <mat-icon>{{ action.icon }}</mat-icon>
                   <span>{{ action.label }}</span>
                   <mat-divider></mat-divider>

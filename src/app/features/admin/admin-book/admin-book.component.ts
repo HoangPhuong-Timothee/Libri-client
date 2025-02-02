@@ -9,6 +9,7 @@ import { DialogService } from 'src/app/core/services/dialog.service';
 import { AddBooksFormComponent } from './add-books-form/add-books-form.component';
 import { AdminBookDetailsComponent } from './admin-book-details/admin-book-details.component';
 import { BookFilterDialogComponent } from './book-filter-dialog/book-filter-dialog.component';
+import { ImportBooksFormComponent } from './import-books-form/import-books-form.component';
 
 @Component({
   selector: 'app-admin-book',
@@ -29,7 +30,7 @@ export class AdminBookComponent implements OnInit {
     { field: 'author', header: 'Tác giả' },
     { field: 'genre', header: 'Thể loại' },
     { field: 'publisher', header: 'NXB' },
-    { field: 'price', header: 'Giá', pipe: 'currency', pipeArgs: 'VND' },
+    { field: 'price', header: 'Giá', pipe: 'currency', pipeArgs: 'VND' }
   ]
   actions = [
     {
@@ -43,7 +44,7 @@ export class AdminBookComponent implements OnInit {
     {
       label: 'Xóa',
       icon: 'delete',
-      tooltip: 'Xóa sách khỏi kho',
+      tooltip: 'Xóa sách khỏi hệ thống',
       action: (row: any) => {
         this.openDeleteBookDialog(row)
       },
@@ -77,7 +78,7 @@ export class AdminBookComponent implements OnInit {
     })
   }
 
-  openAddNewBooksDialog() {
+  openAddNewBookDialog() {
     const dialog = this.dialog.open(AddBooksFormComponent, {
       minWidth: '500px',
       maxHeight: '500px',
@@ -88,7 +89,27 @@ export class AdminBookComponent implements OnInit {
     })
     dialog.afterClosed().subscribe({
       next: (result) => {
-        if (result && result.fileUploaded) {
+        if (result && result.success) {
+          const params = this.bookService.getAdminBookParams()
+          params.pageIndex = 1
+          this.bookService.setAdminBookParams(params)
+          this.adminBookParams = params
+          this.getAllBooksForAdmin()
+        }
+      }
+    })
+  }
+
+  openImportBooksDialog() {
+    const dialog = this.dialog.open(ImportBooksFormComponent, {
+      minWidth: '200px',
+      data: {
+        title: 'Nhập dữ liệu sách'
+      }
+    })
+    dialog.afterClosed().subscribe({
+      next: (result) => {
+        if (result && result.importSuccesss) {
           const params = this.bookService.getAdminBookParams()
           params.pageIndex = 1
           this.bookService.setAdminBookParams(params)
@@ -119,6 +140,7 @@ export class AdminBookComponent implements OnInit {
       }
     })
   }
+
   async openDeleteBookDialog(book: Book) {
     const confirmed = await this.dialogService.confirmDialog(
       'XÁC NHẬN XÓA',

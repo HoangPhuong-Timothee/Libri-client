@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
 import { Order } from 'src/app/core/models/order.model';
 import { OrderParams } from 'src/app/core/models/params.model';
 import { OrderService } from 'src/app/core/services/order.service';
-
 
 @Component({
   selector: 'app-order',
@@ -12,12 +10,18 @@ import { OrderService } from 'src/app/core/services/order.service';
 })
 export class OrderComponent implements OnInit {
 
-  orders: Order[] = []
+  orders?: Order[]
   totalOrders: number = 0
   orderParams: OrderParams
   sortOptions = [
     { name: 'Mới nhất', value: 'newest' },
     { name: 'Cũ nhất', value: 'oldest' }
+  ]
+  statusOptions = [
+    { name: 'Tất cả', value: '' },
+    { name: 'Đã giao hàng', value: 'PaymentReceived' },
+    { name: 'Đang chờ xử lý', value: 'Pending' },
+    { name: 'Đơn hàng đã hủy', value: 'PaymentFailed' }
   ]
 
   constructor(
@@ -37,13 +41,29 @@ export class OrderComponent implements OnInit {
     })
   }
 
-  onPageChange(event: PageEvent) {
+  onPageChanged(event: any) {
     const params = this.orderService.getOrderParams()
-    params.pageIndex = event.pageIndex + 1
-    params.pageSize = event.pageSize
+    if (params.pageIndex !== event) {
+      params.pageIndex = event
+      this.orderService.setOrderParams(params)
+      this.orderParams = params
+      this.getUserOrders()
+    }
+  }
+
+  onSortSelected(event: any) {
+    const params = this.orderService.getOrderParams()
+    params.sort = event.target.value
     this.orderService.setOrderParams(params)
     this.orderParams = params
     this.getUserOrders()
   }
 
+  onStatusSelected(event: any) {
+    const params = this.orderService.getOrderParams()
+    params.orderStatus = event.target.value
+    this.orderService.setOrderParams(params)
+    this.orderParams = params
+    this.getUserOrders()
+  }
 }

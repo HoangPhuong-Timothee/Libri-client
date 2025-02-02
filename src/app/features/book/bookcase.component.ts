@@ -69,7 +69,7 @@ export class BookcaseComponent implements OnInit {
   getAllPublishers(){
     this.publisherService.getAllPublishers().subscribe({
       next: (response) => {
-        this.publishers = [{id: 0, name: 'Tất cả', address: ''}, ...response];
+        this.publishers = [{id: 0, name: 'Tất cả'}, ...response];
       },
       error: (error) => {
         console.log(error);

@@ -22,7 +22,6 @@ export interface BasketTotals {
     delivery: number
     subtotal: number
     total: number
-    discount: number
 }
 
 export class Basket implements Basket {

@@ -9,8 +9,6 @@ import { BasketService } from './core/services/basket.service';
 })
 export class AppComponent implements OnInit {
 
-  title = 'Libri';
-
   constructor(
     private authService: AuthService,
     private basketService: BasketService
@@ -21,12 +19,12 @@ export class AppComponent implements OnInit {
     this.loadBasket()
   }
 
-  loadCurrentUser() {
+  loadCurrentUser(): void {
     const token = localStorage.getItem('access_token')
     this.authService.loadCurrentUser(token).subscribe()
   }
 
-  loadBasket() {
+  loadBasket(): void {
     const basketKey = localStorage.getItem('basket_key')
     if (basketKey) {
       this.basketService.getBasket(basketKey)

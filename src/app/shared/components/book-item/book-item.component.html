@@ -4,9 +4,8 @@
         <div class="d-flex align-items-center justify-content-center hover-overlay">
             <button (click)="addItemToBasket()" class="btn btn-success me-2"><i class="fa-solid fa-plus"></i></button>
             <button [routerLink]="['/bookcase', book.id]" class="btn btn-secondary"><i class="fa-solid fa-eye"></i></button>
-            <button class="btn btn-danger ms-2"><i class="fa-regular fa-heart "></i></button>
         </div>
-        <div *ngIf="book.quantityInStock <= 0" class="text-uppercase bg-dark text-danger fw-bold d-flex align-items-center justify-content-center hover-overlay">
+        <div *ngIf="book.quantityInStock === 0" class="text-uppercase bg-dark text-danger fw-bold d-flex align-items-center justify-content-center hover-overlay">
             <span>Hết sách</span>
         </div>
         <div *ngIf="!book.isAvailable" class="text-uppercase bg-dark text-danger fw-bold d-flex align-items-center justify-content-center hover-overlay">
@@ -14,7 +13,7 @@
       </div>
     </div>
     <div class="card-body d-flex flex-column">
-        <a *ngIf="book.isAvailable || book.quantityInStock >= 0" routerLink="/bookcase/{{ book.id }}" class="text-decoration-none">
+        <a *ngIf="book.isAvailable || book.quantityInStock > 0" routerLink="/bookcase/{{ book.id }}" class="text-decoration-none">
             <h6 class="truncate">
                 {{ book.title | truncateTitle: 20 }}
             </h6>

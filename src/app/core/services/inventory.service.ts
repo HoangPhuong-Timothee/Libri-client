@@ -2,9 +2,9 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map, Observable, of, tap } from "rxjs";
 import { environment } from "src/environments/environment";
-import { BookQuantity, ExportInventoriesRequest, ImportInventoriesRequest, Inventory, InventoryTransaction } from "../models/inventory.model";
+import { AddExportReceiptRequest, AddImportReceiptRequest, AddInventoryAuditRequest, BookQuantity, ConductInventoryRequest, Inventory, InventoryAudit, InventoryAuditDetails, InventoryReceipt, InventoryTransaction } from "../models/inventory.model";
 import { Pagination } from "../models/pagination.model";
-import { InventoryParams, InventoryTransactionParams, ValidateBookQuantityInBookStoreParams } from "../models/params.model";
+import { InventoryAuditParams, InventoryParams, InventoryTransactionParams, ReceiptParams, ValidateBookQuantityInBookStoreParams } from "../models/params.model";
 
 @Injectable({
     providedIn: 'root'
@@ -16,8 +16,19 @@ export class InventoryService {
     inventoryParams = new InventoryParams()
     inventoryCache = new Map<string, Pagination<Inventory[]>>()
 
+    invAuditList: InventoryAudit[] = []
+    invAuditPagination?: Pagination<InventoryAudit[]>
+    invAuditParams = new InventoryAuditParams()
+    invAuditCache = new Map<string, Pagination<InventoryAudit[]>>()
+
+    receiptList: InventoryReceipt[] = []
+    receiptPagination?: Pagination<InventoryReceipt[]>
+    receiptParams = new ReceiptParams()
+    receiptCache = new Map<string, Pagination<InventoryReceipt[]>>()
+
     constructor(private http: HttpClient) { }
 
+    //Book inventory service
     getAllBookInventories(useCache = true): Observable<Pagination<Inventory[]>> {
       if (!useCache) {
         this.inventoryCache = new Map()
@@ -32,10 +43,16 @@ export class InventoryService {
         }
       }
       let params = new HttpParams()
-      if (this.inventoryParams.search) params = params.append('search', this.inventoryParams.search)
-      if (this.inventoryParams.inventoryStatus) params = params.append('inventoryStatus', this.inventoryParams.inventoryStatus)
-      if (this.inventoryParams.genreId) params = params.append('genreId', this.inventoryParams.genreId)
-      if (this.inventoryParams.bookStoreId) params = params.append('bookStoreId', this.inventoryParams.bookStoreId)
+      if (this.inventoryParams.isbnSearch)
+        params = params.append('isbn', this.inventoryParams.isbnSearch)
+      if (this.inventoryParams.search)
+        params = params.append('search', this.inventoryParams.search)
+      if (this.inventoryParams.inventoryStatus)
+        params = params.append('inventoryStatus', this.inventoryParams.inventoryStatus)
+      if (this.inventoryParams.genreId)
+        params = params.append('genreId', this.inventoryParams.genreId)
+      if (this.inventoryParams.bookStoreId)
+        params = params.append('bookStoreId', this.inventoryParams.bookStoreId)
       params = params.append('pageIndex', this.inventoryParams.pageIndex)
       params = params.append('pageSize', this.inventoryParams.pageSize)
       return this.http.get<Pagination<Inventory[]>>(`${environment.baseAPIUrl}/api/Inventories`, { params }).pipe(
@@ -76,10 +93,54 @@ export class InventoryService {
       return this.http.get<InventoryTransaction[]>(`${environment.baseAPIUrl}/api/Inventories/inventory-transactions`, { params })
     }
 
+    //Book receipt service
+    getAllInventoryReceipts(useCache = true): Observable<Pagination<InventoryReceipt[]>> {
+      if (!useCache) {
+        this.receiptCache = new Map()
+      }
+      if (this.receiptCache.size > 0 && useCache) {
+        if (this.receiptCache.has(Object.values(this.receiptParams).join('-'))) {
+          this.receiptPagination = this.receiptCache.get(Object.values(this.receiptParams).join('-'))
+
+          if(this.receiptPagination) {
+            return of(this.receiptPagination)
+          }
+        }
+      }
+      let params = new HttpParams()
+      if (this.receiptParams.receiptStatus)
+        params = params.append('receiptStatus', this.receiptParams.receiptStatus)
+      if (this.receiptParams.search)
+        params = params.append('search', this.receiptParams.search)
+      if (this.invAuditParams.startDate)
+        params = params.append('startDate', new Date(this.invAuditParams.startDate).toDateString())
+      if (this.invAuditParams.endDate)
+        params = params.append('endDate', new Date(this.invAuditParams.endDate).toDateString())
+      if (this.receiptParams.receiptType)
+        params = params.append('receiptType', this.receiptParams.receiptType)
+      params = params.append('pageIndex', this.inventoryParams.pageIndex)
+      params = params.append('pageSize', this.inventoryParams.pageSize)
+      return this.http.get<Pagination<InventoryReceipt[]>>(`${environment.baseAPIUrl}/api/Inventories/admin/receipt-list`, { params }).pipe(
+        map(response => {
+          this.receiptList = [...this.receiptList, ...response.data]
+          this.receiptPagination = response
+          return response
+        })
+      )
+    }
+
+    getInventoryReceiptParams() {
+      return this.receiptParams
+    }
+
+    setInventoryReceiptParams(params: ReceiptParams) {
+      this.receiptParams = params
+    }
+
     importInventoriesFromFile(file: File): Observable<any> {
       const formData = new FormData()
       formData.append('file', file, file.name)
-      return this.http.post(`${environment.baseAPIUrl}/api/Inventories/import-from-file`, formData).pipe(
+      return this.http.post(`${environment.baseAPIUrl}/api/Inventories/import/file`, formData).pipe(
         tap(() => {
           this.inventoryCache = new Map()
         })
@@ -89,27 +150,106 @@ export class InventoryService {
     exportInventoriesFromFile(file: File): Observable<any> {
       const formData = new FormData()
       formData.append('file', file, file.name)
-      return this.http.post(`${environment.baseAPIUrl}/api/Inventories/export-from-file`, formData).pipe(
+      return this.http.post(`${environment.baseAPIUrl}/api/Inventories/export/file`, formData).pipe(
         tap(() => {
           this.inventoryCache = new Map()
         })
       )
     }
 
-    importInventoriesManual(importRequests: ImportInventoriesRequest[]): Observable<any> {
-      return this.http.post(`${environment.baseAPIUrl}/api/Inventories/import-manual`, importRequests).pipe(
+    importInventoriesManual(request: AddImportReceiptRequest): Observable<any> {
+      return this.http.post(`${environment.baseAPIUrl}/api/Inventories/import/manual`, request).pipe(
         tap(() => {
           this.inventoryCache = new Map()
         })
       )
     }
 
-    exportInventoriesManual(exportRequests: ExportInventoriesRequest[]): Observable<any> {
-      return this.http.post(`${environment.baseAPIUrl}/api/Inventories/export-manual`, exportRequests).pipe(
+    exportInventoriesManual(request: AddExportReceiptRequest): Observable<any> {
+      return this.http.post(`${environment.baseAPIUrl}/api/Inventories/export/manual`, request).pipe(
         tap(() => {
           this.inventoryCache = new Map()
         })
       )
     }
 
+    acceptReceipt(receiptId: number, receiptType: string): Observable<any> {
+      let params = new HttpParams().set('receiptType', receiptType)
+      return this.http.put(`${environment.baseAPIUrl}/api/Inventories/admin/receipt-list/accept/${receiptId}`, { params }).pipe(
+        tap(() => {
+          this.receiptCache = new Map()
+        })
+      )
+    }
+
+    cancelReceipt(receiptId: number, receiptType: string): Observable<any> {
+      let params = new HttpParams().set('receiptType', receiptType)
+      return this.http.put(`${environment.baseAPIUrl}/api/Inventories/admin/receipt-list/cancel/${receiptId}`, { params }).pipe(
+        tap(() => {
+          this.receiptCache = new Map()
+        })
+      )
+    }
+
+    getAllInventoryAudits(useCache = true): Observable<Pagination<InventoryAudit[]>> {
+      if (!useCache) {
+        this.invAuditCache = new Map()
+      }
+      if (this.invAuditCache.size > 0 && useCache) {
+        if (this.invAuditCache.has(Object.values(this.invAuditParams).join('-'))) {
+          this.invAuditPagination = this.invAuditCache.get(Object.values(this.invAuditParams).join('-'))
+
+          if(this.invAuditPagination) {
+            return of(this.invAuditPagination)
+          }
+        }
+      }
+      let params = new HttpParams()
+      if (this.invAuditParams.audittedBy) params = params.append('audittedBy', this.invAuditParams.audittedBy)
+      if (this.invAuditParams.search) params = params.append('search', this.invAuditParams.search)
+      if (this.invAuditParams.startDate) params = params.append('startDate', new Date(this.invAuditParams.startDate).toDateString())
+      if (this.invAuditParams.endDate) params = params.append('endDate', new Date(this.invAuditParams.endDate).toDateString())
+      if (this.invAuditParams.auditStatus) params = params.append('auditStatus', this.invAuditParams.auditStatus)
+      params = params.append('pageIndex', this.inventoryParams.pageIndex)
+      params = params.append('pageSize', this.inventoryParams.pageSize)
+      return this.http.get<Pagination<InventoryAudit[]>>(`${environment.baseAPIUrl}/api/Inventories/admin/audit-list`, { params }).pipe(
+        map(response => {
+          this.invAuditList = [...this.invAuditList, ...response.data]
+          this.invAuditPagination = response
+          return response
+        })
+      )
+    }
+
+    getInventoryAuditParams() {
+      return this.invAuditParams
+    }
+
+    setInventoryAuditParams(params: InventoryAuditParams) {
+      this.invAuditParams = params
+    }
+
+    addNewInventoryAudit(request: AddInventoryAuditRequest): Observable<any> {
+      return this.http.post(`${environment.baseAPIUrl}/api/Inventories/admin/audit-list`, request).pipe(
+        tap(() => {
+          this.invAuditCache = new Map()
+        })
+      )
+    }
+
+    getInventoryAuditDetails(id: number) {
+      return this.http.get<InventoryAuditDetails[]>(`${environment.baseAPIUrl}/api/Inventories/admin/audit-list/${id}`)
+    }
+
+    conductInventoryAudit(id: number, request: ConductInventoryRequest): Observable<any> {
+      return this.http.post(`${environment.baseAPIUrl}/api/Inventories/admin/audit-list/${id}/conduct`, request)
+    }
+
+    deleteInventoryAudit(id: number): Observable<any> {
+      return this.http.delete(`${environment.baseAPIUrl}/api/Inventories/admin/audit-list/soft-delete/${id}`).pipe(
+        tap(() => {
+          this.invAuditCache = new Map()
+        })
+      )
+    }
 }

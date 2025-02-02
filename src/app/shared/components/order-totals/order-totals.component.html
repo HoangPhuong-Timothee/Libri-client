@@ -15,9 +15,9 @@
         <li class="d-flex justify-content-between py-3 border-bottom">
           <strong class="text-muted">Phí dịch vụ</strong>
           <p>Sẽ tính phí dựa vào dịch vụ mà bạn chọn</p>
-          <strong>{{ basketTotals.delivery | customCurrency : "VND" }}</strong>
+          <strong>+ {{ basketTotals.delivery | customCurrency : "VND" }}</strong>
         </li>
-        <li class="d-flex justify-content-between align-items-center py-3 border-bottom">
+        <!-- <li class="d-flex justify-content-between align-items-center py-3 border-bottom">
           <strong class="text-muted">Giảm giá</strong>
           <br>
           <strong>- {{ basketTotals.discount | customCurrency : "VND" }}</strong>
@@ -30,14 +30,14 @@
               <button class="btn btn-success py-2 px-4 mx-2">Áp dụng</button>
             </form>
           </div>
-        </li>
+        </li> -->
         <li class="d-flex justify-content-between py-3 border-bottom">
           <strong class="text-muted">Thành tiền</strong>
           <strong>{{ basketTotals.total | customCurrency : "VND" }}</strong>
         </li>
       </ul>
       <div class="d-grid" *ngIf="router.url !== '/checkout'">
-        <button routerLink="/checkout" class="btn btn-success py-2 fw-bold">
+        <button routerLink="/checkout" class="btn btn-primary py-2 fw-bold">
           Tiến hành thanh toán
         </button>
         <button class="fw-bold" routerLink="/bookcase" mat-button>

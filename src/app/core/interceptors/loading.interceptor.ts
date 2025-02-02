@@ -30,7 +30,6 @@ export class LoadingInterceptor implements HttpInterceptor {
         request.method === 'POST' && request.url.includes('Orders')
       )
       {
-        console.log(request.url)
         return next.handle(request)
       }
 

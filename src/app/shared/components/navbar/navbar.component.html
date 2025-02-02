@@ -3,6 +3,7 @@
     <nav class="my-2 my-md-0 mr-md-3 text-uppercase" style="font-size: larger;">
       <a routerLink="/" class="p-5" routerLinkActive="active" [routerLinkActiveOptions]="{ exact:true }">Trang chủ</a>
       <a routerLink="/bookcase" class="p-4" routerLinkActive="active">Tủ sách</a>
+      <a *ngIf="authService.isAdmin$ | async" routerLink="/admin" class="p-4" routerLinkActive="active">Quản lý</a>
       <a routerLink="/introduction" class="p-4" routerLinkActive="active">Giới thiệu</a>
     </nav>
     <div class="d-flex align-items-center">
@@ -27,12 +28,6 @@
               <a routerLink="/profile" class="dropdown-item">
                 <i class="fa-solid fa-user"></i>
                 Thông tin cá nhân
-              </a>
-            </li>
-            <li *ngIf="authService.isAdmin$ | async" class="py-1">
-              <a routerLink="/admin" class="dropdown-item">
-                <i class="fa-brands fa-black-tie"></i>
-                Quản lý cửa hàng
               </a>
             </li>
             <li class="py-1">

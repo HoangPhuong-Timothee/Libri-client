@@ -1,115 +1,44 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { NavigationExtras, Router } from '@angular/router';
-import {
-  loadStripe,
-  Stripe,
-  StripeCardCvcElement,
-  StripeCardExpiryElement,
-  StripeCardNumberElement
-} from '@stripe/stripe-js';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { firstValueFrom } from 'rxjs';
 import { Address } from 'src/app/core/models/address.model';
 import { Basket } from 'src/app/core/models/basket.model';
 import { CreateOrderRequest } from 'src/app/core/models/order.model';
 import { BasketService } from 'src/app/core/services/basket.service';
-import { CheckoutService } from 'src/app/core/services/checkout.service';
-import { environment } from 'src/environments/environment';
+import { OrderService } from 'src/app/core/services/order.service';
 
 @Component({
   selector: 'app-checkout-payment',
   templateUrl: './checkout-payment.component.html',
   styleUrls: ['./checkout-payment.component.css']
 })
-export class CheckoutPaymentComponent implements OnInit {
+export class CheckoutPaymentComponent {
 
   @Input() checkoutForm?: FormGroup
-  @ViewChild('cardNumber') cardNumberElement?: ElementRef
-  @ViewChild('cardExpiry') cardExpiryElement?: ElementRef
-  @ViewChild('cardCVC') cardCVCElement?: ElementRef
-  stripe?: Stripe | null
-  cardNumber?: StripeCardNumberElement
-  cardExpiry?: StripeCardExpiryElement
-  cardCVC?: StripeCardCvcElement
-  cardNumberComplete: boolean = false
-  cardExpiryComplete: boolean = false
-  cardCVCComplete: boolean = false
-  cardErrors: any
   loading = false
 
   constructor(
     private basketService: BasketService,
-    private checkoutService: CheckoutService,
+    private orderService: OrderService,
     private toastr: ToastrService,
     private router: Router
   ) { }
 
-  ngOnInit(): void {
-    loadStripe(environment.stripePublicKey).then(stripe => {
-      this.stripe = stripe
-      const stripeElements = stripe?.elements()
-      if (stripeElements) {
-        this.cardNumber = stripeElements.create('cardNumber')
-        this.cardNumber.mount(this.cardNumberElement?.nativeElement)
-        this.cardNumber.on('change', event => {
-          this.cardNumberComplete = event.complete
-          if (event.error) {
-            this.cardErrors = event.error.message
-          } else {
-            this.cardErrors = null
-          }
-        })
-
-        this.cardExpiry = stripeElements.create('cardExpiry')
-        this.cardExpiry.mount(this.cardExpiryElement?.nativeElement)
-        this.cardExpiry.on('change', event => {
-          this.cardExpiryComplete = event.complete
-          if (event.error) {
-            this.cardErrors = event.error.message
-          } else {
-            this.cardErrors = null
-          }
-        })
-
-        this.cardCVC = stripeElements.create('cardCvc')
-        this.cardCVC.mount(this.cardCVCElement?.nativeElement)
-        this.cardCVC.on('change', event => {
-          this.cardCVCComplete = event.complete
-          if (event.error) {
-            this.cardErrors = event.error.message
-          } else {
-            this.cardErrors = null
-          }
-        })
-      }
-    })
+  get codPaymentFormComplete() {
+    return this.checkoutForm?.get('paymentForm')?.value.paymentMethod === 'COD'
   }
-
-  get paymentFormComplete() {
-    return this.checkoutForm?.get('paymentForm')?.valid
-      && this.cardNumberComplete
-      && this.cardExpiryComplete
-      && this.cardCVCComplete
-  }
-
 
   async submitOrder() {
     this.loading = true
     const basket = this.basketService.getCurrentBasketValue()
+    console.log(basket)
+    console.log(basket?.id)
     if (!basket) {
     throw new Error('Không thể lấy thông tin giò hàng')
     }
     try {
-      const createdOrder = await this.createOrder(basket)
-      const paymentResult = await this.confirmPaymentWithStripe(basket)
-      if (paymentResult.paymentIntent) {
-        this.basketService.deleteBasket(basket)
-        const navigationExtras: NavigationExtras = { state: createdOrder }
-        this.router.navigate(['checkout/success'], navigationExtras)
-      } else {
-        this.toastr.error(paymentResult.error.message)
-      }
+      await this.createOrder(basket)
     } catch (error: any) {
       console.log("Có lỗi: ", error)
       this.toastr.error(error.message)
@@ -118,33 +47,25 @@ export class CheckoutPaymentComponent implements OnInit {
     }
   }
 
-  private async confirmPaymentWithStripe(basket: Basket | null) {
-    if (!basket) {
-      throw new Error('Giỏ hàng rỗng')
-    }
-    const result = this.stripe?.confirmCardPayment(basket.clientSecret!, {
-      payment_method: {
-        card: this.cardNumber!,
-        billing_details: {
-          name: this.checkoutForm?.get('paymentForm')?.get('nameOnCard')?.value
-        }
-      }
-    })
-    if (!result) {
-      throw new Error('Có lỗi xảy ra khi thực hiện thanh toán qua cổng stripe')
-    }
-    return result
-  }
-
-  private async createOrder(basket: Basket | null) {
+  async createOrder(basket: Basket | null) {
     if (!basket) {
       throw new Error('Giỏ hàng rỗng')
     }
     const orderToCreate = this.getOrderToCreate()
-    return firstValueFrom(this.checkoutService.createOrder(orderToCreate, basket.id))
+    this.orderService.createOrder(orderToCreate, basket.id).subscribe({
+      next: (response) => {
+        this.toastr.success(response.message)
+        this.basketService.deleteBasket(basket)
+        this.router.navigateByUrl('/order')
+      },
+      error: (error) => {
+        this.toastr.error(error.message)
+        console.log("Có lỗi: ", error)
+      }
+    })
   }
 
-  private getOrderToCreate():  CreateOrderRequest {
+  getOrderToCreate():  CreateOrderRequest {
     const deliveryMethodId = this.checkoutForm?.get('deliveryForm')?.get('deliveryMethod')?.value
     const shippingAddress = this.checkoutForm?.get('userInfoForm')?.value as Address
     if (!deliveryMethodId || !shippingAddress) {
@@ -155,5 +76,4 @@ export class CheckoutPaymentComponent implements OnInit {
       shippingAddress: shippingAddress
     }
   }
-
 }

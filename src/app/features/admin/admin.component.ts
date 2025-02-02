@@ -12,9 +12,9 @@ export class AdminComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    const savedIndex = localStorage.getItem('selectedTabIndex')
-    if (savedIndex !== null) {
-      this.selectedTabIndex = +savedIndex
+    const savedTabIndex = localStorage.getItem('selectedTabIndex')
+    if (savedTabIndex !== null) {
+      this.selectedTabIndex = +savedTabIndex
     }
   }
 
@@ -22,5 +22,4 @@ export class AdminComponent implements OnInit {
     this.selectedTabIndex = event.index
     localStorage.setItem('selectedTabIndex', this.selectedTabIndex.toString());
   }
-
 }

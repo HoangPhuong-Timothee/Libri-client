@@ -44,7 +44,18 @@ export class InventoryParams {
   pageIndex = 1
   pageSize = 20
   search = ''
+  isbnSearch = ''
   inventoryStatus = ''
+}
+
+export class ReceiptParams {
+  search = ''
+  pageIndex = 1
+  pageSize = 20
+  startDate?: Date
+  endDate?: Date
+  receiptStatus?: string
+  receiptType?: string
 }
 
 export class InventoryTransactionParams {
@@ -64,6 +75,10 @@ export class OrderParams {
   sort = 'newest'
   pageIndex = 1
   pageSize = 20
+  startDate?: Date
+  endDate?: Date
+  orderStatus?: string
+  orderEmail?: string
 }
 
 export class UnitOfMeasureParams {
@@ -78,4 +93,20 @@ export class ValidateBookQuantityInBookStoreParams {
   inputQuantity = 0
   bookTitle = ''
   isbn = ''
+}
+
+export class DeliveryMethodParams {
+  pageIndex = 1
+  pageSize = 20
+  search = ''
+}
+
+export class InventoryAuditParams {
+  search = ''
+  pageIndex = 1
+  pageSize = 20
+  startDate?: Date
+  endDate?: Date
+  auditStatus?: string
+  audittedBy?: string
 }

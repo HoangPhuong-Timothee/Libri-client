@@ -15,7 +15,8 @@ export class CustomTableComponent {
     imageUrl?: string,
     pipe?: string,
     pipeArgs?: any,
-    class?: (row: any) => string
+    class?: (row: any) => string,
+    colClass?: string
   }[] = []
   @Input() dataSource: any[] = []
   @Input() actions: {
@@ -45,6 +46,10 @@ export class CustomTableComponent {
 
   getCellClass(row: any, column: any): string {
     return column.class ? column.class(row) : ''
+  }
+
+  getColClass(column: any): string {
+    return column.colClass ? column.colClass : ''
   }
 
   getCellValue(row: any, column: any) {

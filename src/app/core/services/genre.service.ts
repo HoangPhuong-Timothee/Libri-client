@@ -18,14 +18,12 @@ export class GenreService {
   genreCache = new Map<string, Pagination<Genre[]>>()
 
   constructor(private http: HttpClient) { }
-
   getAllGenres () {
     if (this.genres.length > 0) {
       return of(this.genres)
     }
     return this.http.get<Genre[]>(`${environment.baseAPIUrl}/api/Genres`)
   }
-
   getGenresForAdmin(useCache = true): Observable<Pagination<Genre[]>> {
     if (!useCache) {
       this.genreCache.clear()
@@ -50,15 +48,12 @@ export class GenreService {
       })
     )
   }
-
   setGenreParams(params: GenreParams) {
     this.genreParams = params
   }
-
   getGenreParams() {
     return this.genreParams
   }
-
   addNewGenre(request: AddGenreRequest): Observable<any> {
     return this.http.post(`${environment.baseAPIUrl}/api/Genres`, request).pipe(
       tap(() => {
@@ -66,7 +61,6 @@ export class GenreService {
       })
     )
   }
-
   importGenresFromFile(file: File): Observable<any> {
     const formData = new FormData()
     formData.append('file', file, file.name)
@@ -76,7 +70,6 @@ export class GenreService {
       })
     )
   }
-
   updateGenre(request: UpdateGenreRequest) {
     return this.http.put(`${environment.baseAPIUrl}/api/Genres/${request.id}`, request).pipe(
       tap(() => {
@@ -84,13 +77,10 @@ export class GenreService {
       })
     )
   }
-
   deleteGenre(id: number) {
     return this.http.delete(`${environment.baseAPIUrl}/api/Genres/soft-delete/${id}`)
   }
-
   checkGenreExist(name: string) {
     return this.http.get(`${environment.baseAPIUrl}/api/Genres/genre-exists?name=${name}`)
   }
-
 }

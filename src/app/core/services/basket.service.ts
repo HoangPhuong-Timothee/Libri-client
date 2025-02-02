@@ -86,7 +86,6 @@ export class BasketService {
     return this.http.delete(`${environment.baseAPIUrl}/api/Baskets?id=${basket.id}`).subscribe({
       next: () => {
         this.deleteLocalBasket()
-        this.toastr.info('Bạn không còn sách nào trong giỏ')
       }
     })
   }
@@ -151,9 +150,8 @@ export class BasketService {
     if (!basket) {
       return
     }
-    const discount = 0
     const subtotal = basket.basketItems.reduce((a, b) => a + (b.price * b.quantity), 0)
-    const total = subtotal + basket.deliveryPrice - discount
-    this.basketTotalSource.next({ delivery: basket.deliveryPrice, total, subtotal, discount })
+    const total = subtotal + basket.deliveryPrice
+    this.basketTotalSource.next({ delivery: basket.deliveryPrice, total, subtotal })
   }
 }

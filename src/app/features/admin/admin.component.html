@@ -9,9 +9,8 @@
       <mat-tab label="THỂ LOẠI"></mat-tab>
       <mat-tab label="NHÀ XUẤT BẢN"></mat-tab>
       <mat-tab label="TỒN KHO"></mat-tab>
-      <mat-tab label="ĐƠN VỊ"></mat-tab>
       <mat-tab label="HIỆU SÁCH"></mat-tab>
-      <mat-tab label="ĐƠN ĐẶT SÁCH"></mat-tab>
+      <mat-tab label="ĐƠN HÀNG"></mat-tab>
       <mat-tab label="NGƯỜI DÙNG"></mat-tab>
   </mat-tab-group>
   <div class="tab-content">
@@ -31,15 +30,12 @@
           <app-admin-inventory></app-admin-inventory>
       </ng-container>
       <ng-container *ngIf="selectedTabIndex === 5">
-        <app-admin-unit-of-measure></app-admin-unit-of-measure>
-      </ng-container>
-      <ng-container *ngIf="selectedTabIndex === 6">
         <app-admin-bookstore></app-admin-bookstore>
       </ng-container>
-      <ng-container *ngIf="selectedTabIndex === 7">
+      <ng-container *ngIf="selectedTabIndex === 6">
           <app-admin-order></app-admin-order>
       </ng-container>
-      <ng-container *ngIf="selectedTabIndex === 8">
+      <ng-container *ngIf="selectedTabIndex === 7">
         <app-admin-user></app-admin-user>
       </ng-container>
    </div>
